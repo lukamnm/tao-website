@@ -67,8 +67,15 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    users: User;
+    banners: Banner;
+    offers: Offer;
+    news: News;
+    pages: Page;
+    documents: Document;
+    'contact-messages': ContactMessage;
+    'corporate-requests': CorporateRequest;
     media: Media;
+    users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -76,20 +83,31 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
+    banners: BannersSelect<false> | BannersSelect<true>;
+    offers: OffersSelect<false> | OffersSelect<true>;
+    news: NewsSelect<false> | NewsSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
+    documents: DocumentsSelect<false> | DocumentsSelect<true>;
+    'contact-messages': ContactMessagesSelect<false> | ContactMessagesSelect<true>;
+    'corporate-requests': CorporateRequestsSelect<false> | CorporateRequestsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: string;
+    defaultIDType: number;
   };
-  fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
-  locale: null;
+  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('ka' | 'en') | ('ka' | 'en')[];
+  globals: {
+    settings: Setting;
+  };
+  globalsSelect: {
+    settings: SettingsSelect<false> | SettingsSelect<true>;
+  };
+  locale: 'ka' | 'en';
   widgets: {
     collections: CollectionsWidget;
   };
@@ -118,11 +136,301 @@ export interface UserAuthOperations {
   };
 }
 /**
+ * მთავარი გვერდის სლაიდერი (hero) და პრომო-ბანერები.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "banners".
+ */
+export interface Banner {
+  id: number;
+  placement: 'hero' | 'promo';
+  kicker?: string | null;
+  title: string;
+  text?: string | null;
+  image: number | Media;
+  /**
+   * მაგ. 80% 50%
+   */
+  imagePosition?: string | null;
+  actionLabel?: string | null;
+  /**
+   * შიდა გვერდი (/health, /offers/slug) ან სრული URL. "portal" - ტაოს პორტალი.
+   */
+  href: string;
+  active?: boolean | null;
+  order?: number | null;
+  from?: string | null;
+  until?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  alt: string;
+  _objectKey?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    thumb?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    wide?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    hero?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "offers".
+ */
+export interface Offer {
+  id: number;
+  title: string;
+  /**
+   * ლათინური ასოები, ციფრები და ტირე. მაგ. travel-15
+   */
+  slug?: string | null;
+  product: 'health' | 'travel' | 'car' | 'property';
+  type: 'discount' | 'bundle' | 'partner';
+  category?: ('medical' | 'pharmacy' | 'sport' | 'trip') | null;
+  cities?: ('online' | 'tbilisi' | 'batumi' | 'kutaisi')[] | null;
+  value?: string | null;
+  pct?: number | null;
+  /**
+   * მაგ. "ოჯახის ყველა წევრი ერთ პოლისში"
+   */
+  note?: string | null;
+  excerpt: string;
+  image: number | Media;
+  imagePosition?: string | null;
+  from: string;
+  until: string;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  steps?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  terms?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  partner?: {
+    name?: string | null;
+    phone?: string | null;
+    address?: string | null;
+    website?: string | null;
+  };
+  featured?: boolean | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news".
+ */
+export interface News {
+  id: number;
+  title: string;
+  /**
+   * ლათინური ასოები, ციფრები და ტირე. მაგ. travel-15
+   */
+  slug?: string | null;
+  category: 'company' | 'products' | 'campaigns' | 'partners';
+  product?: ('health' | 'travel' | 'car' | 'property') | null;
+  date: string;
+  excerpt: string;
+  lead?: string | null;
+  image: number | Media;
+  imagePosition?: string | null;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  published?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * კონფიდენციალურობის პოლიტიკა, საიტის წესები, პრეტენზიების წესი და სხვა ტექსტური გვერდები.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: number;
+  title: string;
+  /**
+   * privacy, terms, complaints
+   */
+  slug: string;
+  intro?: string | null;
+  body: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  effectiveDate?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "documents".
+ */
+export interface Document {
+  id: number;
+  title: string;
+  section: 'legal' | 'financial';
+  docType: 'terms' | 'sheet' | 'sample' | 'annual' | 'quarterly' | 'other';
+  product?: ('general' | 'health' | 'travel' | 'car' | 'property') | null;
+  date: string;
+  quarter?: ('Q1' | 'Q2' | 'Q3' | 'Q4') | null;
+  /**
+   * მაგ. TAO/HI/R-001/26
+   */
+  code?: string | null;
+  order?: number | null;
+  _objectKey?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * კონტაქტის ფორმიდან შემოსული შეტყობინებები.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-messages".
+ */
+export interface ContactMessage {
+  id: number;
+  status?: ('new' | 'answered' | 'closed') | null;
+  topic?: ('general' | 'buy' | 'claim' | 'complaint') | null;
+  name: string;
+  phone: string;
+  email?: string | null;
+  message: string;
+  consent?: boolean | null;
+  locale?: string | null;
+  note?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * ჯანმრთელობის დაზღვევის გვერდის "კომპანიებისთვის" ფორმიდან შემოსული მოთხოვნები.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "corporate-requests".
+ */
+export interface CorporateRequest {
+  id: number;
+  status?: ('new' | 'progress' | 'closed') | null;
+  firstName: string;
+  lastName: string;
+  company: string;
+  companyCode: string;
+  staff: number;
+  phone: string;
+  consent?: boolean | null;
+  locale?: string | null;
+  note?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
-  id: string;
+  id: number;
+  name?: string | null;
+  role: 'admin' | 'editor';
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -145,29 +453,10 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: string;
-  alt: string;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: string;
+  id: number;
   key: string;
   data:
     | {
@@ -184,20 +473,48 @@ export interface PayloadKv {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string;
+  id: number;
   document?:
     | ({
-        relationTo: 'users';
-        value: string | User;
+        relationTo: 'banners';
+        value: number | Banner;
+      } | null)
+    | ({
+        relationTo: 'offers';
+        value: number | Offer;
+      } | null)
+    | ({
+        relationTo: 'news';
+        value: number | News;
+      } | null)
+    | ({
+        relationTo: 'pages';
+        value: number | Page;
+      } | null)
+    | ({
+        relationTo: 'documents';
+        value: number | Document;
+      } | null)
+    | ({
+        relationTo: 'contact-messages';
+        value: number | ContactMessage;
+      } | null)
+    | ({
+        relationTo: 'corporate-requests';
+        value: number | CorporateRequest;
       } | null)
     | ({
         relationTo: 'media';
-        value: string | Media;
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -207,10 +524,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: number;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   key?: string | null;
   value?:
@@ -230,7 +547,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -238,9 +555,232 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "banners_select".
+ */
+export interface BannersSelect<T extends boolean = true> {
+  placement?: T;
+  kicker?: T;
+  title?: T;
+  text?: T;
+  image?: T;
+  imagePosition?: T;
+  actionLabel?: T;
+  href?: T;
+  active?: T;
+  order?: T;
+  from?: T;
+  until?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "offers_select".
+ */
+export interface OffersSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  product?: T;
+  type?: T;
+  category?: T;
+  cities?: T;
+  value?: T;
+  pct?: T;
+  note?: T;
+  excerpt?: T;
+  image?: T;
+  imagePosition?: T;
+  from?: T;
+  until?: T;
+  body?: T;
+  steps?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  terms?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  partner?:
+    | T
+    | {
+        name?: T;
+        phone?: T;
+        address?: T;
+        website?: T;
+      };
+  featured?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news_select".
+ */
+export interface NewsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  category?: T;
+  product?: T;
+  date?: T;
+  excerpt?: T;
+  lead?: T;
+  image?: T;
+  imagePosition?: T;
+  body?: T;
+  published?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  intro?: T;
+  body?: T;
+  effectiveDate?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "documents_select".
+ */
+export interface DocumentsSelect<T extends boolean = true> {
+  title?: T;
+  section?: T;
+  docType?: T;
+  product?: T;
+  date?: T;
+  quarter?: T;
+  code?: T;
+  order?: T;
+  _objectKey?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-messages_select".
+ */
+export interface ContactMessagesSelect<T extends boolean = true> {
+  status?: T;
+  topic?: T;
+  name?: T;
+  phone?: T;
+  email?: T;
+  message?: T;
+  consent?: T;
+  locale?: T;
+  note?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "corporate-requests_select".
+ */
+export interface CorporateRequestsSelect<T extends boolean = true> {
+  status?: T;
+  firstName?: T;
+  lastName?: T;
+  company?: T;
+  companyCode?: T;
+  staff?: T;
+  phone?: T;
+  consent?: T;
+  locale?: T;
+  note?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media_select".
+ */
+export interface MediaSelect<T extends boolean = true> {
+  alt?: T;
+  _objectKey?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumb?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        card?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        wide?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        hero?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -258,24 +798,6 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media_select".
- */
-export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -316,6 +838,74 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * კონტაქტები, პორტალის ბმულები, სოციალური ქსელები და სტატისტიკა.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "settings".
+ */
+export interface Setting {
+  id: number;
+  phone?: string | null;
+  phoneHref?: string | null;
+  email?: string | null;
+  address?: string | null;
+  addressShort?: string | null;
+  city?: string | null;
+  hours?: string | null;
+  mapUrl?: string | null;
+  portalUrl?: string | null;
+  portalHealthUrl?: string | null;
+  portalTravelUrl?: string | null;
+  portalCarUrl?: string | null;
+  portalPropertyUrl?: string | null;
+  portalClaimUrl?: string | null;
+  facebook?: string | null;
+  instagram?: string | null;
+  linkedin?: string | null;
+  foundedYear?: string | null;
+  clients?: string | null;
+  paid?: string | null;
+  corporate?: string | null;
+  siteName?: string | null;
+  siteDescription?: string | null;
+  ogImage?: (number | null) | Media;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "settings_select".
+ */
+export interface SettingsSelect<T extends boolean = true> {
+  phone?: T;
+  phoneHref?: T;
+  email?: T;
+  address?: T;
+  addressShort?: T;
+  city?: T;
+  hours?: T;
+  mapUrl?: T;
+  portalUrl?: T;
+  portalHealthUrl?: T;
+  portalTravelUrl?: T;
+  portalCarUrl?: T;
+  portalPropertyUrl?: T;
+  portalClaimUrl?: T;
+  facebook?: T;
+  instagram?: T;
+  linkedin?: T;
+  foundedYear?: T;
+  clients?: T;
+  paid?: T;
+  corporate?: T;
+  siteName?: T;
+  siteDescription?: T;
+  ogImage?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

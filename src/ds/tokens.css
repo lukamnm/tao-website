@@ -1,0 +1,27 @@
+/* TAO tokens as CSS variables (light theme) - values from the TAO Insurance design system tokens.json.
+   The system's generated tokens.css only carries @font-face rules, so the component bundle's var(--...) names are defined here. */
+:root {
+  --blue-50: #F3F7FF; --blue-100: #E5EDFF; --blue-200: #CCDAFF; --blue-300: #A7BFFE; --blue-400: #799CFE;
+  --blue-500: #466CFD; --blue-600: #283DEE; --blue-700: #1B21C4; --blue-800: #120F9D; --blue-900: #0A0274; --blue-950: #04004C;
+  --grey-50: #F5F7FA; --grey-100: #EEF0F3; --grey-200: #D9DCE1; --grey-300: #C2C6CC; --grey-400: #A8ADB3; --grey-500: #8A9099;
+  --grey-600: #656970; --grey-700: #4C5056; --grey-800: #34373C; --grey-900: #1E2124; --grey-950: #101010;
+  --brand-blue: #283DEE; --brand-vermilion: #F15336; --brand-black: #101010; --brand-ice-white: #F5F7FA;
+  --brand-silver: #D9DCE1; --brand-steel: #8A9099; --brand-graphite: #656970;
+  --error: #B3202B; --error-bg: #FFF2F0; --warning: #B55C00; --warning-bg: #FFF3E6; --success: #11813C; --success-bg: #E8FBEB;
+  --info: #283DEE; --info-bg: #F3F7FF;
+
+  --bg: #FFFFFF; --bg-subtle: #F5F7FA; --surface: #FFFFFF; --surface-raised: #FFFFFF;
+  --border: #D9DCE1; --border-strong: #C2C6CC;
+  --text: #101010; --text-secondary: #656970; --text-muted: #8A9099; --icon: #8A9099;
+  --primary: #283DEE; --primary-hover: #1B21C4; --primary-pressed: #120F9D; --on-primary: #FFFFFF;
+  --primary-subtle: #F3F7FF; --primary-subtle-border: #CCDAFF; --link: #283DEE; --focus-ring: #799CFE; --selected: #E5EDFF;
+  --cta: #F15336; --cta-hover: #D9432A; --on-cta: #FFFFFF; --control-border: #8A9099;
+  --on-blue-line: #FFFFFF66; --on-blue-grid: #FFFFFF1F; --on-blue-muted: #CCDAFF; --ground-grid: #C2C6CC;
+
+  --space-4: 4px; --space-8: 8px; --space-12: 12px; --space-16: 16px; --space-24: 24px; --space-32: 32px;
+  --space-48: 48px; --space-80: 80px; --container: 1280px; --gutter: 24px;
+  --radius: 5px; --radius-none: 0px; --hairline: 1px; --icon-stroke: 1.5px; --indicator: 2px;
+
+  --font-display: "November Condensed GeL", "November GeL", sans-serif;
+  --font-sans: "November GeL", system-ui, sans-serif;
+}

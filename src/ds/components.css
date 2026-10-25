@@ -1,0 +1,388 @@
+/* TAO Insurance components. Every value comes from tokens.css: borders not shadows, 5px radius, one CTA per view. */
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; font-family: var(--font-sans); font-size: 16px; line-height: 1.6; background: var(--bg); color: var(--text); }
+.tao-icon { display: inline-block; flex: none; vertical-align: middle; }
+
+/* ---------- Type helpers ---------- */
+/* Mtavruli: the font's OpenType "case" feature maps Mkhedruli to Mtavruli; uppercase handles Latin.
+   Source text stays Mkhedruli, so copy, search and screen readers get normal Georgian. */
+.tao-caps, .tao-h, .tao-kicker, .tao-tag, .tao-btn, .tao-link--standalone, .tao-nav__link, .tao-tabs__tab, .tao-lang__opt,
+.tao-panel__title, .tao-hero__strip-label, .tao-ticker__item, .tao-footer__bottom, .tao-marker, .tao-diag__num, .tao-accordion__num, .tao-card__num {
+  font-feature-settings: "case" on; text-transform: uppercase; }
+.tao-h { margin: 0; font-family: var(--font-display); color: var(--link); letter-spacing: 0.02em; }
+.tao-h--display { font-size: 96px; line-height: 0.9; font-weight: 900; }
+.tao-h--h1 { font-size: 64px; line-height: 0.95; font-weight: 900; }
+.tao-h--h2 { font-size: 48px; line-height: 1; font-weight: 900; }
+.tao-h--h3 { font-size: 32px; line-height: 1; font-weight: 700; }
+.tao-h--h4 { font-size: 24px; line-height: 1.05; font-weight: 700; }
+.tao-kicker { margin: 0; font-size: 13px; line-height: 1.4; font-weight: 500; letter-spacing: 0.08em; color: var(--link); }
+.tao-kicker--on-blue { color: var(--on-blue-muted); }
+.tao-meta { display: inline-flex; align-items: center; gap: var(--space-4); margin: 0; font-size: 14px; line-height: 1.5; color: var(--text-muted); }
+.tao-tag { display: inline-flex; align-items: center; height: 28px; padding: 0 var(--space-8); border: var(--hairline) solid var(--link); border-radius: var(--radius); font-size: 13px; font-weight: 500; letter-spacing: 0.08em; color: var(--link); }
+:focus-visible { outline: var(--indicator) solid var(--focus-ring); outline-offset: 2px; }
+
+/* ---------- Grounds: dashed 80px grid (Patch-style) ---------- */
+/* .tao-ground: the page floor (ice white + dashed silver grid). .tao-canvas: blue band + dashed white grid. */
+.tao-ground, .tao-canvas { position: relative; isolation: isolate; }
+.tao-ground { background-color: var(--bg-subtle); }
+.tao-canvas { background-color: var(--primary); color: var(--on-primary); }
+.tao-ground::before, .tao-ground::after, .tao-canvas::before, .tao-canvas::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.tao-ground::before { background: linear-gradient(90deg, var(--ground-grid) 1px, transparent 1px) 0 0 / var(--space-80) var(--space-80);
+  -webkit-mask: repeating-linear-gradient(180deg, #000 0 4px, transparent 4px 8px); mask: repeating-linear-gradient(180deg, #000 0 4px, transparent 4px 8px); }
+.tao-ground::after { background: linear-gradient(180deg, var(--ground-grid) 1px, transparent 1px) 0 0 / var(--space-80) var(--space-80);
+  -webkit-mask: repeating-linear-gradient(90deg, #000 0 4px, transparent 4px 8px); mask: repeating-linear-gradient(90deg, #000 0 4px, transparent 4px 8px); }
+.tao-canvas::before { background: linear-gradient(90deg, var(--on-blue-grid) 1px, transparent 1px) 0 0 / var(--space-80) var(--space-80);
+  -webkit-mask: repeating-linear-gradient(180deg, #000 0 4px, transparent 4px 8px); mask: repeating-linear-gradient(180deg, #000 0 4px, transparent 4px 8px); }
+.tao-canvas::after { background: linear-gradient(180deg, var(--on-blue-grid) 1px, transparent 1px) 0 0 / var(--space-80) var(--space-80);
+  -webkit-mask: repeating-linear-gradient(90deg, #000 0 4px, transparent 4px 8px); mask: repeating-linear-gradient(90deg, #000 0 4px, transparent 4px 8px); }
+.tao-canvas .tao-h { color: var(--on-primary); }
+.tao-canvas .tao-panel .tao-h, .tao-canvas .tao-card .tao-h { color: var(--link); }
+.tao-canvas :focus-visible { outline-color: var(--on-primary); }
+
+/* ---------- Button ---------- */
+.tao-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); box-sizing: border-box; height: 48px; padding: 0 var(--space-24);
+  border: var(--hairline) solid transparent; border-radius: var(--radius); font-family: var(--font-sans); font-size: 15px; line-height: 1; font-weight: 500;
+  letter-spacing: 0.04em; text-decoration: none; white-space: nowrap; cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease; }
+.tao-btn--sm { height: 40px; padding: 0 var(--space-16); font-size: 14px; }
+.tao-btn--block { display: flex; width: 100%; }
+.tao-btn--icon-only { width: 48px; padding: 0; }
+.tao-btn--sm.tao-btn--icon-only { width: 40px; }
+.tao-btn--cta { background: var(--cta); border-color: var(--cta); color: var(--on-cta); }
+.tao-btn--cta:hover { background: var(--cta-hover); border-color: var(--cta-hover); }
+.tao-btn--primary { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+.tao-btn--primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+.tao-btn--primary:active { background: var(--primary-pressed); }
+.tao-btn--secondary { background: var(--surface); border-color: var(--link); color: var(--link); }
+.tao-btn--secondary:hover { background: var(--primary-subtle); }
+.tao-btn--ghost { background: transparent; color: var(--link); }
+.tao-btn--ghost:hover { background: var(--primary-subtle); }
+.tao-btn--onBlue { background: transparent; border-color: var(--on-primary); color: var(--on-primary); }
+.tao-btn--onBlue:hover { background: var(--on-primary); color: var(--primary); }
+.tao-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ---------- Link ---------- */
+.tao-link { color: var(--link); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; transition: color 150ms ease; }
+.tao-link:hover { color: var(--primary-hover); }
+.tao-link--standalone, .tao-link--external { display: inline-flex; align-items: center; gap: var(--space-8); text-decoration: none; font-weight: 500; }
+.tao-link--standalone { font-size: 15px; letter-spacing: 0.04em; }
+.tao-link--standalone .tao-icon { transition: transform 200ms ease; }
+.tao-link--standalone:hover .tao-icon, a:hover > .tao-card__body .tao-card__more .tao-icon { transform: translateX(4px); }
+.tao-link--external:hover span { text-decoration: underline; text-underline-offset: 3px; }
+.tao-link--on-blue, .tao-link--on-blue:hover { color: var(--on-primary); }
+
+/* ---------- Section marker ---------- */
+.tao-marker { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; flex: none; width: 48px; height: 48px;
+  border: var(--hairline) solid var(--link); border-radius: var(--radius); font-family: var(--font-display); font-size: 20px; font-weight: 700; line-height: 1; color: var(--link); }
+.tao-marker--sm { width: 32px; height: 32px; font-size: 15px; }
+.tao-marker--lg { width: 64px; height: 64px; font-size: 28px; }
+.tao-marker--on-blue { border-color: var(--on-primary); color: var(--on-primary); }
+.tao-diag { position: relative; display: inline-block; flex: none; box-sizing: border-box; width: 80px; height: 80px; border: var(--hairline) solid var(--link); color: var(--link); }
+.tao-diag--sm { width: 48px; height: 48px; } .tao-diag--lg { width: 120px; height: 120px; }
+.tao-diag svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.tao-diag line { stroke: currentColor; stroke-width: 1px; vector-effect: non-scaling-stroke; }
+.tao-diag__num { position: absolute; left: var(--space-8); bottom: var(--space-4); font-family: var(--font-display); font-weight: 700; font-size: 24px; line-height: 1; }
+.tao-diag--on-blue { border-color: var(--on-primary); color: var(--on-primary); }
+.tao-section-head { display: flex; gap: var(--space-24); align-items: flex-start; }
+.tao-section-head__text { display: flex; flex-direction: column; gap: var(--space-8); }
+.tao-section-head__lead { margin: var(--space-8) 0 0; font-size: 18px; color: var(--text-secondary); max-width: 640px; }
+.tao-section-head--on-blue .tao-h { color: var(--on-primary); }
+.tao-section-head--on-blue .tao-kicker { color: var(--on-blue-muted); }
+.tao-section-head--on-blue .tao-section-head__lead { color: var(--on-blue-muted); }
+
+/* ---------- Language switch ---------- */
+.tao-lang { display: inline-flex; align-items: center; gap: var(--space-4); color: var(--link); }
+.tao-lang__icon { margin-right: var(--space-4); }
+.tao-lang__opt { height: 32px; min-width: 44px; padding: 0 var(--space-8); border: var(--hairline) solid transparent; border-radius: var(--radius); background: none;
+  font-family: var(--font-sans); font-size: 13px; font-weight: 500; letter-spacing: 0.08em; color: var(--text-secondary); cursor: pointer; }
+.tao-lang__opt:hover { color: var(--link); }
+.tao-lang__opt.is-active { border-color: var(--link); color: var(--link); }
+.tao-lang--on-blue { color: var(--on-primary); }
+.tao-lang--on-blue .tao-lang__opt { color: var(--on-blue-muted); }
+.tao-lang--on-blue .tao-lang__opt:hover, .tao-lang--on-blue .tao-lang__opt.is-active { color: var(--on-primary); border-color: var(--on-primary); }
+
+/* ---------- Header: logo, nav, and one bordered dock for language, search, CTA and menu ---------- */
+.tao-header { position: relative; z-index: 10; }
+.tao-header--solid { background: var(--surface); border-bottom: var(--hairline) solid var(--border); }
+.tao-header--overlay { background: transparent; color: var(--on-primary); }
+.tao-header__bar { display: flex; align-items: center; gap: var(--space-24); box-sizing: border-box; max-width: var(--container); height: 80px; margin: 0 auto; padding: 0 var(--space-24); }
+.tao-logo { display: block; width: auto; }
+.tao-logo-auto { display: inline-flex; }
+.tao-logo--on-dark { display: none; }
+[data-theme="dark"] .tao-logo--on-light { display: none; }
+[data-theme="dark"] .tao-logo--on-dark { display: block; }
+.tao-logo-link { display: inline-flex; flex: none; }
+.tao-header__nav { flex: 1; display: flex; justify-content: center; }
+.tao-nav { display: flex; gap: var(--space-4); margin: 0; padding: 0; list-style: none; }
+.tao-nav__link { display: inline-flex; align-items: center; box-sizing: border-box; height: 40px; padding: 0 var(--space-8); border-bottom: var(--indicator) solid transparent;
+  font-size: 14px; font-weight: 500; letter-spacing: 0.04em; color: var(--text); text-decoration: none; transition: color 150ms ease, border-color 150ms ease; }
+.tao-nav__link:hover { color: var(--link); }
+.tao-nav__link.is-active { color: var(--link); border-bottom-color: var(--link); }
+.tao-header--overlay .tao-nav__link { color: var(--on-primary); }
+.tao-header--overlay .tao-nav__link.is-active, .tao-header--overlay .tao-nav__link:hover { color: var(--on-primary); border-bottom-color: var(--on-primary); }
+.tao-header__dock { display: flex; align-items: center; gap: var(--space-4); flex: none; padding: 3px; border: var(--hairline) solid var(--link); border-radius: var(--radius); background: var(--surface); }
+.tao-header--overlay .tao-header__dock { border-color: var(--on-primary); background: var(--surface); }
+.tao-header__lang { padding: 0 var(--space-4); }
+.tao-header__lang .tao-lang--on-blue .tao-lang__opt { color: var(--text-secondary); }
+.tao-header__lang .tao-lang--on-blue .tao-lang__opt.is-active { color: var(--link); border-color: var(--link); }
+.tao-header__icon { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; border: 0; border-radius: var(--radius);
+  background: transparent; color: var(--link); cursor: pointer; transition: background-color 150ms ease; }
+.tao-header__icon:hover { background: var(--primary-subtle); }
+.tao-header__menu { display: none; }
+.tao-header__panel { display: none; }
+.tao-header--mobile .tao-header__bar { height: 64px; padding: 0 var(--space-16); }
+.tao-header--mobile .tao-logo { height: 28px !important; }
+.tao-header--mobile .tao-header__nav, .tao-header--mobile .tao-header__lang, .tao-header--mobile .tao-header__search { display: none; }
+.tao-header--mobile .tao-header__dock { margin-left: auto; }
+.tao-header--mobile .tao-header__menu { display: inline-flex; }
+.tao-header--mobile.is-open { background: var(--surface); }
+.tao-header--mobile.is-open .tao-header__panel { display: block; border-top: var(--hairline) solid var(--border); background: var(--surface-raised); padding: var(--space-8) var(--space-16) var(--space-24); }
+.tao-nav--stacked { flex-direction: column; gap: 0; }
+.tao-nav--stacked li { border-bottom: var(--hairline) solid var(--border); }
+.tao-nav--stacked .tao-nav__link { display: flex; height: 56px; padding: 0; font-size: 15px; border-bottom: 0; }
+.tao-header--overlay .tao-nav--stacked .tao-nav__link { color: var(--text); }
+.tao-nav--stacked .tao-nav__link.is-active { color: var(--link); }
+.tao-header__panel-foot { margin-top: var(--space-24); }
+@media (max-width: 1023px) {
+  .tao-header--auto .tao-header__bar { height: 64px; padding: 0 var(--space-16); }
+  .tao-header--auto .tao-logo { height: 28px !important; }
+  .tao-header--auto .tao-header__nav, .tao-header--auto .tao-header__lang, .tao-header--auto .tao-header__search { display: none; }
+  .tao-header--auto .tao-header__dock { margin-left: auto; }
+  .tao-header--auto .tao-header__menu { display: inline-flex; }
+  .tao-header--auto.is-open { background: var(--surface); }
+  .tao-header--auto.is-open .tao-header__panel { display: block; border-top: var(--hairline) solid var(--border); background: var(--surface-raised); padding: var(--space-8) var(--space-16) var(--space-24); }
+}
+
+/* ---------- Footer: bento of blue panels with 4px gaps ---------- */
+.tao-footer { display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-4); background: var(--bg); }
+.tao-footer__grid { display: grid; grid-template-columns: 1fr 3fr; gap: var(--space-4); }
+.tao-footer__panel { border-radius: var(--radius); padding: var(--space-32); }
+.tao-footer__tagline { margin: var(--space-24) 0 0; max-width: 320px; color: var(--on-blue-muted); }
+.tao-footer__contacts { margin: var(--space-24) 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--space-12); }
+.tao-footer__contacts li { display: flex; align-items: center; gap: var(--space-8); }
+.tao-footer a { color: var(--on-primary); text-decoration: none; }
+.tao-footer a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.tao-footer__links { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-24); align-content: start; }
+.tao-footer__col ul { margin: var(--space-16) 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--space-12); }
+.tao-footer__bottom { display: flex; align-items: center; justify-content: space-between; gap: var(--space-16); padding: var(--space-12) var(--space-32);
+  font-size: 12px; font-weight: 500; letter-spacing: 0.08em; color: var(--on-blue-muted); }
+.tao-footer__bottom p { margin: 0; }
+.tao-footer__top { display: inline-flex; align-items: center; gap: var(--space-4); }
+@media (max-width: 767px) { .tao-footer__grid { grid-template-columns: 1fr; } .tao-footer__links { grid-template-columns: 1fr 1fr; } .tao-footer__bottom { flex-direction: column; align-items: flex-start; } }
+
+/* ---------- Hero slider: framed blue panel, dashed grid, bottom strip ---------- */
+.tao-hero { overflow: hidden; }
+.tao-hero--framed { margin: var(--space-4); border-radius: var(--radius); }
+.tao-hero__track { display: grid; max-width: var(--container); margin: 0 auto; }
+.tao-hero__slide { grid-area: 1 / 1; display: grid; grid-template-columns: 7fr 5fr; gap: var(--space-48); align-items: center; box-sizing: border-box;
+  min-height: 520px; padding: var(--space-48) var(--space-24) var(--space-48); opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity 250ms ease, transform 250ms ease, visibility 0s 250ms; }
+.tao-hero__slide.is-active { opacity: 1; visibility: visible; transform: none; transition: opacity 250ms ease, transform 250ms ease; }
+.tao-hero__text { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-24); }
+.tao-hero__lead { margin: 0; max-width: 520px; font-size: 18px; line-height: 1.6; color: var(--on-blue-muted); }
+.tao-hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-16); margin-top: var(--space-8); }
+.tao-hero__media { aspect-ratio: 4 / 5; max-height: 440px; width: 100%; border-radius: var(--radius); overflow: hidden; background: var(--surface); border: var(--hairline) solid var(--on-primary); }
+.tao-hero__media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.tao-hero__media--empty { display: flex; align-items: center; justify-content: center; color: var(--link); }
+.tao-hero__strip { display: grid; grid-template-columns: 1fr 1fr auto; align-items: center; gap: var(--space-24); box-sizing: border-box; max-width: var(--container); margin: 0 auto; padding: var(--space-16) var(--space-24);
+  border-top: var(--hairline) solid var(--on-blue-line); }
+.tao-hero__strip-cell { display: flex; align-items: center; gap: var(--space-12); }
+.tao-hero__strip-label { font-size: 13px; font-weight: 500; letter-spacing: 0.08em; }
+.tao-hero__bars { display: flex; gap: var(--space-8); }
+.tao-hero__bar { flex: 1; height: 24px; padding: 0; border: 0; background: linear-gradient(var(--on-blue-line), var(--on-blue-line)) center / 100% 1px no-repeat; cursor: pointer; }
+.tao-hero__bar.is-active { background-image: linear-gradient(var(--on-primary), var(--on-primary)); background-size: 100% 2px; }
+.tao-hero__navs { display: flex; gap: var(--space-8); }
+.tao-hero__nav { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; padding: 0; border: var(--hairline) solid var(--on-primary); border-radius: var(--radius);
+  background: transparent; color: var(--on-primary); cursor: pointer; transition: background-color 150ms ease, color 150ms ease; }
+.tao-hero__nav:hover, .tao-hero__nav--solid { background: var(--surface); color: var(--link); }
+.tao-hero__nav--solid:hover { background: var(--primary-subtle); }
+@media (max-width: 767px) {
+  .tao-hero__slide { grid-template-columns: 1fr; gap: var(--space-32); padding: var(--space-32) var(--space-16); }
+  .tao-hero .tao-h--display { font-size: 56px; }
+  .tao-hero__media { aspect-ratio: 4 / 3; }
+  .tao-hero__strip { grid-template-columns: 1fr auto; } .tao-hero__bars { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .tao-hero__slide, .tao-btn, .tao-link .tao-icon, .tao-accordion__a, .tao-ticker__track, .tao-numlist__item { transition: none !important; animation: none !important; } }
+
+/* ---------- Cards ---------- */
+.tao-card { display: flex; flex-direction: column; box-sizing: border-box; height: 100%; background: var(--surface); border: var(--hairline) solid var(--border); border-radius: var(--radius);
+  overflow: hidden; color: var(--text); text-decoration: none; transition: border-color 200ms ease; }
+.tao-card:hover { border-color: var(--link); }
+.tao-card { position: relative; }
+.tao-card__num { position: absolute; left: -1px; top: -1px; z-index: 1; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 24px; padding: 0 var(--space-4); box-sizing: border-box;
+  border: var(--hairline) solid var(--border); border-radius: var(--radius) 0 var(--radius) 0; font-size: 11px; font-weight: 500; color: var(--link); background: var(--surface); transition: border-color 200ms ease; }
+.tao-card:hover .tao-card__num { border-color: var(--link); }
+.tao-card__media { aspect-ratio: 3 / 2; overflow: hidden; background: var(--bg-subtle); border-bottom: var(--hairline) solid var(--border); }
+.tao-card__media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.tao-card__body { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-16); flex: 1; padding: var(--space-32); }
+.tao-card__text { margin: 0; color: var(--text-secondary); }
+.tao-card__more { margin-top: auto; padding-top: var(--space-8); }
+.tao-product__icon { color: var(--link); }
+.tao-product__features { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--space-8); align-self: stretch; }
+.tao-product__features li { display: flex; gap: var(--space-8); align-items: center; padding-top: var(--space-8); border-top: var(--hairline) solid var(--border); font-size: 15px; }
+.tao-product__features .tao-icon { color: var(--link); }
+.tao-offer { background: var(--bg-subtle); }
+.tao-offer__top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-16); align-self: stretch; }
+.tao-offer__value { margin: var(--space-8) 0 0; font-size: 72px; line-height: 1; font-weight: 200; color: var(--link); }
+.tao-offer__value span { margin-left: var(--space-8); font-size: 18px; font-weight: 400; color: var(--text-secondary); }
+.tao-news__media { display: flex; align-items: center; justify-content: center; color: var(--link); }
+.tao-news__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-12); margin: 0; font-size: 14px; color: var(--text-muted); }
+.tao-news__title { margin: 0; font-size: 20px; line-height: 1.3; font-weight: 500; color: var(--text); }
+.tao-news:hover .tao-news__title { color: var(--link); }
+.tao-news .tao-card__body { padding: var(--space-24); gap: var(--space-12); }
+
+/* ---------- Benefit / Step ---------- */
+.tao-benefit { display: flex; flex-direction: column; gap: var(--space-16); padding-top: var(--space-24); border-top: var(--hairline) solid var(--border); }
+.tao-benefit__icon { color: var(--link); }
+.tao-benefit__text { margin: 0; color: var(--text-secondary); }
+.tao-benefit--on-blue { border-top-color: var(--on-blue-line); }
+.tao-benefit--on-blue .tao-benefit__icon, .tao-benefit--on-blue .tao-h { color: var(--on-primary); }
+.tao-benefit--on-blue .tao-benefit__text { color: var(--on-blue-muted); }
+.tao-step { display: flex; flex-direction: column; gap: var(--space-16); list-style: none; }
+.tao-step__head { display: flex; align-items: center; gap: var(--space-16); }
+.tao-step__line { flex: 1; height: var(--hairline); background: var(--border); }
+.tao-step--last .tao-step__line { visibility: hidden; }
+.tao-step__text { margin: 0; color: var(--text-secondary); max-width: 360px; }
+.tao-steps { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: var(--space-24); margin: 0; padding: 0; }
+
+/* ---------- Accordion: boxed rows, number tab, divided arrow cell ---------- */
+.tao-accordion { display: flex; flex-direction: column; }
+.tao-accordion__item { position: relative; margin-top: -1px; border: var(--hairline) solid var(--link); border-radius: var(--radius); background: var(--surface); }
+.tao-accordion__num { position: absolute; left: -1px; top: -1px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 24px; padding: 0 var(--space-4); box-sizing: border-box;
+  border: var(--hairline) solid var(--link); border-radius: var(--radius) 0 var(--radius) 0; font-size: 11px; font-weight: 500; letter-spacing: 0.04em; color: var(--link); background: var(--surface); }
+.tao-accordion__q { margin: 0; }
+.tao-accordion__q button { display: flex; align-items: stretch; width: 100%; padding: 0; border: 0; background: none; font-family: var(--font-sans); text-align: left; color: var(--link); cursor: pointer; }
+.tao-accordion__qtext { flex: 1; padding: var(--space-24) var(--space-24) var(--space-24) 64px; font-size: 20px; line-height: 1.3; font-weight: 500; }
+.tao-accordion__arrow { display: flex; align-items: center; justify-content: center; flex: none; width: 80px; border-left: var(--hairline) solid var(--link); }
+.tao-accordion__arrow .tao-icon { transition: transform 200ms ease; }
+.tao-accordion__item.is-open .tao-accordion__arrow .tao-icon { transform: rotate(180deg); }
+.tao-accordion__q button:hover .tao-accordion__arrow { background: var(--primary-subtle); }
+.tao-accordion__a { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 200ms ease; }
+.tao-accordion__a > div { overflow: hidden; }
+.tao-accordion__item.is-open .tao-accordion__a { grid-template-rows: 1fr; }
+.tao-accordion__inner { padding: 0 104px var(--space-24) 64px; color: var(--text-secondary); max-width: 760px; }
+.tao-accordion__item:not(.is-open) .tao-accordion__a { visibility: hidden; }
+@media (max-width: 599px) { .tao-accordion__qtext { padding-left: var(--space-16); padding-top: 32px; font-size: 17px; } .tao-accordion__arrow { width: 56px; } .tao-accordion__inner { padding: 0 var(--space-16) var(--space-16); } }
+
+/* ---------- Document row ---------- */
+.tao-doc { display: flex; align-items: center; gap: var(--space-16); padding: var(--space-16) var(--space-16); border-bottom: var(--hairline) solid var(--border); transition: background-color 150ms ease; }
+.tao-doc:hover { background: var(--bg-subtle); }
+.tao-doc__icon { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 48px; height: 48px; border: var(--hairline) solid var(--border); border-radius: var(--radius); color: var(--link); background: var(--surface); }
+.tao-doc__text { flex: 1; min-width: 0; }
+.tao-doc__title { margin: 0; font-size: 16px; line-height: 1.4; font-weight: 500; }
+@media (max-width: 599px) { .tao-doc__dl .tao-btn__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); } .tao-doc__dl { width: 40px; padding: 0; } }
+
+/* ---------- Tabs ---------- */
+.tao-tabs__list { display: flex; gap: var(--space-32); border-bottom: var(--hairline) solid var(--border); overflow-x: auto; }
+.tao-tabs__tab { display: inline-flex; align-items: center; gap: var(--space-8); height: 56px; padding: 0; margin-bottom: -1px; border: 0; border-bottom: var(--indicator) solid transparent; background: none;
+  font-family: var(--font-sans); font-size: 14px; font-weight: 500; letter-spacing: 0.04em; color: var(--text-secondary); white-space: nowrap; cursor: pointer; transition: color 150ms ease, border-color 150ms ease; }
+.tao-tabs__tab:hover { color: var(--link); }
+.tao-tabs__tab.is-active { color: var(--link); border-bottom-color: var(--link); }
+.tao-tabs__panel { padding-top: var(--space-24); }
+
+/* ---------- Chips ---------- */
+.tao-chips { display: flex; flex-wrap: wrap; gap: var(--space-8); }
+.tao-chip { display: inline-flex; align-items: center; gap: var(--space-8); height: 40px; padding: 0 var(--space-16); border: var(--hairline) solid var(--border-strong); border-radius: var(--radius); background: var(--surface);
+  font-family: var(--font-sans); font-size: 15px; font-weight: 500; color: var(--text); cursor: pointer; transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease; }
+.tao-chip:hover { border-color: var(--link); color: var(--link); }
+.tao-chip.is-selected { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+.tao-chip__count { font-size: 13px; color: var(--text-muted); }
+.tao-chip.is-selected .tao-chip__count { color: var(--on-blue-muted); }
+
+/* ---------- Pagination ---------- */
+.tao-pagination { display: flex; align-items: center; gap: var(--space-8); }
+.tao-pagination__cell { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; width: 40px; height: 40px; padding: 0; border: var(--hairline) solid var(--border); border-radius: var(--radius);
+  background: var(--surface); font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--text); cursor: pointer; transition: border-color 150ms ease, color 150ms ease; }
+.tao-pagination__cell:hover:not(:disabled) { border-color: var(--link); color: var(--link); }
+.tao-pagination__cell.is-current { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+.tao-pagination__cell:disabled { color: var(--text-muted); cursor: default; opacity: 0.5; }
+.tao-pagination__gap { width: 24px; text-align: center; color: var(--text-muted); }
+
+/* ---------- Form fields ---------- */
+.tao-field { display: flex; flex-direction: column; gap: var(--space-8); }
+.tao-field__label { font-size: 15px; font-weight: 500; color: var(--text); }
+.tao-field__req { color: var(--text-secondary); }
+.tao-field__box { position: relative; display: flex; align-items: center; }
+.tao-field__input { box-sizing: border-box; width: 100%; height: 48px; padding: 0 var(--space-16); border: var(--hairline) solid var(--control-border); border-radius: var(--radius); background: var(--surface);
+  font-family: var(--font-sans); font-size: 16px; color: var(--text); transition: border-color 150ms ease; appearance: none; -webkit-appearance: none; }
+textarea.tao-field__input { height: auto; min-height: 120px; padding: var(--space-12) var(--space-16); line-height: 1.6; resize: vertical; }
+.tao-field__input::placeholder { color: var(--text-muted); }
+.tao-field__input:hover { border-color: var(--link); }
+.tao-field__input:focus { outline: var(--hairline) solid var(--link); outline-offset: 0; border-color: var(--link); }
+.tao-field__box.has-icon .tao-field__input { padding-left: 48px; }
+.tao-field__icon { position: absolute; left: var(--space-16); color: var(--icon); pointer-events: none; }
+.tao-field__box--select .tao-field__input { padding-right: 48px; cursor: pointer; }
+.tao-field__chevron { position: absolute; right: var(--space-16); color: var(--link); pointer-events: none; }
+.tao-field__hint { margin: 0; font-size: 14px; color: var(--text-secondary); }
+.tao-field__error { display: flex; align-items: center; gap: var(--space-4); margin: 0; font-size: 14px; color: var(--error); }
+.tao-field.has-error .tao-field__input { border-color: var(--error); }
+.tao-field.has-error .tao-field__input:focus { outline-color: var(--error); }
+.tao-field.is-disabled .tao-field__input { background: var(--bg-subtle); color: var(--text-muted); cursor: not-allowed; }
+.tao-check { display: flex; flex-direction: column; gap: var(--space-4); }
+.tao-check__row { display: inline-flex; align-items: flex-start; gap: var(--space-12); cursor: pointer; }
+.tao-check__input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.tao-check__box { display: inline-flex; align-items: center; justify-content: center; flex: none; box-sizing: border-box; width: 20px; height: 20px; margin-top: 2px;
+  border: var(--hairline) solid var(--control-border); border-radius: var(--radius); background: var(--surface); color: transparent; transition: background-color 150ms ease, border-color 150ms ease; }
+.tao-check__input:checked + .tao-check__box { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+.tao-check__input:focus-visible + .tao-check__box { outline: var(--indicator) solid var(--focus-ring); outline-offset: 2px; }
+.tao-check__row:hover .tao-check__box { border-color: var(--link); }
+.tao-check.has-error .tao-check__box { border-color: var(--error); }
+.tao-check__label { font-size: 16px; line-height: 1.5; }
+
+/* ---------- Layout helpers for pages ---------- */
+.tao-container { box-sizing: border-box; max-width: var(--container); margin: 0 auto; padding: 0 var(--space-24); }
+.tao-section { padding: var(--space-80) 0; }
+.tao-section--subtle { background: var(--bg-subtle); }
+.tao-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--gutter); }
+
+/* ---------- Panel: white box, blue hairline, title bar of divided cells ---------- */
+.tao-panel { box-sizing: border-box; background: var(--surface); border: var(--hairline) solid var(--link); border-radius: var(--radius); overflow: hidden; color: var(--text); }
+.tao-panel--subtle { background: var(--bg-subtle); }
+.tao-panel__bar { display: flex; align-items: stretch; min-height: 48px; border-bottom: var(--hairline) solid var(--link); }
+.tao-panel__title { display: flex; align-items: center; margin: 0; padding: 0 var(--space-24); border-right: var(--hairline) solid var(--link);
+  font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: 0.02em; color: var(--link); }
+.tao-panel__fill { flex: 1; }
+.tao-panel__icons { display: flex; align-items: center; gap: var(--space-4); padding: 0 var(--space-12); border-left: var(--hairline) solid var(--link); color: var(--link); }
+.tao-panel__body { padding: var(--space-24); }
+
+/* ---------- StepCard ---------- */
+.tao-stepcard .tao-panel__body { padding: 0; }
+.tao-stepcard__head { display: grid; grid-template-columns: 180px 1fr; border-bottom: var(--hairline) solid var(--link); }
+.tao-stepcard__num { display: flex; align-items: center; justify-content: center; padding: var(--space-24); border-right: var(--hairline) solid var(--link);
+  font-family: var(--font-display); font-weight: 900; font-size: 120px; line-height: 0.85; color: var(--link); }
+.tao-stepcard__title { padding: var(--space-32) var(--space-24); }
+.tao-stepcard__body { display: flex; flex-direction: column; gap: var(--space-12); padding: var(--space-24); }
+.tao-stepcard__text { margin: 0; font-size: 18px; color: var(--link); max-width: 560px; }
+
+/* ---------- StatBlock ---------- */
+.tao-stat { position: relative; }
+.tao-stat .tao-panel__body { display: flex; flex-direction: column; gap: var(--space-8); padding: var(--space-32) var(--space-48); }
+.tao-stat__head { display: flex; align-items: center; gap: var(--space-16); margin-bottom: var(--space-16); }
+.tao-stat__icon { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: var(--radius); background: var(--primary-subtle); color: var(--link); }
+.tao-stat__text { margin: 0; color: var(--link); }
+.tao-stat__value { margin: var(--space-16) 0 0; padding: var(--space-8) 0; font-family: var(--font-display); font-weight: 900; font-size: 160px; line-height: 0.9; color: var(--link);
+  background: linear-gradient(var(--border), var(--border)) 0 0 / 100% 1px no-repeat, linear-gradient(var(--border), var(--border)) 0 50% / 100% 1px no-repeat, linear-gradient(var(--border), var(--border)) 0 100% / 100% 1px no-repeat; }
+.tao-stat__value sup { font-size: 0.4em; vertical-align: top; position: relative; top: 0.15em; }
+.tao-stat__img { position: absolute; right: var(--space-48); bottom: var(--space-24); max-height: 180px; max-width: 35%; }
+
+/* ---------- Ticker ---------- */
+.tao-ticker { overflow: hidden; border-top: var(--hairline) solid var(--on-blue-line); border-bottom: var(--hairline) solid var(--on-blue-line); }
+.tao-ticker--blue { background: var(--primary); color: var(--on-primary); }
+.tao-ticker--black { background: var(--brand-black); color: var(--brand-ice-white); border-color: var(--grey-800); }
+.tao-ticker--white { background: var(--surface); color: var(--link); border-color: var(--border); }
+.tao-ticker__track { display: flex; align-items: center; gap: var(--space-32); width: max-content; padding: var(--space-16) 0; animation: tao-ticker 40s linear infinite; }
+.tao-ticker--reverse .tao-ticker__track { animation-direction: reverse; }
+.tao-ticker:hover .tao-ticker__track { animation-play-state: paused; }
+.tao-ticker__item { font-family: var(--font-display); font-weight: 900; font-size: 40px; line-height: 1; letter-spacing: 0.02em; white-space: nowrap; }
+.tao-ticker__sep { width: 24px; height: 24px; flex: none; }
+@keyframes tao-ticker { to { transform: translateX(-50%); } }
+
+/* ---------- NumberedList ---------- */
+.tao-numlist { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--space-32); }
+.tao-numlist__item { display: grid; grid-template-columns: 48px 1fr; gap: var(--space-32); align-items: start; }
+.tao-numlist__item .tao-marker { border-color: var(--border-strong); color: var(--border-strong); transition: color 250ms ease, border-color 250ms ease; }
+.tao-numlist__title { color: var(--border-strong); transition: color 250ms ease; }
+.tao-numlist__title a { color: inherit; text-decoration: none; }
+.tao-numlist__text { margin: var(--space-12) 0 0; max-width: 560px; color: var(--text-secondary); opacity: 0; transition: opacity 250ms ease; }
+.tao-numlist__item.is-active .tao-marker { border-color: var(--link); color: var(--link); }
+.tao-numlist__item.is-active .tao-numlist__title { color: var(--link); }
+.tao-numlist__item.is-active .tao-numlist__text { opacity: 1; }
