@@ -5,7 +5,7 @@ import { useSite } from '@/site/SiteProvider'
 import { Breadcrumb } from './shared'
 import { OfferCard } from './OfferCard'
 import type { OfferVM } from '@/lib/content'
-import { PRODUCT_LABEL, OFFER_TYPES, OFFER_CATEGORIES, CITIES } from '@/collections/options'
+import { PRODUCT_LABEL, OFFER_CATEGORIES, CITIES } from '@/collections/options'
 
 /* Offers listing (design "06 Offers"): product chips, sort, side filters, grid with pagination. */
 
@@ -19,7 +19,7 @@ const SORTS = [
 export function Offers({ offers }: { offers: OfferVM[] }) {
   const { t, settings } = useSite()
   const [product, setProduct] = useState('all')
-  const [sel, setSel] = useState<{ type: string[]; cat: string[]; city: string[] }>({ type: [], cat: [], city: [] })
+  const [sel, setSel] = useState<{ cat: string[]; city: string[] }>({ cat: [], city: [] })
   const [sort, setSort] = useState('new')
   const [page, setPage] = useState(1)
   const [filtersOpen, setFiltersOpen] = useState(false)
@@ -27,7 +27,6 @@ export function Offers({ offers }: { offers: OfferVM[] }) {
   const products = useMemo(() => Array.from(new Set(offers.map((o) => o.product))).filter((p) => PRODUCT_LABEL[p]), [offers])
   const match = (o: OfferVM, skip?: string) =>
     (skip === 'product' || product === 'all' || o.product === product) &&
-    (skip === 'type' || !sel.type.length || sel.type.includes(o.type)) &&
     (skip === 'cat' || !sel.cat.length || sel.cat.includes(o.cat)) &&
     (skip === 'city' || !sel.city.length || o.cities.some((c) => sel.city.includes(c)))
 
@@ -39,19 +38,18 @@ export function Offers({ offers }: { offers: OfferVM[] }) {
   const pageItems = results.slice((cur - 1) * PER, cur * PER)
 
   const set = (fn: () => void) => { fn(); setPage(1) }
-  const toggle = (key: 'type' | 'cat' | 'city', id: string) => () => set(() => setSel((s) => ({ ...s, [key]: s[key].includes(id) ? s[key].filter((x) => x !== id) : s[key].concat(id) })))
-  const count = (key: 'type' | 'cat' | 'city', id: string) => offers.filter((o) => match(o, key) && (key === 'city' ? o.cities.includes(id) : key === 'cat' ? o.cat === id : o.type === id)).length
+  const toggle = (key: 'cat' | 'city', id: string) => () => set(() => setSel((s) => ({ ...s, [key]: s[key].includes(id) ? s[key].filter((x) => x !== id) : s[key].concat(id) })))
+  const count = (key: 'cat' | 'city', id: string) => offers.filter((o) => match(o, key) && (key === 'city' ? o.cities.includes(id) : o.cat === id)).length
 
   const groups = [
-    { key: 'type' as const, title: 'ტიპი', items: OFFER_TYPES.map((x) => ({ id: x.value, label: x.label })) },
     { key: 'cat' as const, title: 'პარტნიორის კატეგორია', items: OFFER_CATEGORIES.map((x) => ({ id: x.value, label: x.label })) },
     { key: 'city' as const, title: 'ქალაქი', items: CITIES.map((x) => ({ id: x.value, label: x.label })) },
-  ].map((g) => ({ ...g, items: g.items.filter((it) => count(g.key, it.id) > 0 || sel[g.key].includes(it.id)) })).filter((g) => g.items.length)
+  ]
 
   const chips = [{ id: 'all', short: 'ყველა', icon: '' }].concat(products.map((p) => ({ id: p, short: PRODUCT_LABEL[p].short, icon: PRODUCT_LABEL[p].icon })))
   const activeTags: { label: string; remove: () => void }[] = []
-  ;(['type', 'cat', 'city'] as const).forEach((key) => {
-    const src = key === 'type' ? OFFER_TYPES : key === 'cat' ? OFFER_CATEGORIES : CITIES
+  ;(['cat', 'city'] as const).forEach((key) => {
+    const src = key === 'cat' ? OFFER_CATEGORIES : CITIES
     sel[key].forEach((id) => {
       const f = src.find((x) => x.value === id)
       if (f) activeTags.push({ label: f.label, remove: toggle(key, id) })
@@ -59,7 +57,7 @@ export function Offers({ offers }: { offers: OfferVM[] }) {
   })
   const nFilters = activeTags.length
   const hasFilters = nFilters > 0 || product !== 'all'
-  const clearAll = () => set(() => { setProduct('all'); setSel({ type: [], cat: [], city: [] }) })
+  const clearAll = () => set(() => { setProduct('all'); setSel({ cat: [], city: [] }) })
   const goPage = (n: number) => {
     setPage(n)
     const el = document.getElementById('list')

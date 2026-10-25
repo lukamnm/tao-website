@@ -31,21 +31,21 @@ export function OfferDetail({ offer: o, others }: { offer: OfferVM; others: Offe
   const steps = o.steps.length ? o.steps : STEPS[o.type] || []
   const terms = o.terms.length ? o.terms : TERMS(o)
   const valueNote = o.note || (isPartner ? 'ფასდაკლება ტაოს პოლისის მფლობელებს' : 'ფასდაკლება პოლისის ფასზე')
-  const ctaHref = isPartner ? o.partner.website : P(o.product)
-  const hasCta = isPartner ? !!o.partner.website : true
+  // As designed: the action button exists only on partner offers and opens the partner's website.
+  const ctaHref = o.partner.website || '#partner-site'
+  const hasCta = isPartner
   const facts = [
     { k: 'პროდუქტი', v: o.productLabel },
     { k: 'პარტნიორი', v: isPartner ? o.partner.name || '[პარტნიორის სახელი]' : 'ტაო' },
     ...(o.catLabel ? [{ k: 'კატეგორია', v: t(o.catLabel) }] : []),
     { k: 'ვადა', v: o.period },
   ]
-  const contacts = isPartner
-    ? [
-        o.partner.phone ? { icon: 'call-calling', label: 'ტელეფონი', value: o.partner.phone, href: 'tel:' + o.partner.phone.replace(/\s/g, '') } : null,
-        o.partner.address ? { icon: 'location', label: 'მისამართი', value: o.partner.address, href: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(o.partner.address) } : null,
-        o.partner.website ? { icon: 'global', label: 'ვებგვერდი', value: o.partner.website.replace(/^https?:\/\//, ''), href: o.partner.website } : null,
-      ].filter(Boolean) as { icon: string; label: string; value: string; href: string }[]
-    : []
+  // As designed: the partner contact block is always shown; empty fields keep the design's placeholders.
+  const contacts = [
+    { icon: 'call-calling', label: 'ტელეფონი', value: o.partner.phone || '[+995 XXX XX XX XX]', href: o.partner.phone ? 'tel:' + o.partner.phone.replace(/\s/g, '') : 'tel:' },
+    { icon: 'location', label: 'მისამართი', value: o.partner.address || '[ქუჩა, ნომერი, ქალაქი]', href: o.partner.address ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(o.partner.address) : '#partner-map' },
+    { icon: 'global', label: 'ვებგვერდი', value: o.partner.website ? o.partner.website.replace(/^https?:\/\//, '') : '[partner.ge]', href: o.partner.website || '#partner-site' },
+  ]
 
   return (
     <>
@@ -125,7 +125,7 @@ export function OfferDetail({ offer: o, others }: { offer: OfferVM; others: Offe
           </article>
           <aside data-reveal="up" className="tao-osum" style={{ position: 'sticky', top: 104, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 5, overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'stretch', borderBottom: '1px solid var(--border)' }}>
-              <span style={{ flex: 'none', minWidth: 96, padding: '0 16px', boxSizing: 'border-box', background: 'var(--primary)', color: 'var(--on-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 32, lineHeight: 1, whiteSpace: 'nowrap' }}>{o.value || '✓'}</span>
+              <span style={{ flex: 'none', minWidth: 96, padding: '0 16px', boxSizing: 'border-box', background: 'var(--primary)', color: 'var(--on-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 32, lineHeight: 1, whiteSpace: 'nowrap' }}>{o.value}</span>
               <span style={{ flex: 1, padding: '18px 20px', fontSize: 15, fontWeight: 500, lineHeight: 1.4 }}>{t(valueNote)}</span>
             </div>
             <dl style={{ margin: 0, padding: '4px 24px' }}>
@@ -164,9 +164,7 @@ export function OfferDetail({ offer: o, others }: { offer: OfferVM; others: Offe
                   </p>
                 ) : null}
               </div>
-            ) : (
-              <div style={{ padding: 12 }} />
-            )}
+            ) : null}
           </aside>
         </div>
       </section>

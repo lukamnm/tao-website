@@ -17,7 +17,7 @@ export type ProductConfig = {
   image: string
   imageAlt: string
   imagePos: string
-  heroCta: { label: string; href: string; icon: string }
+  heroCta?: { label: string; href: string; icon: string }
   covers: { icon: string; title: string; text: string }[]
   schemes?: { icon: string; title: string; steps: string[] }[]
   schemesTitle?: string
@@ -57,11 +57,10 @@ export const HEALTH: ProductConfig = {
 export const TRAVEL: ProductConfig = {
   product: 'travel',
   title: ['სამოგზაურო', 'დაზღვევა'],
-  lead: 'იმოგზაურე მშვიდად: სამედიცინო დაფარვა საზღვარგარეთ, დასვენება, სწავლა თუ საქმიანი ვიზიტი.',
+  lead: 'ჩაალაგე ჩემოდანი, დანარჩენზე ჩვენ ვიზრუნებთ. სამედიცინო დაფარვა საზღვარგარეთ, ნებისმიერი მოგზაურობისთვის.',
   image: '/img/hero-travel-airport.jpg',
   imageAlt: 'მგზავრი ჩემოდნით აეროპორტში',
-  imagePos: '60% 50%',
-  heroCta: { label: 'ონლაინ ყიდვა', href: 'portal', icon: 'export-square' },
+  imagePos: '82% 50%',
   covers: [
     { icon: 'health', title: 'სამედიცინო ხარჯები', text: 'მკურნალობა საზღვარგარეთ, მოულოდნელი ავადმყოფობის ან ტრავმის დროს.' },
     { icon: '24-support', title: 'ასისტანსი 24/7', text: 'დახმარება ნებისმიერ დროს, ნებისმიერ ქვეყანაში.' },
@@ -95,7 +94,7 @@ export function Product({ cfg, offers }: { cfg: ProductConfig; offers: OfferVM[]
   const [faqOpen, setFaqOpen] = useState(0)
   let n = 0
   const next = () => ++n
-  const isPortal = cfg.heroCta.href === 'portal'
+  const isPortal = cfg.heroCta?.href === 'portal'
 
   return (
     <>
@@ -109,11 +108,13 @@ export function Product({ cfg, offers }: { cfg: ProductConfig; offers: OfferVM[]
               <span style={{ whiteSpace: 'nowrap' }}>{t(cfg.title[1])}</span>
             </h1>
             <p style={{ margin: 0, maxWidth: 520, fontSize: 19, lineHeight: 1.55, color: 'var(--on-blue-muted)' }}>{t(cfg.lead)}</p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center', paddingTop: 8 }}>
-              <Button variant={isPortal ? 'cta' : 'onBlue'} iconRight={cfg.heroCta.icon} href={isPortal ? P(cfg.product) : cfg.heroCta.href}>
-                {t(cfg.heroCta.label)}
-              </Button>
-            </div>
+            {cfg.heroCta ? (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center', paddingTop: 8 }}>
+                <Button variant={isPortal ? 'cta' : 'onBlue'} iconRight={cfg.heroCta.icon} href={isPortal ? P(cfg.product) : cfg.heroCta.href}>
+                  {t(cfg.heroCta.label)}
+                </Button>
+              </div>
+            ) : null}
           </div>
           <div className="tao-intro" style={{ ['--i' as string]: '2', flex: '1 1 420px', minWidth: 0, position: 'relative', minHeight: 460 }}>
             <div style={{ position: 'absolute', inset: 0, border: '1px solid var(--on-blue-line)', borderRadius: 5, transform: 'translate(14px, -14px)' }} />

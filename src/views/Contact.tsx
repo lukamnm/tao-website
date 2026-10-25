@@ -6,16 +6,8 @@ import { Breadcrumb } from './shared'
 import { Consent, Field, SubmitRow } from './forms'
 import { submitContact } from '@/actions/forms'
 
-const TOPICS = [
-  { id: 'general', label: 'ზოგადი კითხვა' },
-  { id: 'buy', label: 'პოლისის შეძენა' },
-  { id: 'claim', label: 'ანაზღაურება' },
-  { id: 'complaint', label: 'პრეტენზია' },
-]
-
 export function Contact() {
   const { t, L, P, settings, locale } = useSite()
-  const [topic, setTopic] = useState('general')
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [consent, setConsent] = useState(false)
   const [sent, setSent] = useState<string | null>(null)
@@ -37,7 +29,7 @@ export function Contact() {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const fd = new FormData(e.currentTarget)
-    fd.set('topic', topic)
+    fd.set('topic', 'general')
     fd.set('consent', consent ? '1' : '')
     fd.set('locale', locale)
     start(async () => {
@@ -99,13 +91,6 @@ export function Contact() {
               </div>
             ) : (
               <form onSubmit={onSubmit} noValidate className="tao-cform" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 5, padding: '36px 40px 40px', display: 'flex', flexDirection: 'column', gap: 24 }}>
-                <div role="radiogroup" aria-label={t('თემა')} style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                  {TOPICS.map((tp) => (
-                    <button key={tp.id} type="button" role="radio" aria-checked={topic === tp.id} onClick={() => setTopic(tp.id)} className={'tao-ochip' + (topic === tp.id ? ' is-on' : '')} style={{ display: 'flex', alignItems: 'center', gap: 8, height: 40, padding: '0 14px', boxSizing: 'border-box', border: '1px solid var(--border)', borderRadius: 5, background: 'var(--surface)', fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 500, color: 'var(--text)', cursor: 'pointer' }}>
-                      {t(tp.label)}
-                    </button>
-                  ))}
-                </div>
                 <div className="tao-cfrow" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 16 }}>
                   <Field label="სახელი და გვარი" name="name" autoComplete="name" error={errors.name} />
                   <Field label="ტელეფონი" name="phone" type="tel" autoComplete="tel" placeholder="5XX XX XX XX" error={errors.phone} />

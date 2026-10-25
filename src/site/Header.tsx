@@ -164,7 +164,7 @@ export function Header() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, fontSize: 14 }}>
               <a href={'tel:' + settings.phoneHref} style={{ color: 'var(--link)', textDecoration: 'none', fontWeight: 500 }}>{settings.phone}</a>
               <button type="button" onClick={switchLang} className="tao-caps" style={{ border: 0, background: 'transparent', padding: '4px 0', cursor: 'pointer', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, letterSpacing: '0.08em', color: 'var(--text-secondary)' }}>
-                {locale === 'en' ? 'ENG / ქარ' : 'ქარ / ENG'}
+                ქარ / ENG
               </button>
             </div>
           </div>
@@ -214,7 +214,7 @@ export function Header() {
             </nav>
             <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 4 }}>
               <button type="button" onClick={switchLang} className="tao-caps tao-hlang" aria-label={locale === 'en' ? 'Language: English, switch to Georgian' : 'ენა: ქართული, გადართვა ინგლისურზე'} style={css`height: 40px; padding: 0 12px; border: 0; background: transparent; ${dock.lang} font-family: var(--font-sans); font-size: 13px; font-weight: 500; letter-spacing: 0.08em; cursor: pointer;`}>
-                {locale === 'en' ? 'ENG / ქარ' : 'ქარ / ENG'}
+                ქარ / ENG
               </button>
               <Button variant="cta" size="sm" href={P('')}>
                 {t('ჩემი პროფილი')}

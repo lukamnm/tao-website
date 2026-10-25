@@ -103,7 +103,7 @@ export function Privacy({ page, updated, pdf }: { page: PageVM | null; updated: 
     ['ელექტრონული ხელმოწერა', ': დოკუმენტების დისტანციური გაფორმება, საჭიროების შემთხვევაში'],
   ]
   return (
-    <InfoPage current="/privacy" title={page?.title || 'კონფიდენციალურობის პოლიტიკა'} lead="როგორ ვამუშავებთ და ვიცავთ შენს პერსონალურ მონაცემებს." updated={page?.effectiveDate || updated}>
+    <InfoPage current="/privacy" title={page?.title || 'კონფიდენციალურობის პოლიტიკა'} lead="როგორ ვაგროვებთ, ვიყენებთ და ვიცავთ შენს პერსონალურ მონაცემებს." updated={page?.effectiveDate || updated}>
       {pdf ? (
         <div data-reveal="up" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '20px 24px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 5 }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: 15 }}>
@@ -196,7 +196,7 @@ export function Privacy({ page, updated, pdf }: { page: PageVM | null; updated: 
 export function Terms({ page, updated }: { page: PageVM | null; updated: string }) {
   const { t, L, settings } = useSite()
   return (
-    <InfoPage current="/terms" title={page?.title || 'საიტის გამოყენების წესები'} lead="ვებგვერდის გამოყენების პირობები." updated={page?.effectiveDate || updated}>
+    <InfoPage current="/terms" title={page?.title || 'საიტის გამოყენების წესები'} lead="წესები, რომლებიც taoinsurance.ge-ის გამოყენებისას მოქმედებს." updated={page?.effectiveDate || updated}>
       {page ? (
         <CmsBody page={page} />
       ) : (

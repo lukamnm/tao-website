@@ -20,10 +20,10 @@ export function Footer() {
   const kicker: React.CSSProperties = { margin: '0 0 20px', fontSize: 12, fontWeight: 500, letterSpacing: '0.08em', color: '#A8ADB3' }
   const ul: React.CSSProperties = { listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 12 }
   const socials = [
-    { label: 'Facebook', href: settings.facebook },
-    { label: 'Instagram', href: settings.instagram },
-    { label: 'LinkedIn', href: settings.linkedin },
-  ].filter((s) => s.href)
+    { label: 'Facebook', href: settings.facebook || '#facebook' },
+    { label: 'Instagram', href: settings.instagram || '#instagram' },
+    { label: 'LinkedIn', href: settings.linkedin || '#linkedin' },
+  ]
 
   return (
     <footer className="tao-bento" data-reveal="up" style={{ margin: '4px 4px 0', display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 3fr)', gap: 4 }}>
@@ -38,15 +38,13 @@ export function Footer() {
             </span>
             {settings.address}
           </p>
-          {socials.length ? (
-            <div style={{ display: 'flex', gap: 16, paddingTop: 8 }}>
-              {socials.map((s) => (
-                <a key={s.label} href={s.href} className="tao-flink" style={flink} target="_blank" rel="noopener">
-                  {s.label}
-                </a>
-              ))}
-            </div>
-          ) : null}
+          <div style={{ display: 'flex', gap: 16, paddingTop: 8 }}>
+            {socials.map((s) => (
+              <a key={s.label} href={s.href} className="tao-flink" style={flink} target={s.href.startsWith('http') ? '_blank' : undefined} rel="noopener">
+                {s.label}
+              </a>
+            ))}
+          </div>
         </div>
       </div>
       <div className="tao-bento__help" style={{ borderRadius: 5, boxSizing: 'border-box', minWidth: 0, background: 'var(--primary)', color: 'var(--on-primary)', padding: 48, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 40 }}>
