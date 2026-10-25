@@ -5,6 +5,17 @@ export const Users: CollectionConfig = {
   labels: { singular: 'მომხმარებელი', plural: 'მომხმარებლები' },
   admin: { useAsTitle: 'email', group: 'სისტემა' },
   auth: true,
+  hooks: {
+    // The very first account (created on /admin) is always an administrator.
+    beforeChange: [
+      async ({ data, operation, req }) => {
+        if (operation !== 'create') return data
+        const existing = await req.payload.count({ collection: 'users', overrideAccess: true })
+        if (existing.totalDocs === 0) return { ...data, role: 'admin' }
+        return data
+      },
+    ],
+  },
   access: {
     read: ({ req }) => !!req.user,
     create: ({ req }) => req.user?.role === 'admin',
