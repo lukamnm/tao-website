@@ -5,6 +5,7 @@ import { isLocale, type Locale } from '@/i18n'
 import { getSettings } from '@/lib/content'
 import { SiteProvider } from '@/site/SiteProvider'
 import { SiteFrame } from '@/site/SiteFrame'
+import { siteUrl } from '@/lib/site-url'
 import '@/ds/tokens.css'
 import '@/ds/components.css'
 import '@/ds/site.css'
@@ -15,7 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params
   if (!isLocale(locale)) return {}
   const s = await getSettings(locale)
-  const base = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  const base = siteUrl()
   return {
     metadataBase: new URL(base),
     title: { default: s.siteName, template: `%s · ${s.siteName}` },

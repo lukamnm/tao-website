@@ -1,7 +1,8 @@
 import type { MetadataRoute } from 'next'
+import { siteUrl } from '@/lib/site-url'
 
 export default function robots(): MetadataRoute.Robots {
-  const base = (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000').replace(/\/$/, '')
+  const base = siteUrl()
   // Staging stays out of search engines until NEXT_PUBLIC_INDEXABLE=1 is set on the live deployment.
   const indexable = process.env.NEXT_PUBLIC_INDEXABLE === '1'
   return {

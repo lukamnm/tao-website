@@ -49,3 +49,7 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 .neon
+
+.vercel
+.env*
+!.env.example

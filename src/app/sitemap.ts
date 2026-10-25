@@ -1,10 +1,11 @@
 import type { MetadataRoute } from 'next'
 import { getNews, getOffers } from '@/lib/content'
+import { siteUrl } from '@/lib/site-url'
 
 const STATIC = ['', '/health', '/travel', '/offers', '/news', '/about', '/contact', '/legal', '/financial', '/complaints', '/privacy', '/terms']
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000').replace(/\/$/, '')
+  const base = siteUrl()
   const [offers, news] = await Promise.all([getOffers('ka'), getNews('ka', 500)])
   const paths = [...STATIC, ...offers.map((o) => o.href), ...news.map((n) => n.href)]
   return paths.flatMap((p) => [
