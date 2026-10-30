@@ -4,7 +4,6 @@ import { Icon } from '@/ds'
 import { useSite } from '@/site/SiteProvider'
 import { InfoPage, InfoSection, KeyValue, Notice, DocList } from './info'
 import type { DocumentVM } from '@/lib/content'
-import { PRODUCT_LABEL } from '@/collections/options'
 
 const TYPES = [
   { id: 'all', label: 'ყველა ტიპი' },
@@ -25,13 +24,13 @@ export function Legal({ docs, updated }: { docs: DocumentVM[]; updated: string }
   const [sort, setSort] = useState('new')
   const [page, setPage] = useState(1)
 
-  const prods = useMemo(() => [{ id: 'all', label: 'ყველა' }].concat(Array.from(new Set(library.map((d) => d.product))).filter((p) => PRODUCT_LABEL[p]).map((p) => ({ id: p, label: PRODUCT_LABEL[p].short }))), [library])
+  const prods = useMemo(() => [{ id: 'all', label: 'ყველა' }].concat(settings.products.filter((p) => library.some((d) => d.product === p.key)).map((p) => ({ id: p.key, label: p.short }))), [settings.products, library])
   const years = useMemo(() => ['all'].concat(Array.from(new Set(library.map((d) => d.year))).sort().reverse()), [library])
   const query = q.trim().toLowerCase()
   const match = (d: DocumentVM, skip?: string) =>
     (skip === 'prod' || prod === 'all' || d.product === prod) && (skip === 'type' || type === 'all' || d.type === type) && (year === 'all' || d.year === year) && (!query || (d.title + ' ' + d.code).toLowerCase().includes(query))
   let res = library.filter((d) => match(d))
-  res = res.slice().sort((a, b) => (sort === 'old' ? a.dateISO.localeCompare(b.dateISO) : b.dateISO.localeCompare(a.dateISO)) || a.order - b.order)
+  res = res.slice().sort((a, b) => (sort === 'old' ? a.dateISO.localeCompare(b.dateISO) : b.dateISO.localeCompare(a.dateISO)))
   const pagesN = Math.max(1, Math.ceil(res.length / PER))
   const cur = Math.min(page, pagesN)
   const items = res.slice((cur - 1) * PER, cur * PER)

@@ -17,11 +17,6 @@ const NAV = [
   { href: '/contact', label: 'კონტაქტი' },
 ]
 
-const PRODUCTS = [
-  { href: '/health', icon: 'health', title: 'ჯანმრთელობის დაზღვევა', text: 'ექიმი, კვლევები, სტაციონარი' },
-  { href: '/travel', icon: 'airplane', title: 'სამოგზაურო დაზღვევა', text: 'სამედიცინო დაფარვა საზღვარგარეთ' },
-]
-
 const DOCKED = {
   outer: 'padding: 0;',
   bar: 'max-width: 100%; padding: 10px max(24px, calc((100% - 1232px) / 2)); background: var(--primary); border: 0; border-bottom: 1px solid var(--on-blue-line); border-radius: 0;',
@@ -51,7 +46,9 @@ export function Header() {
 
   const bare = pathname.replace(/^\/en(?=\/|$)/, '') || '/'
   const isActive = (href: string) => bare === href || bare.startsWith(href + '/')
-  const productActive = bare === '/' || isActive('/health') || isActive('/travel') || isActive('/car') || isActive('/property')
+  // Products menu: the products marked "show in menu" in the admin (each has its own page)
+  const PRODUCTS = settings.products.filter((p) => p.inMenu).map((p) => ({ href: p.href, icon: p.icon, title: p.name, text: p.menuText }))
+  const productActive = bare === '/' || PRODUCTS.some((p) => isActive(p.href))
   const dock = docked ? DOCKED : FLOATING
 
   // docked once the hero has scrolled out

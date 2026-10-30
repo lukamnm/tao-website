@@ -1,9 +1,14 @@
 import { getPayload } from './payload'
 import type { Locale } from '@/i18n'
 import { fmtDMY, fmtDate, fmtUntil, fmtMonth } from '@/i18n'
-import { PRODUCT_LABEL, OFFER_TYPES, OFFER_CATEGORIES, CITIES, NEWS_CATEGORIES } from '@/collections/options'
+import { OFFER_TYPES } from '@/collections/options'
 
 /* Plain, serializable view models for the pages (client components receive these as props). */
+
+/** A product from the editable list (admin: კატეგორიები > პროდუქტები). */
+export type ProductVM = { key: string; name: string; short: string; icon: string; menuText: string; description: string; href: string; inMenu: boolean; portal: string }
+/** An entry of a simple editable list (news categories, partner categories, cities). */
+export type ListItem = { key: string; name: string }
 
 export type SiteSettings = {
   phone: string
@@ -23,11 +28,13 @@ export type SiteSettings = {
   siteName: string
   siteDescription: string
   ogImage: string
+  products: ProductVM[]
 }
 
 type AnyDoc = Record<string, any>
 
 const str = (v: unknown, d = '') => (typeof v === 'string' && v ? v : d)
+const doc = (v: unknown): AnyDoc | null => (v && typeof v === 'object' ? (v as AnyDoc) : null)
 
 export function mediaUrl(m: unknown, size?: 'thumb' | 'card' | 'wide' | 'hero'): string {
   if (!m || typeof m !== 'object') return ''
@@ -37,10 +44,50 @@ export function mediaUrl(m: unknown, size?: 'thumb' | 'card' | 'wide' | 'hero'):
 }
 const mediaAlt = (m: unknown) => (m && typeof m === 'object' ? str((m as AnyDoc).alt) : '')
 
+function productVM(p: AnyDoc): ProductVM {
+  const name = str(p.name)
+  return {
+    key: str(p.key),
+    name,
+    short: str(p.shortName, name),
+    icon: str(p.icon, 'shield-tick'),
+    menuText: str(p.menuText),
+    description: str(p.description),
+    href: str(p.pagePath),
+    inMenu: !!p.showInMenu && !!p.pagePath,
+    portal: str(p.portalUrl),
+  }
+}
+const productOf = (v: unknown): ProductVM | null => {
+  const d = doc(v)
+  return d ? productVM(d) : null
+}
+const itemOf = (v: unknown): ListItem | null => {
+  const d = doc(v)
+  return d ? { key: str(d.key), name: str(d.name) } : null
+}
+
+export async function getProducts(locale: Locale): Promise<ProductVM[]> {
+  const payload = await getPayload()
+  const res = await payload.find({ collection: 'products', locale, fallbackLocale: 'ka', sort: '_order', limit: 100, depth: 0 })
+  return (res.docs as AnyDoc[]).map(productVM)
+}
+
+async function getList(collection: 'news-categories' | 'offer-categories' | 'cities', locale: Locale): Promise<ListItem[]> {
+  const payload = await getPayload()
+  const res = await payload.find({ collection, locale, fallbackLocale: 'ka', sort: '_order', limit: 200, depth: 0 })
+  return (res.docs as AnyDoc[]).map((d) => ({ key: str(d.key), name: str(d.name) }))
+}
+export const getNewsCategories = (locale: Locale) => getList('news-categories', locale)
+export const getOfferCategories = (locale: Locale) => getList('offer-categories', locale)
+export const getCities = (locale: Locale) => getList('cities', locale)
+
 export async function getSettings(locale: Locale): Promise<SiteSettings> {
   const payload = await getPayload()
-  const s = (await payload.findGlobal({ slug: 'settings', locale, fallbackLocale: 'ka' })) as AnyDoc
+  const [s, products] = await Promise.all([payload.findGlobal({ slug: 'settings', locale, fallbackLocale: 'ka' }) as Promise<AnyDoc>, getProducts(locale)])
   const portalUrl = str(s.portalUrl, 'https://portal.taoinsurance.ge')
+  const portal: Record<string, string> = { '': portalUrl, claim: str(s.portalClaimUrl, portalUrl) }
+  for (const p of products) portal[p.key] = p.portal || portalUrl
   return {
     phone: str(s.phone, '+995 32 280 10 01'),
     phoneHref: str(s.phoneHref, '+995322801001'),
@@ -51,14 +98,7 @@ export async function getSettings(locale: Locale): Promise<SiteSettings> {
     hours: str(s.hours, 'ორშ-პარ, 10:00-18:00'),
     mapUrl: str(s.mapUrl),
     portalUrl,
-    portal: {
-      '': portalUrl,
-      health: str(s.portalHealthUrl, portalUrl),
-      travel: str(s.portalTravelUrl, portalUrl),
-      car: str(s.portalCarUrl, portalUrl),
-      property: str(s.portalPropertyUrl, portalUrl),
-      claim: str(s.portalClaimUrl, portalUrl),
-    },
+    portal,
     facebook: str(s.facebook),
     instagram: str(s.instagram),
     linkedin: str(s.linkedin),
@@ -66,11 +106,24 @@ export async function getSettings(locale: Locale): Promise<SiteSettings> {
     siteName: str(s.siteName, locale === 'en' ? 'TAO Insurance' : 'ტაო დაზღვევა'),
     siteDescription: str(s.siteDescription),
     ogImage: mediaUrl(s.ogImage, 'wide'),
+    products,
   }
 }
 
 /* ---------- Banners ---------- */
 export type BannerVM = { id: string; kicker: string; title: string; text: string; image: string; imageAlt: string; pos: string; action: string; href: string }
+
+/** The chosen link as an address; the portal is "portal" or "portal:<product key>" (the Home view opens it). */
+function linkHref(l: AnyDoc | null | undefined): string {
+  if (!l) return '/'
+  switch (l.type) {
+    case 'offer': return doc(l.offer)?.slug ? '/offers/' + doc(l.offer)!.slug : '/offers'
+    case 'news': return doc(l.news)?.slug ? '/news/' + doc(l.news)!.slug : '/news'
+    case 'portal': return doc(l.product)?.key ? 'portal:' + doc(l.product)!.key : 'portal'
+    case 'url': return str(l.url, '/')
+    default: return str(l.page, '/')
+  }
+}
 
 export async function getBanners(locale: Locale, placement: 'hero' | 'promo'): Promise<BannerVM[]> {
   const payload = await getPayload()
@@ -87,7 +140,7 @@ export async function getBanners(locale: Locale, placement: 'hero' | 'promo'): P
         { or: [{ until: { exists: false } }, { until: { greater_than_equal: today } }] },
       ],
     },
-    sort: 'order',
+    sort: '_order',
     limit: 10,
     depth: 1,
   })
@@ -100,7 +153,7 @@ export async function getBanners(locale: Locale, placement: 'hero' | 'promo'): P
     imageAlt: mediaAlt(b.image),
     pos: str(b.imagePosition, '50% 50%'),
     action: str(b.actionLabel, 'გაიგე მეტი'),
-    href: str(b.href, '/'),
+    href: linkHref(b.link),
   }))
 }
 
@@ -111,6 +164,7 @@ export type OfferVM = {
   href: string
   product: string
   productLabel: string
+  productShort: string
   icon: string
   type: string
   typeLabel: string
@@ -135,28 +189,28 @@ export type OfferVM = {
   terms: string[]
   partner: { name: string; phone: string; address: string; website: string }
   featured: boolean
-  order: number
 }
 
 const label = (list: { label: string; value: string }[], id: string) => list.find((x) => x.value === id)?.label || ''
 
 function offerVM(o: AnyDoc, locale: Locale): OfferVM {
-  const pl = PRODUCT_LABEL[o.product] || PRODUCT_LABEL.health
-  const cities: string[] = Array.isArray(o.cities) ? o.cities : []
-  const cityNames = cities.map((c) => label(CITIES, c)).filter(Boolean)
-  const where = o.type === 'partner' ? cityNames.join(', ') : 'ონლაინ, ტაოს პორტალზე'
+  const pr = productOf(o.product)
+  const cat = itemOf(o.category)
+  const cityItems = (Array.isArray(o.cities) ? o.cities : []).map(itemOf).filter((c: ListItem | null): c is ListItem => !!c)
+  const where = o.type === 'partner' ? cityItems.map((c: ListItem) => c.name).join(', ') : 'ონლაინ, ტაოს პორტალზე'
   return {
     id: String(o.id),
     slug: str(o.slug),
     href: '/offers/' + str(o.slug),
-    product: str(o.product),
-    productLabel: locale === 'en' ? pl.en : pl.ka,
-    icon: pl.icon,
+    product: pr?.key || '',
+    productLabel: pr?.name || '',
+    productShort: pr?.short || '',
+    icon: pr?.icon || 'shield-tick',
     type: str(o.type, 'discount'),
     typeLabel: label(OFFER_TYPES, o.type),
-    cat: str(o.category),
-    catLabel: o.category ? label(OFFER_CATEGORIES, o.category) : '',
-    cities,
+    cat: cat?.key || '',
+    catLabel: cat?.name || '',
+    cities: cityItems.map((c: ListItem) => c.key),
     where,
     value: str(o.value),
     pct: Number(o.pct) || 0,
@@ -175,7 +229,6 @@ function offerVM(o: AnyDoc, locale: Locale): OfferVM {
     terms: Array.isArray(o.terms) ? o.terms.map((s: AnyDoc) => str(s.text)) : [],
     partner: { name: str(o.partner?.name), phone: str(o.partner?.phone), address: str(o.partner?.address), website: str(o.partner?.website) },
     featured: !!o.featured,
-    order: Number(o.order) || 0,
   }
 }
 
@@ -184,7 +237,7 @@ export async function getOffers(locale: Locale, opts: { activeOnly?: boolean; pr
   const today = new Date().toISOString().slice(0, 10)
   const and: AnyDoc[] = []
   if (opts.activeOnly !== false) and.push({ until: { greater_than_equal: today } })
-  if (opts.product) and.push({ product: { equals: opts.product } })
+  if (opts.product) and.push({ 'product.key': { equals: opts.product } })
   const res = await payload.find({ collection: 'offers', locale, fallbackLocale: 'ka', where: and.length ? { and } : undefined, sort: '-from', limit: 200, depth: 1 })
   return (res.docs as AnyDoc[]).map((o) => offerVM(o, locale))
 }
@@ -203,7 +256,7 @@ export type NewsVM = {
   href: string
   cat: string
   catLabel: string
-  product: string
+  product: ProductVM | null
   dateISO: string
   date: string
   title: string
@@ -231,9 +284,9 @@ function newsVM(n: AnyDoc, locale: Locale): NewsVM {
     id: String(n.id),
     slug: str(n.slug),
     href: '/news/' + str(n.slug),
-    cat: str(n.category, 'company'),
-    catLabel: label(NEWS_CATEGORIES, n.category),
-    product: str(n.product),
+    cat: itemOf(n.category)?.key || '',
+    catLabel: itemOf(n.category)?.name || '',
+    product: productOf(n.product),
     dateISO: str(n.date),
     date: n.date ? fmtDate(locale, n.date) : '',
     title: str(n.title),
@@ -268,6 +321,7 @@ export type DocumentVM = {
   type: string
   product: string
   prodLabel: string
+  prodShort: string
   icon: string
   dateISO: string
   year: string
@@ -276,24 +330,24 @@ export type DocumentVM = {
   code: string
   size: string
   url: string
-  order: number
 }
 
 const fmtSize = (bytes: number) => (bytes >= 1024 * 1024 ? (bytes / 1024 / 1024).toFixed(1) + ' MB' : Math.max(1, Math.round(bytes / 1024)) + ' KB')
 
 export async function getDocuments(locale: Locale, section: 'legal' | 'financial'): Promise<DocumentVM[]> {
   const payload = await getPayload()
-  const res = await payload.find({ collection: 'documents', locale, fallbackLocale: 'ka', where: { section: { equals: section } }, sort: '-date', limit: 500, depth: 0 })
+  const res = await payload.find({ collection: 'documents', locale, fallbackLocale: 'ka', where: { section: { equals: section } }, sort: '-date', limit: 500, depth: 1 })
   return (res.docs as AnyDoc[]).map((d) => {
-    const pl = PRODUCT_LABEL[d.product]
+    const pl = productOf(d.product)
     return {
       id: String(d.id),
       title: str(d.title),
       section: str(d.section),
       type: str(d.docType),
-      product: str(d.product, 'general'),
-      prodLabel: pl ? (locale === 'en' ? pl.en : pl.ka) : '',
-      icon: pl ? pl.icon : 'document-text',
+      product: pl?.key || 'general',
+      prodLabel: pl?.name || '',
+      prodShort: pl?.short || '',
+      icon: pl?.icon || 'document-text',
       dateISO: str(d.date),
       year: str(d.date).slice(0, 4),
       quarter: str(d.quarter),
@@ -301,7 +355,6 @@ export async function getDocuments(locale: Locale, section: 'legal' | 'financial
       code: str(d.code),
       size: typeof d.filesize === 'number' ? fmtSize(d.filesize) : '',
       url: str(d.url),
-      order: Number(d.order) || 0,
     }
   })
 }

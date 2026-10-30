@@ -3,13 +3,12 @@ import React, { useState } from 'react'
 import { Button, Icon, NewsCard } from '@/ds'
 import { useSite } from '@/site/SiteProvider'
 import { Breadcrumb } from './shared'
-import type { NewsVM } from '@/lib/content'
-import { NEWS_CATEGORIES } from '@/collections/options'
+import type { ListItem, NewsVM } from '@/lib/content'
 
 const STEP = 6
 const FIRST = 7
 
-export function News({ items }: { items: NewsVM[] }) {
+export function News({ items, categories }: { items: NewsVM[]; categories: ListItem[] }) {
   const { t, L } = useSite()
   const [cat, setCat] = useState('all')
   const [query, setQuery] = useState('')
@@ -20,7 +19,7 @@ export function News({ items }: { items: NewsVM[] }) {
   const visible = results.slice(0, shown)
   const featured = visible[0]
   const rest = visible.slice(1)
-  const chips = [{ value: 'all', label: 'ყველა' }].concat(NEWS_CATEGORIES.filter((c) => items.some((n) => n.cat === c.value)))
+  const chips = [{ value: 'all', label: 'ყველა' }].concat(categories.filter((c) => items.some((n) => n.cat === c.key)).map((c) => ({ value: c.key, label: c.name })))
 
   return (
     <>

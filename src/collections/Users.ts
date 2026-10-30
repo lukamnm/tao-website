@@ -3,7 +3,12 @@ import type { CollectionConfig } from 'payload'
 export const Users: CollectionConfig = {
   slug: 'users',
   labels: { singular: 'მომხმარებელი', plural: 'მომხმარებლები' },
-  admin: { useAsTitle: 'email', group: 'სისტემა' },
+  admin: {
+    useAsTitle: 'email',
+    group: 'სისტემა',
+    description: 'ვისაც ადმინ პანელში შესვლა შეუძლია. ადმინისტრატორი ყველაფერს მართავს, რედაქტორი მხოლოდ კონტენტს.',
+    hidden: ({ user }) => (user as { role?: string } | null)?.role !== 'admin',
+  },
   auth: true,
   hooks: {
     // The very first account (created on /admin) is always an administrator.

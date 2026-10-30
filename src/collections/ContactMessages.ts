@@ -3,16 +3,17 @@ import type { CollectionConfig } from 'payload'
 // Inbox of the contact form. Created by the website (server action), read only by signed-in users.
 export const ContactMessages: CollectionConfig = {
   slug: 'contact-messages',
-  labels: { singular: 'შეტყობინება', plural: 'შეტყობინებები (კონტაქტი)' },
+  labels: { singular: 'შეტყობინება', plural: 'შეტყობინებები' },
   admin: {
     useAsTitle: 'name',
     group: 'შემოსული',
     defaultColumns: ['name', 'topic', 'phone', 'status', 'createdAt'],
-    description: 'კონტაქტის ფორმიდან შემოსული შეტყობინებები.',
+    description: 'საიტის კონტაქტის ფორმიდან შემოსული წერილები. პასუხის შემდეგ შეცვალე სტატუსი.',
   },
   access: {
     read: ({ req }) => !!req.user,
-    create: () => true,
+    // The website writes here through the server (local API); nobody creates messages by hand.
+    create: () => false,
     update: ({ req }) => !!req.user,
     delete: ({ req }) => req.user?.role === 'admin',
   },
@@ -45,8 +46,8 @@ export const ContactMessages: CollectionConfig = {
     { name: 'phone', type: 'text', label: 'ტელეფონი', required: true },
     { name: 'email', type: 'email', label: 'ელფოსტა' },
     { name: 'message', type: 'textarea', label: 'შეტყობინება', required: true },
-    { name: 'consent', type: 'checkbox', label: 'თანხმობა მონაცემების დამუშავებაზე' },
-    { name: 'locale', type: 'text', label: 'ენა', admin: { readOnly: true } },
-    { name: 'note', type: 'textarea', label: 'შიდა შენიშვნა' },
+    { name: 'consent', type: 'checkbox', label: 'თანხმობა მონაცემების დამუშავებაზე', admin: { components: { Cell: '/components/admin/YesNoCell#YesNoCell' } } },
+    { name: 'locale', type: 'text', label: 'საიტის ენა', admin: { readOnly: true, position: 'sidebar' } },
+    { name: 'note', type: 'textarea', label: 'შიდა შენიშვნა', admin: { description: 'მხოლოდ თანამშრომლები ხედავენ. მაგ: დავურეკე, თანახმაა.' } },
   ],
 }

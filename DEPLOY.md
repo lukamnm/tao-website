@@ -32,6 +32,25 @@ With a `file:` `DATABASE_URL` the site runs on SQLite (local development without
 - Privacy policy, terms of use and complaints procedure: the site shows the designed text until a "ტექსტური გვერდი" with slug `privacy`, `terms` or `complaints` exists; then that text is shown instead.
 - Changes made in the admin appear on the site immediately (cache is cleared on every save).
 
+## Database changes (migrations)
+
+The database structure never changes on its own. Every change is a file in `src/migrations/`, kept in git with the code that needs it.
+
+- `npm run build` first runs `scripts/migrate-on-build.mjs`: on Vercel production builds (and on any non-Vercel server) it applies the migrations that are not applied yet. Preview builds never touch the database.
+- Each migration runs in a transaction: if it fails, nothing changes and the build stops, so the running site stays as it was.
+- New change to the collections: edit the collection, run `npm run migrate:create` (with `DATABASE_URL` pointing to a Neon test branch), review the file, test it on a branch made from production (`npm run migrate`), then commit.
+- `npm run migrate:status` shows what has been applied where.
+- Before a migration on production, make a Neon backup branch (named `backup-YYYY-MM-DD-...`).
+
+## Editable lists
+
+Products, news categories, partner categories and cities are records in the admin ("კატეგორიები"), not code. Editors add, rename, reorder (drag) and remove them. A list entry still used by offers, news, documents or banners cannot be deleted; the admin says where it is used. Each entry has a hidden `key` (e.g. `health`) that the site code and the product pages rely on; it is made from the name once and never changes.
+
 ## Moving to AWS later
 
-Same code. Change `DATABASE_URL` to RDS, the `AWS_*` variables to a real S3 bucket (remove `AWS_ENDPOINT_URL_S3`), host the Next app on Amplify Hosting or App Runner, run `npm run build && npm start`. Export the Neon database with `pg_dump` and import it into RDS; copy the bucket contents with `aws s3 sync`.
+Same code, same database structure. Change `DATABASE_URL` to RDS (PostgreSQL), the `AWS_*` variables to a real S3 bucket (remove `AWS_ENDPOINT_URL_S3`), host the Next app on Amplify Hosting or App Runner, run `npm run build && npm start`. Export the Neon database with `pg_dump` and import it into RDS; copy the bucket contents with `aws s3 sync`.
+
+Two ways to fill RDS, both give the same result:
+
+1. **Copy everything (recommended):** `pg_dump` from Neon, `pg_restore` into RDS. All content, users, messages and the `payload_migrations` table come along, so the first build on AWS finds nothing to migrate.
+2. **Empty database:** point `DATABASE_URL` to an empty RDS database and build: the migrations create every table and the default lists, then `npm run seed` adds the sample content.

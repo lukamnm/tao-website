@@ -22,7 +22,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
   if (!offer) notFound()
   const others = all
     .filter((x) => x.id !== offer.id)
-    .sort((a, b) => Number(b.product === offer.product) - Number(a.product === offer.product) || a.order - b.order)
+    .sort((a, b) => Number(b.product === offer.product) - Number(a.product === offer.product))
     .slice(0, 3)
   return <OfferDetail offer={offer} others={others} />
 }

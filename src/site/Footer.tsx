@@ -80,8 +80,9 @@ export function Footer() {
         <div style={{ minWidth: 0 }}>
           <p className="tao-caps" style={kicker}>{t('დაზღვევა')}</p>
           <ul style={ul}>
-            <li><a href={L('/health')} className="tao-flink" style={flink}>{t('ჯანმრთელობის დაზღვევა')}</a></li>
-            <li><a href={L('/travel')} className="tao-flink" style={flink}>{t('სამოგზაურო დაზღვევა')}</a></li>
+            {settings.products.filter((p) => p.inMenu).map((p) => (
+              <li key={p.key}><a href={L(p.href)} className="tao-flink" style={flink}>{p.name}</a></li>
+            ))}
           </ul>
         </div>
         <div style={{ minWidth: 0 }}>

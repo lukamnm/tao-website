@@ -4,8 +4,7 @@ import { Button, Icon } from '@/ds'
 import { useSite } from '@/site/SiteProvider'
 import { Breadcrumb } from './shared'
 import { OfferCard } from './OfferCard'
-import type { OfferVM } from '@/lib/content'
-import { PRODUCT_LABEL, OFFER_CATEGORIES, CITIES } from '@/collections/options'
+import type { ListItem, OfferVM } from '@/lib/content'
 
 /* Offers listing (design "06 Offers"): product chips, sort, side filters, grid with pagination. */
 
@@ -16,7 +15,7 @@ const SORTS = [
   { id: 'value', label: 'ფასდაკლების ზომით' },
 ]
 
-export function Offers({ offers }: { offers: OfferVM[] }) {
+export function Offers({ offers, categories, cities }: { offers: OfferVM[]; categories: ListItem[]; cities: ListItem[] }) {
   const { t, settings } = useSite()
   const [product, setProduct] = useState('all')
   const [sel, setSel] = useState<{ cat: string[]; city: string[] }>({ cat: [], city: [] })
@@ -24,7 +23,7 @@ export function Offers({ offers }: { offers: OfferVM[] }) {
   const [page, setPage] = useState(1)
   const [filtersOpen, setFiltersOpen] = useState(false)
 
-  const products = useMemo(() => Array.from(new Set(offers.map((o) => o.product))).filter((p) => PRODUCT_LABEL[p]), [offers])
+  const products = useMemo(() => settings.products.filter((p) => offers.some((o) => o.product === p.key)), [settings.products, offers])
   const match = (o: OfferVM, skip?: string) =>
     (skip === 'product' || product === 'all' || o.product === product) &&
     (skip === 'cat' || !sel.cat.length || sel.cat.includes(o.cat)) &&
@@ -42,17 +41,17 @@ export function Offers({ offers }: { offers: OfferVM[] }) {
   const count = (key: 'cat' | 'city', id: string) => offers.filter((o) => match(o, key) && (key === 'city' ? o.cities.includes(id) : o.cat === id)).length
 
   const groups = [
-    { key: 'cat' as const, title: 'პარტნიორის კატეგორია', items: OFFER_CATEGORIES.map((x) => ({ id: x.value, label: x.label })) },
-    { key: 'city' as const, title: 'ქალაქი', items: CITIES.map((x) => ({ id: x.value, label: x.label })) },
+    { key: 'cat' as const, title: 'პარტნიორის კატეგორია', items: categories.map((x) => ({ id: x.key, label: x.name })) },
+    { key: 'city' as const, title: 'ქალაქი', items: cities.map((x) => ({ id: x.key, label: x.name })) },
   ]
 
-  const chips = [{ id: 'all', short: 'ყველა', icon: '' }].concat(products.map((p) => ({ id: p, short: PRODUCT_LABEL[p].short, icon: PRODUCT_LABEL[p].icon })))
+  const chips = [{ id: 'all', short: 'ყველა', icon: '' }].concat(products.map((p) => ({ id: p.key, short: p.short, icon: p.icon })))
   const activeTags: { label: string; remove: () => void }[] = []
   ;(['cat', 'city'] as const).forEach((key) => {
-    const src = key === 'cat' ? OFFER_CATEGORIES : CITIES
+    const src = key === 'cat' ? categories : cities
     sel[key].forEach((id) => {
-      const f = src.find((x) => x.value === id)
-      if (f) activeTags.push({ label: f.label, remove: toggle(key, id) })
+      const f = src.find((x) => x.key === id)
+      if (f) activeTags.push({ label: f.name, remove: toggle(key, id) })
     })
   })
   const nFilters = activeTags.length

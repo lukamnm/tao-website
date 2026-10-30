@@ -60,11 +60,12 @@ function lexical(blocks: Block[], locale: 'ka' | 'en', phoneId?: number | string
 export async function fillNewsBodies(payload: Payload) {
   const phone = await payload.find({ collection: 'media', where: { filename: { like: 'news-phone-online' } }, limit: 1 })
   const phoneId = phone.docs[0]?.id
-  const news = await payload.find({ collection: 'news', limit: 500, locale: 'ka', depth: 0 })
+  const news = await payload.find({ collection: 'news', limit: 500, locale: 'ka', depth: 1 })
   let n = 0
   for (const item of news.docs) {
     if (item.body) continue
-    const blocks = BODY[item.category as string]
+    const cat = item.category as { key?: string } | number
+    const blocks = BODY[typeof cat === 'object' ? cat.key || '' : '']
     if (!blocks) continue
     await payload.update({ collection: 'news', id: item.id, locale: 'ka', data: { body: lexical(blocks, 'ka', phoneId) as never } })
     await payload.update({ collection: 'news', id: item.id, locale: 'en', data: { body: lexical(blocks, 'en', phoneId) as never } })

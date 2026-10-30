@@ -1,7 +1,8 @@
 import type { CollectionConfig } from 'payload'
 import { contentHooks } from '@/lib/revalidate'
-import { NEWS_CATEGORIES, PRODUCT_OPTIONS } from './options'
 import { slugField } from './slug'
+import { imageFields } from './fields'
+import { previewUrl } from '@/lib/preview'
 
 export const News: CollectionConfig = {
   slug: 'news',
@@ -10,26 +11,43 @@ export const News: CollectionConfig = {
     useAsTitle: 'title',
     group: 'კონტენტი',
     defaultColumns: ['title', 'category', 'date', 'published'],
+    listSearchableFields: ['title'],
+    description: 'კომპანიის ამბები და სტატიები. უახლესი ჩანს მთავარ გვერდზე.',
+    preview: (doc, { locale }) => previewUrl(`/news/${doc.slug}`, locale),
   },
   access: { read: () => true },
   hooks: contentHooks,
   defaultSort: '-date',
   fields: [
-    { name: 'title', type: 'text', label: 'სათაური', required: true, localized: true },
-    slugField(),
     {
-      type: 'row',
-      fields: [
-        { name: 'category', type: 'select', label: 'კატეგორია', required: true, defaultValue: 'company', options: NEWS_CATEGORIES },
-        { name: 'product', type: 'select', label: 'პროდუქტი (სურვილისამებრ)', options: PRODUCT_OPTIONS },
-        { name: 'date', type: 'date', label: 'თარიღი', required: true, defaultValue: () => new Date().toISOString() },
+      type: 'tabs',
+      tabs: [
+        {
+          label: 'ძირითადი',
+          fields: [
+            { name: 'title', type: 'text', label: 'სათაური', required: true, localized: true },
+            {
+              type: 'row',
+              fields: [
+                { name: 'category', type: 'relationship', relationTo: 'news-categories', label: 'კატეგორია', required: true, admin: { width: '34%' } },
+                { name: 'product', type: 'relationship', relationTo: 'products', label: 'პროდუქტი', admin: { width: '33%', description: 'თუ სიახლე კონკრეტულ პროდუქტს ეხება' } },
+                { name: 'date', type: 'date', label: 'თარიღი', required: true, defaultValue: () => new Date().toISOString(), admin: { width: '33%', date: { pickerAppearance: 'dayOnly', displayFormat: 'dd.MM.yyyy' } } },
+              ],
+            },
+            { name: 'excerpt', type: 'textarea', label: 'მოკლე აღწერა', required: true, localized: true, admin: { description: '1-2 წინადადება. ჩანს სიახლეების სიაში.' } },
+            ...imageFields(),
+          ],
+        },
+        {
+          label: 'სტატია',
+          fields: [
+            { name: 'lead', type: 'textarea', label: 'შესავალი', localized: true, admin: { description: 'პირველი აბზაცი, დიდი შრიფტით.' } },
+            { name: 'body', type: 'richText', label: 'ტექსტი', localized: true },
+          ],
+        },
       ],
     },
-    { name: 'excerpt', type: 'textarea', label: 'მოკლე აღწერა', required: true, localized: true },
-    { name: 'lead', type: 'textarea', label: 'შესავალი აბზაცი', localized: true },
-    { name: 'image', type: 'upload', relationTo: 'media', label: 'სურათი', required: true },
-    { name: 'imagePosition', type: 'text', label: 'სურათის პოზიცია', defaultValue: '50% 50%' },
-    { name: 'body', type: 'richText', label: 'სტატია', localized: true },
-    { name: 'published', type: 'checkbox', label: 'გამოქვეყნებული', defaultValue: true },
+    { name: 'published', type: 'checkbox', label: 'საიტზე ჩანს', defaultValue: true, admin: { components: { Cell: '/components/admin/YesNoCell#YesNoCell' }, position: 'sidebar', description: 'მოხსენი მონიშვნა, თუ ჯერ არ გინდა გამოქვეყნება.' } },
+    slugField(),
   ],
 }

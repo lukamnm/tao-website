@@ -5,14 +5,11 @@ import { useSite } from '@/site/SiteProvider'
 import { Breadcrumb } from './shared'
 import { RichText } from './RichText'
 import type { NewsVM } from '@/lib/content'
-import { PRODUCT_LABEL } from '@/collections/options'
-
-const PRODUCT_TEXT: Record<string, string> = { health: 'ექიმი, კვლევები და სტაციონარი ერთ პოლისში.', travel: 'სამედიცინო დაფარვა საზღვარგარეთ.', car: 'ავტომობილის დაცვა ყოველდღიურად.', property: 'სახლი და ქონება, დაცული.' }
 
 export function NewsArticle({ item: cur, others }: { item: NewsVM; others: NewsVM[] }) {
-  const { t, L, locale } = useSite()
+  const { t, L } = useSite()
   const [copied, setCopied] = useState(false)
-  const prod = cur.product ? PRODUCT_LABEL[cur.product] : null
+  const prod = cur.product
   const [share, setShare] = useState('')
   useEffect(() => setShare(window.location.href), [])
   const copyLink = () => {
@@ -80,13 +77,15 @@ export function NewsArticle({ item: cur, others }: { item: NewsVM; others: NewsV
                   <span style={{ width: 48, height: 48, boxSizing: 'border-box', border: '1px solid var(--on-blue-line)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Icon name={prod.icon} size={22} />
                   </span>
-                  <h3 className="tao-h tao-h--h4" style={{ margin: 0, color: 'var(--on-primary)' }}>{locale === 'en' ? prod.en : prod.ka}</h3>
-                  <p style={{ margin: 0, fontSize: 15, color: 'var(--on-blue-muted)' }}>{t(PRODUCT_TEXT[cur.product] || '')}</p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, paddingTop: 4 }}>
-                    <Button variant="onBlue" size="sm" href={L(prod.route)}>
-                      {t('გაიგე მეტი')}
-                    </Button>
-                  </div>
+                  <h3 className="tao-h tao-h--h4" style={{ margin: 0, color: 'var(--on-primary)' }}>{prod.name}</h3>
+                  <p style={{ margin: 0, fontSize: 15, color: 'var(--on-blue-muted)' }}>{prod.description}</p>
+                  {prod.href ? (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, paddingTop: 4 }}>
+                      <Button variant="onBlue" size="sm" href={L(prod.href)}>
+                        {t('გაიგე მეტი')}
+                      </Button>
+                    </div>
+                  ) : null}
                 </div>
               ) : null}
             </aside>

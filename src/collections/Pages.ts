@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { contentHooks } from '@/lib/revalidate'
+import { previewUrl } from '@/lib/preview'
 
 // Long-form text pages rendered in the info layout: privacy policy, terms of use, complaints procedure.
 export const Pages: CollectionConfig = {
@@ -9,15 +10,27 @@ export const Pages: CollectionConfig = {
     useAsTitle: 'title',
     group: 'კონტენტი',
     defaultColumns: ['title', 'slug', 'updatedAt'],
-    description: 'კონფიდენციალურობის პოლიტიკა, საიტის წესები, პრეტენზიების წესი და სხვა ტექსტური გვერდები.',
+    description: 'კონფიდენციალურობის პოლიტიკა, საიტის წესები და პრეტენზიების წესი. სანამ აქ გვერდს არ შექმნი, საიტზე დიზაინის ტექსტი ჩანს.',
+    preview: (doc, { locale }) => previewUrl(`/${doc.slug}`, locale),
   },
   access: { read: () => true },
   hooks: contentHooks,
   fields: [
+    {
+      name: 'slug',
+      type: 'select',
+      label: 'რომელი გვერდი',
+      required: true,
+      unique: true,
+      options: [
+        { label: 'კონფიდენციალურობის პოლიტიკა', value: 'privacy' },
+        { label: 'საიტის გამოყენების წესები', value: 'terms' },
+        { label: 'პრეტენზიების განხილვის წესი', value: 'complaints' },
+      ],
+    },
     { name: 'title', type: 'text', label: 'სათაური', required: true, localized: true },
-    { name: 'slug', type: 'text', label: 'URL (slug)', required: true, unique: true, admin: { position: 'sidebar', description: 'privacy, terms, complaints' } },
     { name: 'intro', type: 'textarea', label: 'შესავალი', localized: true },
     { name: 'body', type: 'richText', label: 'ტექსტი', localized: true, required: true },
-    { name: 'effectiveDate', type: 'date', label: 'ძალაშია: თარიღიდან' },
+    { name: 'effectiveDate', type: 'date', label: 'ძალაშია (თარიღი)', admin: { position: 'sidebar', date: { pickerAppearance: 'dayOnly', displayFormat: 'dd.MM.yyyy' } } },
   ],
 }

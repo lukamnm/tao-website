@@ -67,13 +67,17 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    banners: Banner;
-    offers: Offer;
-    news: News;
-    pages: Page;
-    documents: Document;
     'contact-messages': ContactMessage;
     'corporate-requests': CorporateRequest;
+    news: News;
+    offers: Offer;
+    banners: Banner;
+    documents: Document;
+    pages: Page;
+    products: Product;
+    'news-categories': NewsCategory;
+    'offer-categories': OfferCategory;
+    cities: City;
     media: Media;
     users: User;
     'payload-kv': PayloadKv;
@@ -83,13 +87,17 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
-    banners: BannersSelect<false> | BannersSelect<true>;
-    offers: OffersSelect<false> | OffersSelect<true>;
-    news: NewsSelect<false> | NewsSelect<true>;
-    pages: PagesSelect<false> | PagesSelect<true>;
-    documents: DocumentsSelect<false> | DocumentsSelect<true>;
     'contact-messages': ContactMessagesSelect<false> | ContactMessagesSelect<true>;
     'corporate-requests': CorporateRequestsSelect<false> | CorporateRequestsSelect<true>;
+    news: NewsSelect<false> | NewsSelect<true>;
+    offers: OffersSelect<false> | OffersSelect<true>;
+    banners: BannersSelect<false> | BannersSelect<true>;
+    documents: DocumentsSelect<false> | DocumentsSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
+    products: ProductsSelect<false> | ProductsSelect<true>;
+    'news-categories': NewsCategoriesSelect<false> | NewsCategoriesSelect<true>;
+    'offer-categories': OfferCategoriesSelect<false> | OfferCategoriesSelect<true>;
+    cities: CitiesSelect<false> | CitiesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -136,40 +144,164 @@ export interface UserAuthOperations {
   };
 }
 /**
- * მთავარი გვერდის სლაიდერი (hero) და პრომო-ბანერები.
+ * საიტის კონტაქტის ფორმიდან შემოსული წერილები. პასუხის შემდეგ შეცვალე სტატუსი.
  *
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "banners".
+ * via the `definition` "contact-messages".
  */
-export interface Banner {
+export interface ContactMessage {
   id: number;
-  placement: 'hero' | 'promo';
-  kicker?: string | null;
-  title: string;
-  text?: string | null;
-  image: number | Media;
+  status?: ('new' | 'answered' | 'closed') | null;
+  topic?: ('general' | 'buy' | 'claim' | 'complaint') | null;
+  name: string;
+  phone: string;
+  email?: string | null;
+  message: string;
+  consent?: boolean | null;
+  locale?: string | null;
   /**
-   * მაგ. 80% 50%
+   * მხოლოდ თანამშრომლები ხედავენ. მაგ: დავურეკე, თანახმაა.
    */
-  imagePosition?: string | null;
-  actionLabel?: string | null;
-  /**
-   * შიდა გვერდი (/health, /offers/slug) ან სრული URL. "portal" - ტაოს პორტალი.
-   */
-  href: string;
-  active?: boolean | null;
-  order?: number | null;
-  from?: string | null;
-  until?: string | null;
+  note?: string | null;
   updatedAt: string;
   createdAt: string;
 }
 /**
+ * კომპანიების მოთხოვნები ჯანმრთელობის დაზღვევის გვერდიდან. დაუკავშირდი 1 სამუშაო დღეში და შეცვალე სტატუსი.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "corporate-requests".
+ */
+export interface CorporateRequest {
+  id: number;
+  status?: ('new' | 'progress' | 'closed') | null;
+  firstName: string;
+  lastName: string;
+  company: string;
+  companyCode: string;
+  staff: number;
+  phone: string;
+  consent?: boolean | null;
+  locale?: string | null;
+  /**
+   * მხოლოდ თანამშრომლები ხედავენ. მაგ: დავურეკე, თანახმაა.
+   */
+  note?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * კომპანიის ამბები და სტატიები. უახლესი ჩანს მთავარ გვერდზე.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news".
+ */
+export interface News {
+  id: number;
+  title: string;
+  category: number | NewsCategory;
+  /**
+   * თუ სიახლე კონკრეტულ პროდუქტს ეხება
+   */
+  product?: (number | null) | Product;
+  date: string;
+  /**
+   * 1-2 წინადადება. ჩანს სიახლეების სიაში.
+   */
+  excerpt: string;
+  image: number | Media;
+  imagePosition?: string | null;
+  /**
+   * პირველი აბზაცი, დიდი შრიფტით.
+   */
+  lead?: string | null;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * მოხსენი მონიშვნა, თუ ჯერ არ გინდა გამოქვეყნება.
+   */
+  published?: boolean | null;
+  /**
+   * ივსება ავტომატურად სათაურიდან. მაგ: taoinsurance.ge/offers/travel-15
+   */
+  slug?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * სიახლეების კატეგორიები (კომპანია, პროდუქტები...). ჩანს სიახლეების ფილტრში.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news-categories".
+ */
+export interface NewsCategory {
+  id: number;
+  _order?: string | null;
+  name: string;
+  key?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * დაზღვევის პროდუქტები. ჩანს შეთავაზებებში, სიახლეებში, დოკუმენტებში და საიტის მენიუში. რიგის შესაცვლელად გადაათრიე.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products".
+ */
+export interface Product {
+  id: number;
+  _order?: string | null;
+  name: string;
+  /**
+   * ფილტრის ღილაკებზე
+   */
+  shortName?: string | null;
+  icon: string;
+  menuText?: string | null;
+  /**
+   * ჩანს სიახლის გვერდზე, პროდუქტის ბარათში.
+   */
+  description?: string | null;
+  /**
+   * ახალ პროდუქტს საკუთარი გვერდი ჯერ არ აქვს: ის დიზაინით ემატება. მანამდე დატოვე ცარიელი.
+   */
+  pagePath?: ('/health' | '/travel') | null;
+  /**
+   * მხოლოდ იმ პროდუქტებისთვის, რომლებსაც გვერდი აქვთ.
+   */
+  showInMenu?: boolean | null;
+  /**
+   * თუ ცარიელია, ღილაკი პორტალის მთავარ გვერდს გახსნის.
+   */
+  portalUrl?: string | null;
+  key?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * ყველა ატვირთული ფოტო. ფოტოს ატვირთვა შეგიძლია პირდაპირ სიახლიდან, შეთავაზებიდან ან ბანერიდან.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
   id: number;
+  /**
+   * მოკლედ აღწერე ფოტო. ამას კითხულობენ უსინათლოები და Google.
+   */
   alt: string;
   _objectKey?: string | null;
   updatedAt: string;
@@ -219,31 +351,46 @@ export interface Media {
   };
 }
 /**
+ * აქციები, ფასდაკლებები და პარტნიორების შეთავაზებები. ვადაგასული შეთავაზება საიტზე ავტომატურად ქრება.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "offers".
  */
 export interface Offer {
   id: number;
   title: string;
+  product: number | Product;
   /**
-   * ლათინური ასოები, ციფრები და ტირე. მაგ. travel-15
+   * პარტნიორის შეთავაზებაზე ჩნდება პარტნიორის ველები და ღილაკი მის საიტზე.
    */
-  slug?: string | null;
-  product: 'health' | 'travel' | 'car' | 'property';
   type: 'discount' | 'bundle' | 'partner';
-  category?: ('medical' | 'pharmacy' | 'sport' | 'trip') | null;
-  cities?: ('online' | 'tbilisi' | 'batumi' | 'kutaisi')[] | null;
-  value?: string | null;
-  pct?: number | null;
   /**
-   * მაგ. "ოჯახის ყველა წევრი ერთ პოლისში"
+   * 1-2 წინადადება. ჩანს ბარათზე და გვერდის თავში.
    */
-  note?: string | null;
   excerpt: string;
+  /**
+   * დიდი ციფრი ფოტოზე
+   */
+  value?: string | null;
+  note?: string | null;
   image: number | Media;
   imagePosition?: string | null;
   from: string;
+  /**
+   * ამ დღის შემდეგ საიტზე აღარ ჩანს
+   */
   until: string;
+  category?: (number | null) | OfferCategory;
+  /**
+   * ჩვეულებრივ "ონლაინ". პარტნიორისთვის აირჩიე ქალაქები, სადაც ფილიალები აქვს.
+   */
+  cities?: (number | City)[] | null;
+  partner?: {
+    name?: string | null;
+    phone?: string | null;
+    website?: string | null;
+    address?: string | null;
+  };
   body?: {
     root: {
       type: string;
@@ -271,67 +418,145 @@ export interface Offer {
         id?: string | null;
       }[]
     | null;
-  partner?: {
-    name?: string | null;
-    phone?: string | null;
-    address?: string | null;
-    website?: string | null;
-  };
-  featured?: boolean | null;
-  order?: number | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "news".
- */
-export interface News {
-  id: number;
-  title: string;
   /**
-   * ლათინური ასოები, ციფრები და ტირე. მაგ. travel-15
+   * ივსება ავტომატურად სათაურიდან. მაგ: taoinsurance.ge/offers/travel-15
    */
   slug?: string | null;
-  category: 'company' | 'products' | 'campaigns' | 'partners';
-  product?: ('health' | 'travel' | 'car' | 'property') | null;
-  date: string;
-  excerpt: string;
-  lead?: string | null;
-  image: number | Media;
-  imagePosition?: string | null;
-  body?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  published?: boolean | null;
+  /**
+   * მთავარ გვერდზე ჩანს 3 მონიშნული შეთავაზება.
+   */
+  featured?: boolean | null;
+  pct?: number | null;
   updatedAt: string;
   createdAt: string;
 }
 /**
- * კონფიდენციალურობის პოლიტიკა, საიტის წესები, პრეტენზიების წესი და სხვა ტექსტური გვერდები.
+ * პარტნიორების სფეროები (კლინიკა, აფთიაქი...). ჩანს შეთავაზებების ფილტრში.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "offer-categories".
+ */
+export interface OfferCategory {
+  id: number;
+  _order?: string | null;
+  name: string;
+  key?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * სად მოქმედებს შეთავაზება. ჩანს შეთავაზებების ფილტრში.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cities".
+ */
+export interface City {
+  id: number;
+  _order?: string | null;
+  name: string;
+  key?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * მთავარი გვერდის დიდი სლაიდერი და შავი პრომო-ბლოკი. რიგის შესაცვლელად გადაათრიე.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "banners".
+ */
+export interface Banner {
+  id: number;
+  _order?: string | null;
+  placement: 'hero' | 'promo';
+  /**
+   * ჩანს სათაურის ზემოთ და გადამრთველ ღილაკზე.
+   */
+  kicker?: string | null;
+  title: string;
+  /**
+   * 1 წინადადება
+   */
+  text?: string | null;
+  image: number | Media;
+  imagePosition?: string | null;
+  actionLabel?: string | null;
+  link?: {
+    type?: ('page' | 'offer' | 'news' | 'portal' | 'url') | null;
+    page?:
+      | (
+          | '/'
+          | '/#products'
+          | '/health'
+          | '/travel'
+          | '/offers'
+          | '/news'
+          | '/about'
+          | '/contact'
+          | '/legal'
+          | '/financial'
+          | '/complaints'
+          | '/privacy'
+          | '/terms'
+        )
+      | null;
+    offer?: (number | null) | Offer;
+    news?: (number | null) | News;
+    /**
+     * ცარიელი = პორტალის მთავარი გვერდი
+     */
+    product?: (number | null) | Product;
+    url?: string | null;
+  };
+  active?: boolean | null;
+  from?: string | null;
+  until?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * PDF ფაილები: დაზღვევის პირობები, ფორმები და ფინანსური ანგარიშგება. ჩანს იურიდიული და ფინანსური ინფორმაციის გვერდებზე.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "documents".
+ */
+export interface Document {
+  id: number;
+  title: string;
+  section: 'legal' | 'financial';
+  docType: 'terms' | 'sheet' | 'sample' | 'other' | 'annual' | 'quarterly';
+  /**
+   * ცარიელი = ზოგადი დოკუმენტი
+   */
+  product?: (number | null) | Product;
+  date: string;
+  quarter?: ('Q1' | 'Q2' | 'Q3' | 'Q4') | null;
+  /**
+   * სურვილისამებრ. ძიებაში გამოიყენება.
+   */
+  code?: string | null;
+  _objectKey?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * კონფიდენციალურობის პოლიტიკა, საიტის წესები და პრეტენზიების წესი. სანამ აქ გვერდს არ შექმნი, საიტზე დიზაინის ტექსტი ჩანს.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
  */
 export interface Page {
   id: number;
+  slug: 'privacy' | 'terms' | 'complaints';
   title: string;
-  /**
-   * privacy, terms, complaints
-   */
-  slug: string;
   intro?: string | null;
   body: {
     root: {
@@ -353,77 +578,8 @@ export interface Page {
   createdAt: string;
 }
 /**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "documents".
- */
-export interface Document {
-  id: number;
-  title: string;
-  section: 'legal' | 'financial';
-  docType: 'terms' | 'sheet' | 'sample' | 'annual' | 'quarterly' | 'other';
-  product?: ('general' | 'health' | 'travel' | 'car' | 'property') | null;
-  date: string;
-  quarter?: ('Q1' | 'Q2' | 'Q3' | 'Q4') | null;
-  /**
-   * მაგ. TAO/HI/R-001/26
-   */
-  code?: string | null;
-  order?: number | null;
-  _objectKey?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * კონტაქტის ფორმიდან შემოსული შეტყობინებები.
+ * ვისაც ადმინ პანელში შესვლა შეუძლია. ადმინისტრატორი ყველაფერს მართავს, რედაქტორი მხოლოდ კონტენტს.
  *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "contact-messages".
- */
-export interface ContactMessage {
-  id: number;
-  status?: ('new' | 'answered' | 'closed') | null;
-  topic?: ('general' | 'buy' | 'claim' | 'complaint') | null;
-  name: string;
-  phone: string;
-  email?: string | null;
-  message: string;
-  consent?: boolean | null;
-  locale?: string | null;
-  note?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * ჯანმრთელობის დაზღვევის გვერდის "კომპანიებისთვის" ფორმიდან შემოსული მოთხოვნები.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "corporate-requests".
- */
-export interface CorporateRequest {
-  id: number;
-  status?: ('new' | 'progress' | 'closed') | null;
-  firstName: string;
-  lastName: string;
-  company: string;
-  companyCode: string;
-  staff: number;
-  phone: string;
-  consent?: boolean | null;
-  locale?: string | null;
-  note?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
@@ -476,32 +632,48 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
-        relationTo: 'banners';
-        value: number | Banner;
-      } | null)
-    | ({
-        relationTo: 'offers';
-        value: number | Offer;
-      } | null)
-    | ({
-        relationTo: 'news';
-        value: number | News;
-      } | null)
-    | ({
-        relationTo: 'pages';
-        value: number | Page;
-      } | null)
-    | ({
-        relationTo: 'documents';
-        value: number | Document;
-      } | null)
-    | ({
         relationTo: 'contact-messages';
         value: number | ContactMessage;
       } | null)
     | ({
         relationTo: 'corporate-requests';
         value: number | CorporateRequest;
+      } | null)
+    | ({
+        relationTo: 'news';
+        value: number | News;
+      } | null)
+    | ({
+        relationTo: 'offers';
+        value: number | Offer;
+      } | null)
+    | ({
+        relationTo: 'banners';
+        value: number | Banner;
+      } | null)
+    | ({
+        relationTo: 'documents';
+        value: number | Document;
+      } | null)
+    | ({
+        relationTo: 'pages';
+        value: number | Page;
+      } | null)
+    | ({
+        relationTo: 'products';
+        value: number | Product;
+      } | null)
+    | ({
+        relationTo: 'news-categories';
+        value: number | NewsCategory;
+      } | null)
+    | ({
+        relationTo: 'offer-categories';
+        value: number | OfferCategory;
+      } | null)
+    | ({
+        relationTo: 'cities';
+        value: number | City;
       } | null)
     | ({
         relationTo: 'media';
@@ -555,129 +727,6 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "banners_select".
- */
-export interface BannersSelect<T extends boolean = true> {
-  placement?: T;
-  kicker?: T;
-  title?: T;
-  text?: T;
-  image?: T;
-  imagePosition?: T;
-  actionLabel?: T;
-  href?: T;
-  active?: T;
-  order?: T;
-  from?: T;
-  until?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "offers_select".
- */
-export interface OffersSelect<T extends boolean = true> {
-  title?: T;
-  slug?: T;
-  product?: T;
-  type?: T;
-  category?: T;
-  cities?: T;
-  value?: T;
-  pct?: T;
-  note?: T;
-  excerpt?: T;
-  image?: T;
-  imagePosition?: T;
-  from?: T;
-  until?: T;
-  body?: T;
-  steps?:
-    | T
-    | {
-        text?: T;
-        id?: T;
-      };
-  terms?:
-    | T
-    | {
-        text?: T;
-        id?: T;
-      };
-  partner?:
-    | T
-    | {
-        name?: T;
-        phone?: T;
-        address?: T;
-        website?: T;
-      };
-  featured?: T;
-  order?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "news_select".
- */
-export interface NewsSelect<T extends boolean = true> {
-  title?: T;
-  slug?: T;
-  category?: T;
-  product?: T;
-  date?: T;
-  excerpt?: T;
-  lead?: T;
-  image?: T;
-  imagePosition?: T;
-  body?: T;
-  published?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "pages_select".
- */
-export interface PagesSelect<T extends boolean = true> {
-  title?: T;
-  slug?: T;
-  intro?: T;
-  body?: T;
-  effectiveDate?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "documents_select".
- */
-export interface DocumentsSelect<T extends boolean = true> {
-  title?: T;
-  section?: T;
-  docType?: T;
-  product?: T;
-  date?: T;
-  quarter?: T;
-  code?: T;
-  order?: T;
-  _objectKey?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "contact-messages_select".
  */
 export interface ContactMessagesSelect<T extends boolean = true> {
@@ -708,6 +757,187 @@ export interface CorporateRequestsSelect<T extends boolean = true> {
   consent?: T;
   locale?: T;
   note?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news_select".
+ */
+export interface NewsSelect<T extends boolean = true> {
+  title?: T;
+  category?: T;
+  product?: T;
+  date?: T;
+  excerpt?: T;
+  image?: T;
+  imagePosition?: T;
+  lead?: T;
+  body?: T;
+  published?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "offers_select".
+ */
+export interface OffersSelect<T extends boolean = true> {
+  title?: T;
+  product?: T;
+  type?: T;
+  excerpt?: T;
+  value?: T;
+  note?: T;
+  image?: T;
+  imagePosition?: T;
+  from?: T;
+  until?: T;
+  category?: T;
+  cities?: T;
+  partner?:
+    | T
+    | {
+        name?: T;
+        phone?: T;
+        website?: T;
+        address?: T;
+      };
+  body?: T;
+  steps?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  terms?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  slug?: T;
+  featured?: T;
+  pct?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "banners_select".
+ */
+export interface BannersSelect<T extends boolean = true> {
+  _order?: T;
+  placement?: T;
+  kicker?: T;
+  title?: T;
+  text?: T;
+  image?: T;
+  imagePosition?: T;
+  actionLabel?: T;
+  link?:
+    | T
+    | {
+        type?: T;
+        page?: T;
+        offer?: T;
+        news?: T;
+        product?: T;
+        url?: T;
+      };
+  active?: T;
+  from?: T;
+  until?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "documents_select".
+ */
+export interface DocumentsSelect<T extends boolean = true> {
+  title?: T;
+  section?: T;
+  docType?: T;
+  product?: T;
+  date?: T;
+  quarter?: T;
+  code?: T;
+  _objectKey?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  slug?: T;
+  title?: T;
+  intro?: T;
+  body?: T;
+  effectiveDate?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products_select".
+ */
+export interface ProductsSelect<T extends boolean = true> {
+  _order?: T;
+  name?: T;
+  shortName?: T;
+  icon?: T;
+  menuText?: T;
+  description?: T;
+  pagePath?: T;
+  showInMenu?: T;
+  portalUrl?: T;
+  key?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news-categories_select".
+ */
+export interface NewsCategoriesSelect<T extends boolean = true> {
+  _order?: T;
+  name?: T;
+  key?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "offer-categories_select".
+ */
+export interface OfferCategoriesSelect<T extends boolean = true> {
+  _order?: T;
+  name?: T;
+  key?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cities_select".
+ */
+export interface CitiesSelect<T extends boolean = true> {
+  _order?: T;
+  name?: T;
+  key?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -840,7 +1070,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
- * კონტაქტები, პორტალის ბმულები, სოციალური ქსელები და სტატისტიკა.
+ * ტელეფონი, მისამართი, პორტალის ბმული, სოციალური ქსელები და ციფრები "ჩვენ შესახებ" გვერდზე. ცვლილება საიტზე მაშინვე ჩანს.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "settings".
@@ -848,18 +1078,23 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 export interface Setting {
   id: number;
   phone?: string | null;
-  phoneHref?: string | null;
   email?: string | null;
+  phoneHref?: string | null;
   address?: string | null;
   addressShort?: string | null;
   city?: string | null;
   hours?: string | null;
+  /**
+   * Google Maps-ში იპოვე ოფისი, დააჭირე "გაზიარება" და ბმული აქ ჩასვი.
+   */
   mapUrl?: string | null;
+  /**
+   * "ჩემი პროფილი" ღილაკი ამ მისამართზე გადადის.
+   */
   portalUrl?: string | null;
-  portalHealthUrl?: string | null;
-  portalTravelUrl?: string | null;
-  portalCarUrl?: string | null;
-  portalPropertyUrl?: string | null;
+  /**
+   * თუ ცარიელია, პორტალის მთავარი გვერდი გაიხსნება.
+   */
   portalClaimUrl?: string | null;
   facebook?: string | null;
   instagram?: string | null;
@@ -870,6 +1105,9 @@ export interface Setting {
   corporate?: string | null;
   siteName?: string | null;
   siteDescription?: string | null;
+  /**
+   * ჩანს, როცა საიტის ბმულს ვინმე Facebook-ზე ან Messenger-ში აზიარებს.
+   */
   ogImage?: (number | null) | Media;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -880,18 +1118,14 @@ export interface Setting {
  */
 export interface SettingsSelect<T extends boolean = true> {
   phone?: T;
-  phoneHref?: T;
   email?: T;
+  phoneHref?: T;
   address?: T;
   addressShort?: T;
   city?: T;
   hours?: T;
   mapUrl?: T;
   portalUrl?: T;
-  portalHealthUrl?: T;
-  portalTravelUrl?: T;
-  portalCarUrl?: T;
-  portalPropertyUrl?: T;
   portalClaimUrl?: T;
   facebook?: T;
   instagram?: T;

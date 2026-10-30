@@ -2,11 +2,22 @@ import type { CollectionConfig } from 'payload'
 
 export const Media: CollectionConfig = {
   slug: 'media',
-  labels: { singular: 'სურათი', plural: 'სურათები' },
-  admin: { group: 'მედია' },
+  labels: { singular: 'ფოტო', plural: 'ფოტოები' },
+  admin: {
+    group: 'სისტემა',
+    description: 'ყველა ატვირთული ფოტო. ფოტოს ატვირთვა შეგიძლია პირდაპირ სიახლიდან, შეთავაზებიდან ან ბანერიდან.',
+    defaultColumns: ['filename', 'alt', 'updatedAt'],
+  },
   access: { read: () => true },
   fields: [
-    { name: 'alt', type: 'text', label: 'აღწერა (alt)', required: true, localized: true },
+    {
+      name: 'alt',
+      type: 'text',
+      label: 'რა არის ფოტოზე',
+      required: true,
+      localized: true,
+      admin: { placeholder: 'მაგ: ექიმი პაციენტს ესაუბრება', description: 'მოკლედ აღწერე ფოტო. ამას კითხულობენ უსინათლოები და Google.' },
+    },
   ],
   upload: {
     mimeTypes: ['image/*'],

@@ -1,6 +1,5 @@
 import type { CollectionConfig } from 'payload'
 import { contentHooks } from '@/lib/revalidate'
-import { PRODUCT_OPTIONS } from './options'
 
 // PDF library: legal documents (terms, information sheets, samples, forms) and financial statements.
 export const Documents: CollectionConfig = {
@@ -10,50 +9,56 @@ export const Documents: CollectionConfig = {
     useAsTitle: 'title',
     group: 'კონტენტი',
     defaultColumns: ['title', 'section', 'docType', 'product', 'date'],
+    listSearchableFields: ['title', 'code'],
+    description: 'PDF ფაილები: დაზღვევის პირობები, ფორმები და ფინანსური ანგარიშგება. ჩანს იურიდიული და ფინანსური ინფორმაციის გვერდებზე.',
   },
   access: { read: () => true },
   hooks: contentHooks,
-  upload: {
-    mimeTypes: ['application/pdf'],
-  },
+  upload: { mimeTypes: ['application/pdf', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'] },
+  defaultSort: '-date',
   fields: [
-    { name: 'title', type: 'text', label: 'სათაური', required: true, localized: true },
+    { name: 'title', type: 'text', label: 'დოკუმენტის სახელი', required: true, localized: true, admin: { placeholder: 'მაგ: სამოგზაურო დაზღვევის პირობები' } },
     {
-      name: 'section',
-      type: 'select',
-      label: 'განყოფილება',
-      required: true,
-      defaultValue: 'legal',
-      options: [
-        { label: 'იურიდიული ინფორმაცია', value: 'legal' },
-        { label: 'ფინანსური ინფორმაცია', value: 'financial' },
+      type: 'row',
+      fields: [
+        {
+          name: 'section',
+          type: 'select',
+          label: 'რომელ გვერდზე',
+          required: true,
+          defaultValue: 'legal',
+          options: [
+            { label: 'იურიდიული ინფორმაცია', value: 'legal' },
+            { label: 'ფინანსური ინფორმაცია', value: 'financial' },
+          ],
+          admin: { width: '50%' },
+        },
+        {
+          name: 'docType',
+          type: 'select',
+          label: 'დოკუმენტის სახე',
+          required: true,
+          defaultValue: 'terms',
+          options: [
+            { label: 'დაზღვევის პირობები', value: 'terms' },
+            { label: 'საინფორმაციო ფურცელი', value: 'sheet' },
+            { label: 'ნიმუში ან ფორმა', value: 'sample' },
+            { label: 'კორპორატიული დოკუმენტი (წესდება, ლიცენზია...)', value: 'other' },
+            { label: 'წლიური ანგარიშგება', value: 'annual' },
+            { label: 'კვარტალური ანგარიშგება', value: 'quarterly' },
+          ],
+          admin: { width: '50%' },
+        },
       ],
     },
     {
-      name: 'docType',
-      type: 'select',
-      label: 'ტიპი',
-      required: true,
-      defaultValue: 'terms',
-      options: [
-        { label: 'დაზღვევის პირობები', value: 'terms' },
-        { label: 'საინფორმაციო ფურცელი', value: 'sheet' },
-        { label: 'ნიმუშები და ფორმები', value: 'sample' },
-        { label: 'წლიური ანგარიშგება (აუდიტირებული)', value: 'annual' },
-        { label: 'კვარტალური ანგარიშგება', value: 'quarterly' },
-        { label: 'სხვა', value: 'other' },
+      type: 'row',
+      fields: [
+        { name: 'product', type: 'relationship', relationTo: 'products', label: 'პროდუქტი', admin: { width: '50%', description: 'ცარიელი = ზოგადი დოკუმენტი' } },
+        { name: 'date', type: 'date', label: 'გამოქვეყნების თარიღი', required: true, admin: { width: '25%', date: { pickerAppearance: 'monthOnly', displayFormat: 'MM.yyyy' } } },
+        { name: 'quarter', type: 'select', label: 'კვარტალი', options: ['Q1', 'Q2', 'Q3', 'Q4'].map((q) => ({ label: q, value: q })), admin: { width: '25%', condition: (d) => d?.docType === 'quarterly' } },
       ],
     },
-    {
-      name: 'product',
-      type: 'select',
-      label: 'პროდუქტი',
-      defaultValue: 'general',
-      options: [{ label: 'ზოგადი', value: 'general' }, ...PRODUCT_OPTIONS],
-    },
-    { name: 'date', type: 'date', label: 'თარიღი', required: true, admin: { date: { pickerAppearance: 'monthOnly', displayFormat: 'MMMM yyyy' } } },
-    { name: 'quarter', type: 'select', label: 'კვარტალი', options: ['Q1', 'Q2', 'Q3', 'Q4'].map((q) => ({ label: q, value: q })), admin: { condition: (data) => data?.docType === 'quarterly' } },
-    { name: 'code', type: 'text', label: 'დოკუმენტის კოდი', admin: { description: 'მაგ. TAO/HI/R-001/26' } },
-    { name: 'order', type: 'number', label: 'რიგითობა', defaultValue: 0 },
+    { name: 'code', type: 'text', label: 'დოკუმენტის კოდი', admin: { placeholder: 'მაგ: TAO/HI/R-001/26', description: 'სურვილისამებრ. ძიებაში გამოიყენება.' } },
   ],
 }

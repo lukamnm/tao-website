@@ -8,11 +8,12 @@ export const CorporateRequests: CollectionConfig = {
     useAsTitle: 'company',
     group: 'შემოსული',
     defaultColumns: ['company', 'firstName', 'phone', 'staff', 'status', 'createdAt'],
-    description: 'ჯანმრთელობის დაზღვევის გვერდის "კომპანიებისთვის" ფორმიდან შემოსული მოთხოვნები.',
+    description: 'კომპანიების მოთხოვნები ჯანმრთელობის დაზღვევის გვერდიდან. დაუკავშირდი 1 სამუშაო დღეში და შეცვალე სტატუსი.',
   },
   access: {
     read: ({ req }) => !!req.user,
-    create: () => true,
+    // The website writes here through the server (local API); nobody creates messages by hand.
+    create: () => false,
     update: ({ req }) => !!req.user,
     delete: ({ req }) => req.user?.role === 'admin',
   },
@@ -36,8 +37,8 @@ export const CorporateRequests: CollectionConfig = {
     { name: 'companyCode', type: 'text', label: 'საიდენტიფიკაციო კოდი', required: true },
     { name: 'staff', type: 'number', label: 'თანამშრომლების რაოდენობა', required: true },
     { name: 'phone', type: 'text', label: 'ტელეფონი', required: true },
-    { name: 'consent', type: 'checkbox', label: 'თანხმობა მონაცემების დამუშავებაზე' },
-    { name: 'locale', type: 'text', label: 'ენა', admin: { readOnly: true } },
-    { name: 'note', type: 'textarea', label: 'შიდა შენიშვნა' },
+    { name: 'consent', type: 'checkbox', label: 'თანხმობა მონაცემების დამუშავებაზე', admin: { components: { Cell: '/components/admin/YesNoCell#YesNoCell' } } },
+    { name: 'locale', type: 'text', label: 'საიტის ენა', admin: { readOnly: true, position: 'sidebar' } },
+    { name: 'note', type: 'textarea', label: 'შიდა შენიშვნა', admin: { description: 'მხოლოდ თანამშრომლები ხედავენ. მაგ: დავურეკე, თანახმაა.' } },
   ],
 }

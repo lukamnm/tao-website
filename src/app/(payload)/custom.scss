@@ -1,0 +1,167 @@
+/* TAO admin: the same light look as the public site (brand font, ice-white ground, TAO blue for actions),
+   slightly larger text, and styles for the custom admin pieces (start page, photo point, icon picker). */
+
+@font-face { font-family: 'November GeL'; src: url('/fonts/NovemberGeL-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'November GeL'; src: url('/fonts/NovemberGeL-Medium.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'November GeL'; src: url('/fonts/NovemberGeL-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+
+$blue: #283dee;
+$blue-hover: #1b21c4;
+$blue-subtle: #f3f7ff;
+$blue-line: #ccdaff;
+$ice: #f5f7fa;
+$silver: #d9dce1;
+$graphite: #656970;
+$black: #101010;
+
+:root {
+  --font-body: 'November GeL', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --base-body-size: 14;
+  --style-radius-s: 5px;
+  --style-radius-m: 5px;
+  --style-radius-l: 8px;
+
+  // cool brand greys instead of Payload's neutral ones
+  --color-base-50: #{$ice};
+  --color-base-100: #eef0f3;
+  --color-base-150: #{$silver};
+  --color-base-200: #c2c6cc;
+  --color-base-400: #a8adb3;
+  --color-base-500: #8a9099;
+  --color-base-600: #{$graphite};
+  --color-base-800: #{$black};
+
+  --theme-bg: #{$ice};
+  --theme-input-bg: #fff;
+  --theme-text: #{$black};
+  --accessibility-outline: 2px solid #799cfe;
+}
+
+body { font-size: 15px; }
+
+/* Main actions in TAO blue */
+.btn--style-primary {
+  --color: #fff;
+  --bg-color: #{$blue};
+  --hover-bg: #{$blue-hover};
+  --hover-color: #fff;
+}
+.btn--style-secondary {
+  --color: #{$blue};
+  --hover-color: #{$blue-hover};
+  --box-shadow: inset 0 0 0 1px #{$blue-line};
+  --hover-box-shadow: inset 0 0 0 1px #{$blue};
+}
+a { color: inherit; }
+.field-label { font-weight: 500; font-size: 14px; }
+.field-description { font-size: 13px; color: $graphite; }
+
+/* Cards and the side menu sit on white over the ice-white ground */
+.card { background: #fff; }
+.nav { background: #fff; border-right: 1px solid $silver; }
+.nav-group__toggle { font-weight: 500; color: $graphite; }
+.nav__link { font-size: 15px; }
+
+/* ---------- Start page ---------- */
+.tao-welcome { margin-bottom: 40px; display: flex; flex-direction: column; gap: 20px; }
+.tao-welcome h1 { margin: 0 0 6px; font-size: 32px; line-height: 1.15; font-weight: 700; }
+.tao-welcome p { margin: 0; color: $graphite; font-size: 16px; line-height: 1.5; max-width: 640px; }
+.tao-welcome__head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; }
+.tao-welcome__site {
+  display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px; border-radius: 5px;
+  background: $blue; color: #fff !important; text-decoration: none; font-weight: 500;
+  &:hover { background: $blue-hover; }
+}
+.tao-welcome__inbox { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.tao-welcome__inbox a {
+  display: grid; grid-template-columns: auto 1fr; column-gap: 16px; align-items: center;
+  padding: 18px 20px; border: 1px solid $silver; border-radius: 5px; background: #fff; text-decoration: none; color: $black;
+  strong { grid-row: span 2; font-size: 36px; line-height: 1; font-weight: 700; color: #a8adb3; }
+  span { font-size: 16px; font-weight: 500; }
+  em { font-style: normal; font-size: 13px; color: $graphite; }
+  &.is-new { border-color: $blue; background: $blue-subtle; strong { color: $blue; } }
+  &:hover { border-color: $blue; }
+}
+.tao-welcome__h { margin: 12px 0 0; font-size: 20px; font-weight: 700; }
+.tao-welcome__tasks { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.tao-welcome__task {
+  display: flex; align-items: center; gap: 16px; min-height: 76px; padding: 14px 18px;
+  border: 1px solid $silver; border-radius: 5px; background: #fff; color: $black; text-decoration: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  strong { display: block; font-size: 16px; font-weight: 500; }
+  em { display: block; font-style: normal; font-size: 13px; color: $graphite; margin-top: 2px; }
+  &:hover { border-color: $blue; box-shadow: 0 2px 12px rgba(40, 61, 238, 0.08); }
+}
+.tao-welcome__ic {
+  flex: none; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+  border-radius: 5px; background: $blue-subtle; color: $blue; font-size: 20px;
+}
+.tao-welcome__guide {
+  border: 1px solid $silver; border-radius: 5px; background: #fff; padding: 0 20px;
+  summary { cursor: pointer; padding: 16px 0; font-weight: 500; font-size: 16px; color: $blue; }
+  ol { margin: 0 0 18px; padding-left: 20px; display: flex; flex-direction: column; gap: 10px; font-size: 15px; line-height: 1.5; }
+}
+
+/* Link to the site in the side menu */
+.tao-navsite {
+  display: flex; align-items: center; margin-top: 16px; padding: 10px 12px; border-radius: 5px;
+  border: 1px solid $blue-line; color: $blue !important; text-decoration: none; font-weight: 500;
+  &:hover { background: $blue-subtle; }
+}
+
+/* ---------- Main point of the photo ---------- */
+.tao-imgpos__help { margin: 0 0 12px; color: $graphite; font-size: 14px; line-height: 1.5; }
+.tao-imgpos__row { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+.tao-imgpos__pick {
+  position: relative; flex: 1 1 360px; max-width: 520px; cursor: crosshair; border-radius: 5px; overflow: hidden; border: 1px solid $silver;
+  img { display: block; width: 100%; height: auto; user-select: none; }
+}
+.tao-imgpos__dot {
+  position: absolute; width: 28px; height: 28px; margin: -14px 0 0 -14px; border-radius: 50%;
+  border: 3px solid #fff; background: rgba(40, 61, 238, 0.85); box-shadow: 0 0 0 2px $blue, 0 2px 8px rgba(0, 0, 0, 0.35); pointer-events: none;
+}
+.tao-imgpos__previews { display: flex; flex-direction: column; gap: 8px; flex: 0 1 260px; }
+.tao-imgpos__cap { font-size: 13px; color: $graphite; }
+.tao-imgpos__wide, .tao-imgpos__square, .tao-imgpos__tall { background-size: cover; border-radius: 5px; border: 1px solid $silver; }
+.tao-imgpos__wide { width: 260px; height: 110px; }
+.tao-imgpos__square { width: 120px; height: 120px; }
+.tao-imgpos__tall { width: 80px; height: 120px; }
+.tao-imgpos__reset {
+  align-self: flex-start; margin-top: 4px; padding: 8px 12px; border: 1px solid $blue-line; border-radius: 5px;
+  background: #fff; color: $blue; font: inherit; font-size: 14px; cursor: pointer;
+  &:hover { background: $blue-subtle; }
+}
+
+/* ---------- Icon picker ---------- */
+.tao-iconpick { display: grid; grid-template-columns: repeat(auto-fill, 52px); gap: 8px; margin-top: 6px; }
+.tao-iconpick__item {
+  width: 52px; height: 52px; display: flex; align-items: center; justify-content: center;
+  border: 1px solid $silver; border-radius: 5px; background: #fff; color: $black; cursor: pointer;
+  &:hover { border-color: $blue; color: $blue; }
+  &.is-on { border-color: $blue; background: $blue; color: #fff; }
+}
+
+/* "Add new" at the top of every list: the main action, so it is a clear blue button */
+.list-create-new-doc__create-new-button.btn--style-pill {
+  --bg-color: #{$blue};
+  --color: #fff;
+  --hover-bg: #{$blue-hover};
+  --hover-color: #fff;
+  padding: 6px 14px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Yes / no in lists */
+.tao-yesno { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; }
+.tao-yesno::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #c2c6cc; }
+.tao-yesno.is-yes { color: $blue; }
+.tao-yesno.is-yes::before { background: $blue; }
+.tao-yesno.is-no { color: $graphite; }
+
+/* The developer "API" tab means nothing to editors; with it gone the tab row has nothing left to show */
+.doc-tabs { display: none; }
+
+/* Section headings inside a form (e.g. "where the button leads") */
+.group-field__title { font-size: 18px; font-weight: 700; color: $black; }
+.collapsible__toggle { font-weight: 500; }
