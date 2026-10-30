@@ -31,6 +31,16 @@ function list(s: string): string | null {
 /** English for a Georgian string, or null when unknown. */
 export function tr(s: string): string | null {
   const k = norm(s)
+  let r = tr0(k)
+  // texts drop their final full stop on the site; the dictionary may still hold the dotted form
+  if (r == null && k && !/[.!?:]$/.test(k)) {
+    r = tr0(k + '.')
+    if (r != null) r = r.replace(/\.$/, '')
+  }
+  return r
+}
+
+function tr0(k: string): string | null {
   let m: RegExpMatchArray | null
   if (!k || !G.test(k)) return null
   if (D[k] != null) return D[k]

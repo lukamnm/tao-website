@@ -8,7 +8,9 @@ export const CorporateRequests: CollectionConfig = {
     useAsTitle: 'company',
     group: 'შემოსული',
     defaultColumns: ['company', 'firstName', 'phone', 'staff', 'status', 'createdAt'],
-    description: 'კომპანიების მოთხოვნები ჯანმრთელობის დაზღვევის გვერდიდან. დაუკავშირდი 1 სამუშაო დღეში და შეცვალე სტატუსი.',
+    description: 'ძველი მოთხოვნები ჯანმრთელობის დაზღვევის გვერდის ფორმიდან. ფორმა საიტიდან ამოღებულია, ამიტომ ახალი მოთხოვნები აღარ შემოდის.',
+    // The form was removed in the second design round; the collection stays so earlier requests are kept.
+    hidden: true,
   },
   access: {
     read: ({ req }) => !!req.user,

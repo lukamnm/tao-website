@@ -1,0 +1,10 @@
+/* Home page: banner slider (design Main.dc.html, "Banner slider" helmet CSS) */
+.tao-bnr__nav{opacity:0;transition:opacity 200ms ease,background-color 200ms ease,color 200ms ease;box-shadow:0 2px 8px rgba(16,16,16,.12)}
+.tao-bnr:hover .tao-bnr__nav,.tao-bnr__nav:focus-visible{opacity:1}
+.tao-bnr__nav:hover{background:var(--primary)!important;color:var(--on-primary)!important}
+.tao-bnr__dot{transition:width 250ms ease,background-color 250ms ease}
+.tao-bnr__dot:focus-visible,.tao-bnr__nav:focus-visible,.tao-bnr__slide:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}
+@media (hover:none){.tao-bnr__nav{display:none!important}}
+/* design targets section[aria-label="ბანერები"]; a class keeps it working in English too */
+@media (max-width:640px){.tao-bnrsec{padding-bottom:56px!important}}
+/* /Banner slider */

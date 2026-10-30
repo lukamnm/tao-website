@@ -30,29 +30,3 @@ export async function submitContact(fd: FormData): Promise<FormResult> {
   })
   return { ok: true, name: name.split(' ')[0] }
 }
-
-export async function submitLead(fd: FormData): Promise<FormResult> {
-  const firstName = get(fd, 'first')
-  const lastName = get(fd, 'last')
-  const company = get(fd, 'company')
-  const code = digits(get(fd, 'code'))
-  const staff = Number(digits(get(fd, 'staff')))
-  const phone = get(fd, 'phone')
-  const consent = get(fd, 'consent') === '1'
-  const locale = get(fd, 'locale') || 'ka'
-  const errors: Record<string, string> = {}
-  if (!firstName) errors.first = 'მიუთითე სახელი'
-  if (!lastName) errors.last = 'მიუთითე გვარი'
-  if (!company) errors.company = 'მიუთითე კომპანიის დასახელება'
-  if (code.length !== 9 && code.length !== 11) errors.code = 'მიუთითე სწორი საიდენტიფიკაციო ნომერი'
-  if (!(staff > 0)) errors.staff = 'მიუთითე თანამშრომლების რაოდენობა'
-  if (digits(phone).length < 9) errors.phone = 'მიუთითე სწორი ნომერი'
-  if (!consent) errors.consent = '1'
-  if (Object.keys(errors).length) return { ok: false, errors }
-  const payload = await getPayload()
-  await payload.create({
-    collection: 'corporate-requests',
-    data: { firstName, lastName, company, companyCode: code, staff, phone, consent, locale, status: 'new' },
-  })
-  return { ok: true, name: firstName }
-}

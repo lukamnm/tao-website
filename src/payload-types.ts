@@ -167,7 +167,7 @@ export interface ContactMessage {
   createdAt: string;
 }
 /**
- * კომპანიების მოთხოვნები ჯანმრთელობის დაზღვევის გვერდიდან. დაუკავშირდი 1 სამუშაო დღეში და შეცვალე სტატუსი.
+ * ძველი მოთხოვნები ჯანმრთელობის დაზღვევის გვერდის ფორმიდან. ფორმა საიტიდან ამოღებულია, ამიტომ ახალი მოთხოვნები აღარ შემოდის.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "corporate-requests".
@@ -278,7 +278,7 @@ export interface Product {
   /**
    * ახალ პროდუქტს საკუთარი გვერდი ჯერ არ აქვს: ის დიზაინით ემატება. მანამდე დატოვე ცარიელი.
    */
-  pagePath?: ('/health' | '/travel') | null;
+  pagePath?: ('/health' | '/travel' | '/car') | null;
   /**
    * მხოლოდ იმ პროდუქტებისთვის, რომლებსაც გვერდი აქვთ.
    */
@@ -382,7 +382,11 @@ export interface Offer {
   until: string;
   category?: (number | null) | OfferCategory;
   /**
-   * ჩვეულებრივ "ონლაინ". პარტნიორისთვის აირჩიე ქალაქები, სადაც ფილიალები აქვს.
+   * მონიშნე, თუ შეთავაზებით სარგებლობა ონლაინ შეიძლება (მაგ: ტაო დაზღვევის პორტალზე). შეთავაზებების ფილტრში "ფორმატი".
+   */
+  online?: boolean | null;
+  /**
+   * სად მოქმედებს: ქალაქები, სადაც პარტნიორს ფილიალები აქვს.
    */
   cities?: (number | City)[] | null;
   partner?: {
@@ -445,7 +449,7 @@ export interface OfferCategory {
   createdAt: string;
 }
 /**
- * სად მოქმედებს შეთავაზება. ჩანს შეთავაზებების ფილტრში.
+ * სად მოქმედებს პარტნიორის შეთავაზება. ჩანს შეთავაზებების ფილტრში "ქალაქი / რეგიონი". ონლაინ შეთავაზება ცალკე ინიშნება თავად შეთავაზებაში.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "cities".
@@ -459,7 +463,7 @@ export interface City {
   createdAt: string;
 }
 /**
- * მთავარი გვერდის დიდი სლაიდერი და შავი პრომო-ბლოკი. რიგის შესაცვლელად გადაათრიე.
+ * მთავარი გვერდის დიდი სლაიდერი და პრომო-ბანერები (ფოტო-ზოლი გვერდის შუაში). რიგის შესაცვლელად გადაათრიე.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "banners".
@@ -469,9 +473,8 @@ export interface Banner {
   _order?: string | null;
   placement: 'hero' | 'promo';
   /**
-   * ჩანს სათაურის ზემოთ და გადამრთველ ღილაკზე.
+   * პრომო-ბანერზე საიტზე არ ჩანს: მხოლოდ სიაში გეხმარება მის პოვნაში.
    */
-  kicker?: string | null;
   title: string;
   /**
    * 1 წინადადება
@@ -488,6 +491,7 @@ export interface Banner {
           | '/#products'
           | '/health'
           | '/travel'
+          | '/car'
           | '/offers'
           | '/news'
           | '/about'
@@ -795,6 +799,7 @@ export interface OffersSelect<T extends boolean = true> {
   from?: T;
   until?: T;
   category?: T;
+  online?: T;
   cities?: T;
   partner?:
     | T
@@ -830,7 +835,6 @@ export interface OffersSelect<T extends boolean = true> {
 export interface BannersSelect<T extends boolean = true> {
   _order?: T;
   placement?: T;
-  kicker?: T;
   title?: T;
   text?: T;
   image?: T;
@@ -1070,7 +1074,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
- * ტელეფონი, მისამართი, პორტალის ბმული, სოციალური ქსელები და ციფრები "ჩვენ შესახებ" გვერდზე. ცვლილება საიტზე მაშინვე ჩანს.
+ * ტელეფონი, ოფისის და სერვის ცენტრის მისამართი, პორტალის ბმული, Facebook და ციფრები "ჩვენ შესახებ" გვერდზე. ცვლილება საიტზე მაშინვე ჩანს.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "settings".
@@ -1088,6 +1092,23 @@ export interface Setting {
    * Google Maps-ში იპოვე ოფისი, დააჭირე "გაზიარება" და ბმული აქ ჩასვი.
    */
   mapUrl?: string | null;
+  serviceAddress?: string | null;
+  serviceAddressShort?: string | null;
+  serviceCity?: string | null;
+  /**
+   * თითო სტრიქონი: დღეები და საათები. მაგ: "ორშაბათი - პარასკევი" და "9:00 - 18:00".
+   */
+  serviceHours?:
+    | {
+        days: string;
+        time: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Google Maps-ში იპოვე სერვის ცენტრი, დააჭირე "გაზიარება" და ბმული აქ ჩასვი.
+   */
+  serviceMapUrl?: string | null;
   /**
    * "ჩემი პროფილი" ღილაკი ამ მისამართზე გადადის.
    */
@@ -1097,8 +1118,6 @@ export interface Setting {
    */
   portalClaimUrl?: string | null;
   facebook?: string | null;
-  instagram?: string | null;
-  linkedin?: string | null;
   foundedYear?: string | null;
   clients?: string | null;
   paid?: string | null;
@@ -1125,11 +1144,20 @@ export interface SettingsSelect<T extends boolean = true> {
   city?: T;
   hours?: T;
   mapUrl?: T;
+  serviceAddress?: T;
+  serviceAddressShort?: T;
+  serviceCity?: T;
+  serviceHours?:
+    | T
+    | {
+        days?: T;
+        time?: T;
+        id?: T;
+      };
+  serviceMapUrl?: T;
   portalUrl?: T;
   portalClaimUrl?: T;
   facebook?: T;
-  instagram?: T;
-  linkedin?: T;
   foundedYear?: T;
   clients?: T;
   paid?: T;

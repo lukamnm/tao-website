@@ -13,18 +13,18 @@ export function Contact() {
   const [sent, setSent] = useState<string | null>(null)
   const [pending, start] = useTransition()
 
-  const channels = [
-    { icon: 'call-calling', label: 'ცხელი ხაზი', value: settings.phone, note: settings.hours, href: 'tel:' + settings.phoneHref },
-    { icon: 'sms', label: 'ელფოსტა', value: settings.email, note: 'გიპასუხებთ 1 სამუშაო დღეში', href: 'mailto:' + settings.email },
-    { icon: 'location', label: 'ოფისი', value: settings.addressShort, note: settings.city, href: '#office' },
-    { icon: 'global', label: 'ტაოს პორტალი', value: 'პოლისი და ანაზღაურება', note: 'ონლაინ, 24/7', href: P('') },
+  const serviceMap = settings.service.mapUrl
+  const channels: { icon: string; label: string; value: string; href: string; external?: boolean }[] = [
+    { icon: 'call-calling', label: 'ცხელი ხაზი', value: settings.phone, href: 'tel:' + settings.phoneHref },
+    { icon: 'sms', label: 'ელფოსტა', value: settings.email, href: 'mailto:' + settings.email },
+    { icon: 'location', label: 'სერვის ცენტრი', value: settings.service.addressShort, href: serviceMap, external: true },
+    { icon: 'global', label: 'ტაო დაზღვევის პორტალი', value: 'პოლისი და ანაზღაურება', href: P('') },
   ]
   const claimLinks = [
-    { icon: 'global', title: 'მოთხოვნა პორტალზე', text: 'ატვირთე დოკუმენტები და ადევნე თვალი სტატუსს.', href: P('claim') },
-    { icon: 'document-text', title: 'პრეტენზიის წარდგენა', text: 'გაეცანი პრეტენზიების განხილვის წესს.', href: L('/complaints') },
-    { icon: 'messages-2', title: 'ხშირად დასმული კითხვები', text: 'პასუხები პროდუქტის გვერდებზე.', href: L('/health#faq') },
+    { icon: 'global', title: 'მოთხოვნა პორტალზე', text: 'ატვირთე დოკუმენტები და ადევნე თვალი სტატუსს', href: P('claim') },
+    { icon: 'document-text', title: 'პრეტენზიის წარდგენა', text: 'გაეცანი პრეტენზიების განხილვის წესს', href: L('/complaints') },
+    { icon: 'messages-2', title: 'ხშირად დასმული კითხვები', text: 'პასუხები პროდუქტის გვერდებზე', href: L('/health#faq') },
   ]
-  const mapUrl = settings.mapUrl || 'https://www.google.com/maps/search/?api=1&query=Anna+Politkovskaya+St+16+Tbilisi'
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -49,13 +49,12 @@ export function Contact() {
         <div style={{ boxSizing: 'border-box', maxWidth: 1280, margin: '0 auto', padding: '150px 24px 0', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 24 }}>
           <Breadcrumb current="კონტაქტი" />
           <h1 className="tao-h tao-h--display tao-intro" style={{ ['--i' as string]: '1', margin: 0, color: 'var(--on-primary)', fontSize: 'min(76px, 5.3vw)', lineHeight: 0.95, whiteSpace: 'nowrap' }}>{t('კონტაქტი')}</h1>
-          <p className="tao-intro" style={{ ['--i' as string]: '2', margin: 0, maxWidth: 520, fontSize: 19, lineHeight: 1.55, color: 'var(--on-blue-muted)' }}>{t('დაგვირეკე, მოგვწერე ან გვეწვიე ოფისში. ყველა კითხვაზე გიპასუხებთ.')}</p>
         </div>
         {/* contact channels */}
         <div style={{ marginTop: 56, borderTop: '1px solid var(--on-blue-line)' }}>
           <div className="tao-ctiles tao-intro" style={{ ['--i' as string]: '3', boxSizing: 'border-box', maxWidth: 1280, margin: '0 auto', padding: '0 24px', display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))' }}>
             {channels.map((c) => (
-              <a key={c.label} href={c.href} className="tao-ctile" style={{ boxSizing: 'border-box', padding: '28px 24px 30px', borderLeft: '1px solid var(--on-blue-line)', display: 'flex', flexDirection: 'column', gap: 14, color: 'var(--on-primary)', textDecoration: 'none', minWidth: 0 }}>
+              <a key={c.label} href={c.href} target={c.external ? '_blank' : undefined} rel={c.external ? 'noopener' : undefined} className="tao-ctile" style={{ boxSizing: 'border-box', padding: '28px 24px 30px', borderLeft: '1px solid var(--on-blue-line)', display: 'flex', flexDirection: 'column', gap: 14, color: 'var(--on-primary)', textDecoration: 'none', minWidth: 0 }}>
                 <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
                   <Icon name={c.icon} size={22} />
                   <span className="tao-ctile__arrow" style={{ display: 'flex' }}>
@@ -64,7 +63,6 @@ export function Contact() {
                 </span>
                 <span className="tao-caps" style={{ fontSize: 12, fontWeight: 500, letterSpacing: '0.08em', color: 'var(--on-blue-muted)' }}>{t(c.label)}</span>
                 <span style={{ fontSize: 20, fontWeight: 500, lineHeight: 1.35 }}>{t(c.value)}</span>
-                <span style={{ fontSize: 14, color: 'var(--on-blue-muted)' }}>{t(c.note)}</span>
               </a>
             ))}
           </div>
@@ -75,7 +73,7 @@ export function Contact() {
       <section style={{ background: 'var(--bg)', marginTop: 4, padding: '96px 0' }}>
         <div className="tao-odetail" style={{ boxSizing: 'border-box', maxWidth: 1280, margin: '0 auto', padding: '0 24px', display: 'grid', gridTemplateColumns: 'minmax(0, 1.15fr) minmax(0, 1fr)', gap: 48, alignItems: 'start' }}>
           <div data-reveal="up" style={{ display: 'flex', flexDirection: 'column', gap: 32, minWidth: 0 }}>
-            <SectionMarker number={1} title={t('მოგვწერე')} text={t('შეავსე ფორმა და სამუშაო დღის განმავლობაში დაგიკავშირდებით.')} />
+            <SectionMarker number={1} title={t('მოგვწერე')} text={t('გაქვს შეკითხვა ან გჭირდება დახმარება? შეავსე ფორმა და ჩვენი გუნდი დაგიკავშირდება')} />
             {sent ? (
               <div role="status" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 5, padding: '48px 40px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 16 }}>
                 <span style={{ width: 56, height: 56, boxSizing: 'border-box', border: '1px solid var(--success)', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -98,7 +96,7 @@ export function Contact() {
                 <Field label="ელფოსტა" optional="(არასავალდებულო)" name="email" type="email" autoComplete="email" />
                 <Field label="შეტყობინება" name="message" multiline rows={5} error={errors.msg} />
                 <Consent on={consent} error={!!errors.consent} onToggle={() => { setConsent((c) => !c); setErrors((e) => ({ ...e, consent: '' })) }} />
-                <SubmitRow pending={pending} error={errors.consent ? 'გასაგრძელებლად დაეთანხმე მონაცემების დამუშავებას.' : ''} />
+                <SubmitRow pending={pending} error={errors.consent ? 'გასაგრძელებლად დაეთანხმე მონაცემების დამუშავებას' : ''} />
               </form>
             )}
           </div>
@@ -124,19 +122,19 @@ export function Contact() {
               </div>
             </div>
             <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 5, padding: 28, display: 'flex', flexDirection: 'column', gap: 18 }}>
-              <p className="tao-caps" style={{ margin: 0, fontSize: 12, fontWeight: 500, letterSpacing: '0.08em', color: 'var(--text-muted)' }}>{t('მთავარი ოფისი')}</p>
-              <p style={{ margin: 0, fontSize: 20, fontWeight: 500, lineHeight: 1.4 }}>{settings.address}</p>
-              <dl style={{ margin: 0 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', gap: 16, padding: '12px 0', borderTop: '1px solid var(--border)' }}>
-                  <dt style={{ color: 'var(--text-secondary)' }}>{t('ორშაბათი - პარასკევი')}</dt>
-                  <dd style={{ margin: 0, fontWeight: 500 }}>10:00 - 18:00</dd>
+              <p className="tao-caps" style={{ margin: 0, fontSize: 12, fontWeight: 500, letterSpacing: '0.08em', color: 'var(--text-muted)' }}>{t('სერვის ცენტრი')}</p>
+              <p style={{ margin: 0, fontSize: 20, fontWeight: 500, lineHeight: 1.4 }}>{t(settings.service.address)}</p>
+              {settings.service.hours.length ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8, paddingTop: 16, borderTop: '1px solid var(--border)', fontSize: 15, lineHeight: 1.5 }}>
+                  {settings.service.hours.map((h) => (
+                    <div key={h.days} style={{ display: 'flex', justifyContent: 'space-between', gap: 16 }}>
+                      <span style={{ color: 'var(--text-muted)' }}>{t(h.days)}</span>
+                      <span style={{ fontWeight: 500 }}>{t(h.time)}</span>
+                    </div>
+                  ))}
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', gap: 16, padding: '12px 0', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
-                  <dt style={{ color: 'var(--text-secondary)' }}>{t('შაბათი - კვირა')}</dt>
-                  <dd style={{ margin: 0, fontWeight: 500 }}>{t('დაკეტილია')}</dd>
-                </div>
-              </dl>
-              <Button variant="secondary" iconRight="export-square" href={mapUrl} target="_blank" rel="noopener">
+              ) : null}
+              <Button variant="secondary" iconRight="export-square" href={serviceMap} target="_blank" rel="noopener">
                 {t('რუკაზე ნახვა')}
               </Button>
             </div>

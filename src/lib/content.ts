@@ -21,9 +21,9 @@ export type SiteSettings = {
   mapUrl: string
   portalUrl: string
   portal: Record<string, string>
+  /** Service centre (second address, with opening hours) */
+  service: { address: string; addressShort: string; city: string; mapUrl: string; hours: { days: string; time: string }[] }
   facebook: string
-  instagram: string
-  linkedin: string
   stats: { foundedYear: string; clients: string; paid: string; corporate: string }
   siteName: string
   siteDescription: string
@@ -89,9 +89,9 @@ export async function getSettings(locale: Locale): Promise<SiteSettings> {
   const portal: Record<string, string> = { '': portalUrl, claim: str(s.portalClaimUrl, portalUrl) }
   for (const p of products) portal[p.key] = p.portal || portalUrl
   return {
-    phone: str(s.phone, '+995 32 280 10 01'),
-    phoneHref: str(s.phoneHref, '+995322801001'),
-    email: str(s.email, 'info@taoinsurance.ge'),
+    phone: str(s.phone, '+995 32 219 52 12'),
+    phoneHref: str(s.phoneHref, '+995322195212'),
+    email: str(s.email, 'contact@taoinsurance.ge'),
     address: str(s.address, 'ანა პოლიტკოვსკაიას ქ. 16, 0186 თბილისი'),
     addressShort: str(s.addressShort, 'ანა პოლიტკოვსკაიას ქ. 16'),
     city: str(s.city, '0186 თბილისი'),
@@ -99,9 +99,14 @@ export async function getSettings(locale: Locale): Promise<SiteSettings> {
     mapUrl: str(s.mapUrl),
     portalUrl,
     portal,
+    service: {
+      address: str(s.serviceAddress, 'შალვა ნუცუბიძის ქ. 72, 0186 თბილისი'),
+      addressShort: str(s.serviceAddressShort, 'შალვა ნუცუბიძის ქ. 72'),
+      city: str(s.serviceCity, '0186 თბილისი'),
+      mapUrl: str(s.serviceMapUrl, 'https://www.google.com/maps/search/?api=1&query=72+Shalva+Nutsubidze+St+Tbilisi'),
+      hours: Array.isArray(s.serviceHours) ? s.serviceHours.map((h: AnyDoc) => ({ days: str(h.days), time: str(h.time) })).filter((h: { days: string }) => h.days) : [],
+    },
     facebook: str(s.facebook),
-    instagram: str(s.instagram),
-    linkedin: str(s.linkedin),
     stats: { foundedYear: str(s.foundedYear, '2007'), clients: str(s.clients, '[N]+'), paid: str(s.paid, '[N] ₾ M'), corporate: str(s.corporate, '[N]+') },
     siteName: str(s.siteName, locale === 'en' ? 'TAO Insurance' : 'ტაო დაზღვევა'),
     siteDescription: str(s.siteDescription),
@@ -111,7 +116,7 @@ export async function getSettings(locale: Locale): Promise<SiteSettings> {
 }
 
 /* ---------- Banners ---------- */
-export type BannerVM = { id: string; kicker: string; title: string; text: string; image: string; imageAlt: string; pos: string; action: string; href: string }
+export type BannerVM = { id: string; title: string; text: string; image: string; imageAlt: string; pos: string; action: string; href: string }
 
 /** The chosen link as an address; the portal is "portal" or "portal:<product key>" (the Home view opens it). */
 function linkHref(l: AnyDoc | null | undefined): string {
@@ -146,7 +151,6 @@ export async function getBanners(locale: Locale, placement: 'hero' | 'promo'): P
   })
   return (res.docs as AnyDoc[]).map((b) => ({
     id: String(b.id),
-    kicker: str(b.kicker),
     title: str(b.title),
     text: str(b.text),
     image: mediaUrl(b.image, 'hero'),
@@ -170,6 +174,8 @@ export type OfferVM = {
   typeLabel: string
   cat: string
   catLabel: string
+  /** Usable online (filter group "ფორმატი") */
+  online: boolean
   cities: string[]
   where: string
   value: string
@@ -197,7 +203,7 @@ function offerVM(o: AnyDoc, locale: Locale): OfferVM {
   const pr = productOf(o.product)
   const cat = itemOf(o.category)
   const cityItems = (Array.isArray(o.cities) ? o.cities : []).map(itemOf).filter((c: ListItem | null): c is ListItem => !!c)
-  const where = o.type === 'partner' ? cityItems.map((c: ListItem) => c.name).join(', ') : 'ონლაინ, ტაოს პორტალზე'
+  const where = o.type === 'partner' ? [o.online ? 'ონლაინ' : '', ...cityItems.map((c: ListItem) => c.name)].filter(Boolean).join(', ') : 'ონლაინ, ტაო დაზღვევის პორტალზე'
   return {
     id: String(o.id),
     slug: str(o.slug),
@@ -210,6 +216,7 @@ function offerVM(o: AnyDoc, locale: Locale): OfferVM {
     typeLabel: label(OFFER_TYPES, o.type),
     cat: cat?.key || '',
     catLabel: cat?.name || '',
+    online: !!o.online,
     cities: cityItems.map((c: ListItem) => c.key),
     where,
     value: str(o.value),

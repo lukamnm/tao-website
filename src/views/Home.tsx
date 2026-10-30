@@ -4,6 +4,7 @@ import { BenefitItem, Button, Icon, NewsCard, SectionMarker } from '@/ds'
 import { css } from '@/site/css'
 import { useSite } from '@/site/SiteProvider'
 import { reducedMotion } from '@/site/lottie'
+import '@/ds/pages/home.css'
 import type { BannerVM, NewsVM, OfferVM } from '@/lib/content'
 
 /* Home page (design "01 Home", look: blue = calm, hero = photo, cards = outline, banner = spotlight, nav = floating). */
@@ -53,8 +54,8 @@ function splitTitle(title: string) {
 }
 
 const COVER = {
-  health: ['ამბულატორიული მომსახურება', 'სტაციონარული მკურნალობა', 'გადაუდებელი დახმარება 24/7', 'მედიკამენტები', 'სტომატოლოგია'],
-  travel: ['სამედიცინო ხარჯები', 'გადაუდებელი ჰოსპიტალიზაცია', 'სამედიცინო ტრანსპორტირება', 'ბარგი', 'რეისის გადადება'],
+  health: ['ამბულატორიული მომსახურება', 'სტაციონარული მკურნალობა', 'გადაუდებელი დახმარება 24/7', 'მედიკამენტები', 'სტომატოლოგია', 'ორსულობა და მშობიარობა', 'ოჯახის ექიმის მომსახურება', 'დაავადებათა პროფილაქტიკა'],
+  travel: ['სამედიცინო ხარჯები', 'გადაუდებელი ჰოსპიტალიზაცია', 'გადაუდებელი ამბულატორია', 'სამედიცინო ტრანსპორტირება', 'ბარგის დაგვიანება / დაკარგვა', 'რეისის გადადება'],
 }
 
 export function Home({ slides, banners, offers, news }: Props) {
@@ -110,24 +111,29 @@ export function Home({ slides, banners, offers, news }: Props) {
   const portalSlide = cur ? cur.href === 'portal' || cur.href.startsWith('portal:') : false
   const slideHref = !cur ? '#' : portalSlide ? P(cur.href.split(':')[1] || '') : cur.href.startsWith('http') ? cur.href : L(cur.href)
 
-  /* ---------- promo banners ---------- */
+  /* ---------- banner slider (autoplay 6 s; any manual pick restarts the timer) ---------- */
   const [bIdx, setBIdx] = useState(0)
+  const [bTick, setBTick] = useState(0)
   useEffect(() => {
     if (reducedMotion() || banners.length < 2) return
-    const id = window.setInterval(() => setBIdx((i) => (i + 1) % banners.length), 7000)
+    const id = window.setInterval(() => setBIdx((i) => (i + 1) % banners.length), 6000)
     return () => window.clearInterval(id)
-  }, [banners.length])
+  }, [banners.length, bTick])
+  const pickBanner = (i: number) => {
+    setBIdx(((i % banners.length) + banners.length) % banners.length)
+    setBTick((x) => x + 1)
+  }
 
   /* ---------- offers ---------- */
   const [oIdx, setOIdx] = useState(0)
   const offerActive = offers[oIdx] || offers[0]
 
   const hrefOf = (b: BannerVM) => (b.href === 'portal' || b.href.startsWith('portal:') ? P(b.href.split(':')[1] || '') : b.href.startsWith('http') ? b.href : L(b.href))
-  const isPortalHref = (b: BannerVM) => b.href === 'portal' || b.href.startsWith('portal:')
 
   const sideLink: React.CSSProperties = { flex: '1 1 260px', minWidth: 0, boxSizing: 'border-box', display: 'flex', alignItems: 'center', gap: 16, padding: '22px 0', borderTop: '1px solid var(--on-blue-line)', borderBottom: '1px solid var(--on-blue-line)', color: 'var(--on-primary)', textDecoration: 'none' }
   const badge: React.CSSProperties = { width: 44, height: 44, boxSizing: 'border-box', border: '1px solid var(--on-primary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }
   const ctrl: React.CSSProperties = { width: 44, height: 44, border: '1px solid var(--primary-subtle-border)', borderRadius: 5, background: 'var(--surface)', color: 'var(--link)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }
+  const bnrNav: React.CSSProperties = { position: 'absolute', top: '50%', transform: 'translateY(-50%)', width: 40, height: 40, border: 0, borderRadius: '50%', background: 'var(--surface)', color: 'var(--link)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }
   const wrap: React.CSSProperties = { boxSizing: 'border-box', maxWidth: 1280, margin: '0 auto', padding: '0 24px', display: 'flex', flexDirection: 'column', gap: 48 }
 
   const productCard = (p: 'health' | 'travel', img: string, alt: string, pos: string, lead: string, reverse: boolean) => (
@@ -246,8 +252,8 @@ export function Home({ slides, banners, offers, news }: Props) {
             <SectionMarker number={1} variant="diagonal" />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-            {productCard('health', '/img/hero-health-clinic.jpg', 'ექიმი პაციენტს ესაუბრება კლინიკაში', '78% 50%', 'ექიმის კონსულტაციები, კვლევები, სტაციონარული მკურნალობა და გადაუდებელი დახმარება.', false)}
-            {productCard('travel', '/img/hero-travel-airport.jpg', 'მგზავრი ჩემოდნით აეროპორტში', '60% 50%', 'სამედიცინო დაფარვა საზღვარგარეთ: დასვენება, სწავლა თუ საქმიანი ვიზიტი.', true)}
+            {productCard('health', '/img/hero-health-clinic.jpg', 'ექიმი პაციენტს ესაუბრება კლინიკაში', '78% 50%', 'მარტივი დისტანციური სერვისები, პროვაიდერების ფართო ქსელი, ხელმისაწვდომი სამედიცინო მომსახურება', false)}
+            {productCard('travel', '/img/hero-travel-airport.jpg', 'მგზავრი ჩემოდნით აეროპორტში', '60% 50%', 'სამედიცინო დაფარვა საზღვარგარეთ დასვენების, სწავლის ან საქმიანი ვიზიტისას', true)}
           </div>
         </div>
       </section>
@@ -256,61 +262,48 @@ export function Home({ slides, banners, offers, news }: Props) {
       <section style={{ padding: '80px 0' }}>
         <div style={wrap}>
           <div data-reveal="up">
-            <SectionMarker number={2} title={t('რატომ ტაო')} />
+            <SectionMarker number={2} title={t('რატომ ტაო დაზღვევა')} />
           </div>
           <div data-reveal="stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24 }}>
-            <div className="tao-hbox" style={{ boxSizing: 'border-box' }}><BenefitItem icon="calendar" title={t('2007 წლიდან')} text={t('გამოცდილება, რომელსაც ოჯახები და კომპანიები ენდობიან.')} /></div>
-            <div className="tao-hbox" style={{ boxSizing: 'border-box' }}><BenefitItem icon="document-text" title={t('გასაგები პირობები')} text={t('პოლისში ყველაფერი მარტივად წერია, ზედმეტი წვრილი შრიფტის გარეშე.')} /></div>
-            <div className="tao-hbox" style={{ boxSizing: 'border-box' }}><BenefitItem icon="money-send" title={t('სწრაფი ანაზღაურება')} text={t('მოქნილი სისტემა და მინიმუმ ბიუროკრატია.')} /></div>
-            <div className="tao-hbox" style={{ boxSizing: 'border-box' }}><BenefitItem icon="security-safe" title={t('შენზე მორგებული')} text={t('პოლისს შენს საჭიროებებს ვუსადაგებთ, არც მეტს, არც ნაკლებს.')} /></div>
+            <div className="tao-hbox" style={{ boxSizing: 'border-box' }}><BenefitItem icon="calendar" title={t('2007 წლიდან')} text={t('გამოცდილება, რომელსაც ოჯახები და კომპანიები ენდობიან')} /></div>
+            <div className="tao-hbox" style={{ boxSizing: 'border-box' }}><BenefitItem icon="location" title={t('ხელმისაწვდომი')} text={t('მრავალრიცხოვანი პროვაიდერი კლინიკები მთელი საქართველოს მასშტაბით')} /></div>
+            <div className="tao-hbox" style={{ boxSizing: 'border-box' }}><BenefitItem icon="money-send" title={t('სწრაფი ანაზღაურება')} text={t('მოქნილი სისტემა, დისტანციური სერვისები')} /></div>
+            <div className="tao-hbox" style={{ boxSizing: 'border-box' }}><BenefitItem icon="24-support" title={t('მხარდაჭერა')} text={t('მომხმარებელზე ორიენტირებული მომსახურება და დახმარება საჭირო დროს')} /></div>
           </div>
         </div>
       </section>
 
-      {/* Promo banner (admin: Banners, placement promo): campaigns, benefits, announcements - always with an image */}
+      {/* Banner slider (admin: Banners, placement promo): image-only banners, the same files as on the TAO portal (no text in the page itself) */}
       {banners.length ? (
-        <section aria-roledescription="carousel" aria-label={t('აქციები და სიახლეები')} style={{ padding: '0 0 80px' }}>
-          <div style={{ boxSizing: 'border-box', maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
-            <div data-reveal="scale" style={{ borderRadius: 5, overflow: 'hidden', background: 'var(--brand-black)', color: 'var(--on-primary)', display: 'flex', flexWrap: 'wrap' }}>
-              <div className="tao-spot__text" style={{ flex: '1 1 460px', minWidth: 0, boxSizing: 'border-box', padding: '56px 48px 40px 56px', display: 'flex', flexDirection: 'column', gap: 40 }}>
-                {/* All banners are stacked in one grid cell: the cell is as tall as the longest banner, so switching never changes the height */}
-                <div style={{ display: 'grid', flex: 1 }}>
-                  {banners.map((b, i) => {
-                    const on = i === bIdx
-                    return (
-                      <div key={b.id} aria-hidden={!on} style={css`grid-area: 1 / 1; display: flex; flex-direction: column; align-items: flex-start; gap: 24px; transition: opacity 450ms ease, transform 600ms cubic-bezier(.2,.8,.2,1), visibility 450ms; ${on ? 'opacity: 1; visibility: visible; transform: none;' : 'opacity: 0; visibility: hidden; transform: translateY(12px);'}`}>
-                        <span className="tao-caps" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 14px', border: '1px solid var(--on-primary)', fontSize: 13, fontWeight: 500, letterSpacing: '0.08em' }}>
-                          <span style={{ width: 8, height: 8, background: 'var(--cta)' }} />
-                          {t(b.kicker)}
-                        </span>
-                        <h2 className="tao-h tao-spot__title" style={{ margin: 0, maxWidth: 560, color: 'var(--on-primary)', fontWeight: 900, lineHeight: 0.95, textWrap: 'balance' }}>{t(b.title)}</h2>
-                        <p style={{ margin: 0, maxWidth: 460, fontSize: 19, lineHeight: 1.55, color: 'var(--grey-400)' }}>{t(b.text)}</p>
-                        <div style={{ marginTop: 'auto', paddingTop: 8 }}>
-                          <Button variant={isPortalHref(b) ? 'cta' : 'onBlue'} iconRight={isPortalHref(b) ? 'export-square' : 'arrow-right'} href={hrefOf(b)} tabIndex={on ? undefined : -1}>
-                            {t(b.action)}
-                          </Button>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-                <div role="tablist" aria-label={t('ბანერები')} style={{ width: '100%', display: 'grid', gridTemplateColumns: `repeat(${banners.length}, minmax(0, 1fr))`, gap: 16 }}>
-                  {banners.map((b, i) => (
-                    <button key={b.id} type="button" role="tab" aria-selected={i === bIdx} onClick={() => setBIdx(i)} className="tao-caps tao-spottab" style={css`${i === bIdx ? 'color: var(--on-primary); box-shadow: inset 0 2px 0 var(--on-primary);' : 'color: var(--grey-400); box-shadow: inset 0 1px 0 var(--grey-700);'} padding: 14px 0 0; border: 0; background: transparent; text-align: left; font-family: var(--font-sans); font-size: 12px; font-weight: 500; letter-spacing: 0.08em; cursor: pointer; transition: color 200ms ease, box-shadow 200ms ease;`}>
-                      {t(b.kicker)}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="tao-spot__media" style={{ flex: '1 1 480px', minWidth: 0, minHeight: 520, position: 'relative' }}>
-                <div style={{ position: 'absolute', inset: 24, border: '1px solid var(--grey-700)', borderRadius: 5, transform: 'translate(12px, -12px)' }} />
-                <div style={{ position: 'absolute', inset: 24, borderRadius: 5, overflow: 'hidden', background: 'var(--grey-900)' }}>
-                  {banners.map((b, i) => (
-                    <img key={b.id} src={b.image} alt={b.imageAlt} style={css`position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: ${b.pos}; display: block; transition: opacity 600ms ease, transform 1200ms cubic-bezier(.2,.8,.2,1); ${i === bIdx ? 'opacity: 1; transform: scale(1);' : 'opacity: 0; transform: scale(1.06);'}`} />
-                  ))}
-                </div>
-              </div>
+        <section className="tao-bnrsec" aria-roledescription="carousel" aria-label={t('ბანერები')} style={{ padding: '0 0 80px' }}>
+          <div style={{ boxSizing: 'border-box', maxWidth: 1280, margin: '0 auto', padding: '0 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+            <div data-reveal="up" className="tao-bnr" style={{ position: 'relative', width: '100%', aspectRatio: '1232 / 224', borderRadius: 5, overflow: 'hidden', background: 'var(--bg-subtle)' }}>
+              {banners.map((b, i) => {
+                const on = i === bIdx
+                return (
+                  <a key={b.id} href={hrefOf(b)} className="tao-bnr__slide" role="group" aria-roledescription="slide" aria-label={i + 1 + ' / ' + banners.length} aria-hidden={!on} tabIndex={on ? 0 : -1} style={css`position: absolute; inset: 0; display: block; transition: opacity 600ms ease, visibility 600ms; ${on ? 'opacity: 1; visibility: visible; z-index: 1;' : 'opacity: 0; visibility: hidden; z-index: 0;'}`}>
+                    <img src={b.image} alt={b.imageAlt} style={css`display: block; width: 100%; height: 100%; object-fit: cover; object-position: ${b.pos};`} />
+                  </a>
+                )
+              })}
+              {banners.length > 1 ? (
+                <>
+                  <button type="button" onClick={() => pickBanner(bIdx - 1)} aria-label={t('წინა ბანერი')} className="tao-bnr__nav" style={{ ...bnrNav, left: 16 }}>
+                    <Icon name="arrow-left-2" size={18} />
+                  </button>
+                  <button type="button" onClick={() => pickBanner(bIdx + 1)} aria-label={t('შემდეგი ბანერი')} className="tao-bnr__nav" style={{ ...bnrNav, right: 16 }}>
+                    <Icon name="arrow-right-2" size={18} />
+                  </button>
+                </>
+              ) : null}
             </div>
+            {banners.length > 1 ? (
+              <div role="tablist" aria-label={t('ბანერის არჩევა')} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                {banners.map((b, i) => (
+                  <button key={b.id} type="button" role="tab" aria-selected={i === bIdx} aria-label={i + 1 + ' / ' + banners.length} onClick={() => pickBanner(i)} className="tao-bnr__dot" style={css`height: 8px; padding: 0; border: 0; border-radius: 4px; cursor: pointer; ${i === bIdx ? 'width: 24px; background: var(--primary);' : 'width: 8px; background: var(--grey-300, #C9CDD2);'}`} />
+                ))}
+              </div>
+            ) : null}
           </div>
         </section>
       ) : null}
@@ -320,7 +313,7 @@ export function Home({ slides, banners, offers, news }: Props) {
         <section style={{ background: 'var(--bg)', padding: '80px 0' }}>
           <div style={wrap}>
             <div data-reveal="up" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 24, flexWrap: 'wrap' }}>
-              <SectionMarker number={3} title={t('შეთავაზებები')} text={t('აქტიური აქციები და სპეციალური პირობები.')} />
+              <SectionMarker number={3} title={t('შეთავაზებები')} text={t('აქტიური აქციები და სპეციალური პირობები')} />
               <Button variant="secondary" iconRight="arrow-right" href={L('/offers')}>
                 {t('ყველა შეთავაზება')}
               </Button>

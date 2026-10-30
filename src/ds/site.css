@@ -239,7 +239,6 @@ a.tao-iq:hover{background:var(--primary);border-color:var(--primary)!important;c
 .tao-cfield input:hover{border-color:var(--link)}
 .tao-cfield input:focus{outline:2px solid var(--focus-ring);outline-offset:1px;border-color:var(--link)}
 .tao-ocheck:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}
-@media (max-width:1000px){.tao-lead{grid-template-columns:minmax(0,1fr)!important;gap:40px!important}}
 @media (max-width:640px){.tao-cfrow{grid-template-columns:minmax(0,1fr)!important}.tao-cform{padding:24px 20px!important}}
 /* /Lead form */
 /* FAQ list */

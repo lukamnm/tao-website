@@ -1,6 +1,8 @@
 /* Seed the CMS with the design's sample content (banners, offers, news, settings).
    Run once on an empty database:  npm run seed
-   Safe to re-run: documents that already exist (by slug / title) are skipped. */
+   Safe to re-run: documents that already exist (by slug / title) are skipped.
+   npm run seed -- --update  also rewrites the texts of the existing sample records with the current design
+   texts (scripts/sample-content.json, built from the Claude Design project); photos and dates stay. */
 import 'dotenv/config'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -8,12 +10,19 @@ import { getPayload } from 'payload'
 import config from '../src/payload.config'
 import { fillNewsBodies } from './news-bodies'
 import { DEFAULT_LISTS, type ListSlug } from './default-lists'
+import sample from './sample-content.json'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 const IMG = (name: string) => path.resolve(dirname, '../public/img', name + '.jpg')
 
 type Loc = { ka: string; en: string }
 const L = (ka: string, en: string): Loc => ({ ka, en })
+const UPDATE = process.argv.includes('--update')
+const S = sample as unknown as {
+  news: Record<string, { cat: string; title: Loc; excerpt: Loc; lead: Loc }>
+  offers: Record<string, { title: Loc; excerpt: Loc; note: Loc; value: string; online: boolean }>
+  hero: { title: Loc; text: Loc; action: Loc }[]
+}
 
 async function main() {
   const payload = await getPayload({ config })
@@ -34,8 +43,9 @@ async function main() {
   }
 
   /* ---------- settings ---------- */
-  await payload.updateGlobal({ slug: 'settings', locale: 'ka', data: { phone: '+995 32 280 10 01', phoneHref: '+995322801001', email: 'info@taoinsurance.ge', address: 'ანა პოლიტკოვსკაიას ქ. 16, 0186 თბილისი', addressShort: 'ანა პოლიტკოვსკაიას ქ. 16', city: '0186 თბილისი', hours: 'ორშ-პარ, 10:00-18:00', portalUrl: 'https://portal.taoinsurance.ge', foundedYear: '2007', siteName: 'ტაო დაზღვევა', siteDescription: 'ჯანმრთელობის და სამოგზაურო დაზღვევა 2007 წლიდან. პოლისი ონლაინ, ანაზღაურება სწრაფად.' } })
-  await payload.updateGlobal({ slug: 'settings', locale: 'en', data: { address: '16 Anna Politkovskaya St, 0186 Tbilisi', addressShort: '16 Anna Politkovskaya St', city: '0186 Tbilisi', hours: 'Mon-Fri, 10:00-18:00', siteName: 'TAO Insurance', siteDescription: 'Health and travel insurance since 2007. Policies online, claims paid fast.' } })
+  await payload.updateGlobal({ slug: 'settings', locale: 'ka', data: { phone: '+995 32 219 52 12', email: 'contact@taoinsurance.ge', serviceAddress: 'შალვა ნუცუბიძის ქ. 72, 0186 თბილისი', serviceAddressShort: 'შალვა ნუცუბიძის ქ. 72', serviceCity: '0186 თბილისი', serviceHours: [{ days: 'ორშაბათი - პარასკევი', time: '9:00 - 18:00' }, { days: 'შაბათი', time: '9:30 - 14:00' }], address: 'ანა პოლიტკოვსკაიას ქ. 16, 0186 თბილისი', addressShort: 'ანა პოლიტკოვსკაიას ქ. 16', city: '0186 თბილისი', hours: 'ორშ-პარ, 10:00-18:00', portalUrl: 'https://portal.taoinsurance.ge', foundedYear: '2007', siteName: 'ტაო დაზღვევა', siteDescription: 'ჯანმრთელობის და სამოგზაურო დაზღვევა 2007 წლიდან. პოლისი ონლაინ, ანაზღაურება სწრაფად.' } })
+  const hoursKa = ((await payload.findGlobal({ slug: 'settings', locale: 'ka' })) as { serviceHours?: { id?: string | null }[] }).serviceHours || []
+  await payload.updateGlobal({ slug: 'settings', locale: 'en', data: { serviceAddress: '72 Shalva Nutsubidze St, 0186 Tbilisi', serviceAddressShort: '72 Shalva Nutsubidze St', serviceCity: '0186 Tbilisi', serviceHours: hoursKa.map((h, i) => ({ id: h.id, days: ['Monday - Friday', 'Saturday'][i] || '', time: ['9:00 - 18:00', '9:30 - 14:00'][i] || '' })), address: '16 Anna Politkovskaya St, 0186 Tbilisi', addressShort: '16 Anna Politkovskaya St', city: '0186 Tbilisi', hours: 'Mon-Fri, 10:00-18:00', siteName: 'TAO Insurance', siteDescription: 'Health and travel insurance since 2007. Policies online, claims paid fast.' } })
   console.log('settings')
 
   /* ---------- editable lists (the migration creates them on PostgreSQL; a fresh SQLite file needs them here) ---------- */
@@ -70,13 +80,24 @@ async function main() {
     { slug: 'luggage', product: 'travel', type: 'partner', category: 'trip', cities: ['tbilisi', 'batumi'], value: '15%', pct: 15, title: L('ჩემოდნები და სამოგზაურო აქსესუარები 15%-ით იაფად', 'Suitcases and travel accessories 15% cheaper'), text: L('სამოგზაურო პოლისის მფლობელებს პარტნიორ მაღაზიაში 15%-იანი ფასდაკლება აქვთ.', 'Travel policy holders get a 15% discount at the partner shop.'), from: '2026-04-15', until: '2027-04-30', image: 'hero-home-tbilisi', alt: L('ქალი ლურჯ პალტოში თბილისის ქუჩაზე', 'Woman in a blue coat on a Tbilisi street'), pos: '60% 50%' },
   ]
   for (const o of offers) {
+    const t = S.offers[o.slug]
+    if (t) Object.assign(o, { title: t.title, text: t.excerpt, note: t.note.ka ? t.note : o.note, value: t.value || o.value })
+    const online = t ? t.online : o.cities.includes('online')
+    o.cities = o.cities.filter((c) => c !== 'online')
     const exists = await payload.find({ collection: 'offers', where: { slug: { equals: o.slug } }, limit: 1 })
-    if (exists.docs[0]) continue
+    if (exists.docs[0]) {
+      if (!UPDATE) continue
+      const id = exists.docs[0].id
+      await payload.update({ collection: 'offers', id, locale: 'ka', data: { title: o.title.ka, excerpt: o.text.ka, note: o.note?.ka, online } })
+      await payload.update({ collection: 'offers', id, locale: 'en', data: { title: o.title.en, excerpt: o.text.en, note: o.note?.en } })
+      console.log('offer updated', o.slug)
+      continue
+    }
     const img = await image(o.image, o.alt)
     const doc = await payload.create({
       collection: 'offers',
       locale: 'ka',
-      data: { slug: o.slug, product: idOf('products', o.product)!, type: o.type as 'discount', category: o.category ? idOf('offer-categories', o.category) : undefined, cities: o.cities.map((c) => idOf('cities', c)!), value: o.value, pct: o.pct, note: o.note?.ka, title: o.title.ka, excerpt: o.text.ka, image: img, imagePosition: o.pos, from: o.from, until: o.until, featured: !!o.featured },
+      data: { slug: o.slug, product: idOf('products', o.product)!, type: o.type as 'discount', category: o.category ? idOf('offer-categories', o.category) : undefined, online, cities: o.cities.map((c) => idOf('cities', c)!), value: o.value, pct: o.pct, note: o.note?.ka, title: o.title.ka, excerpt: o.text.ka, image: img, imagePosition: o.pos, from: o.from, until: o.until, featured: !!o.featured },
     })
     await payload.update({ collection: 'offers', id: doc.id, locale: 'en', data: { title: o.title.en, excerpt: o.text.en, value: o.value, note: o.note?.en } })
     console.log('offer', o.slug)
@@ -98,9 +119,20 @@ async function main() {
     { slug: 'year-results', cat: 'company', product: '', date: '2026-05-30', title: L('ტაოს წლის შედეგები', 'TAO annual results'), excerpt: L('ანაზღაურებული შემთხვევები, ახალი მომხმარებლები და გეგმები.', 'Claims paid, new customers and plans.'), lead: L('გასულ წელს ტაომ [N] სადაზღვევო შემთხვევა აანაზღაურა და [N] ახალ მომხმარებელს შეუერთდა. ვაჯამებთ წელს და ვყვებით გეგმებზე.', 'Last year TAO paid [N] claims and welcomed [N] new customers. We sum up the year and share our plans.'), image: 'photo-people', alt: L('წყვილი ლურჯ კართან', 'Couple at a blue door'), pos: '50% 40%' },
     { slug: 'assistance-partner', cat: 'partners', product: 'travel', date: '2026-05-15', title: L('ახალი ასისტანს პარტნიორი საზღვარგარეთ', 'A new assistance partner abroad'), excerpt: L('სამოგზაურო პოლისით დახმარება 24/7, ნებისმიერ ქვეყანაში.', 'Help 24/7 with the travel policy, in any country.'), lead: L('ტაოს სამოგზაურო პოლისის მფლობელებს ახალი საერთაშორისო ასისტანს პარტნიორი ემსახურება. საზღვარგარეთ ექიმი თუ დაგჭირდა, ცხელ ხაზზე 24/7 გიპასუხებენ და გეტყვიან, სად მიხვიდე.', 'TAO travel policy holders are now served by a new international assistance partner. If you need a doctor abroad, the hotline answers 24/7 and tells you where to go.'), image: 'hero-home-tbilisi', alt: L('ქალი ლურჯ პალტოში თბილისის ქუჩაზე', 'Woman in a blue coat on a Tbilisi street'), pos: '70% 50%' },
   ]
+  const updatedNews: string[] = []
   for (const n of news) {
+    const t = S.news[n.slug]
+    if (t) Object.assign(n, { cat: t.cat, title: t.title, excerpt: t.excerpt, lead: t.lead })
     const exists = await payload.find({ collection: 'news', where: { slug: { equals: n.slug } }, limit: 1 })
-    if (exists.docs[0]) continue
+    if (exists.docs[0]) {
+      if (!UPDATE) continue
+      const id = exists.docs[0].id
+      await payload.update({ collection: 'news', id, locale: 'ka', data: { category: idOf('news-categories', n.cat)!, title: n.title.ka, excerpt: n.excerpt.ka, lead: n.lead.ka } })
+      await payload.update({ collection: 'news', id, locale: 'en', data: { title: n.title.en, excerpt: n.excerpt.en, lead: n.lead.en } })
+      updatedNews.push(n.slug)
+      console.log('news updated', n.slug)
+      continue
+    }
     const img = await image(n.image, n.alt)
     const doc = await payload.create({ collection: 'news', locale: 'ka', data: { slug: n.slug, category: idOf('news-categories', n.cat)!, product: n.product ? idOf('products', n.product) : undefined, date: n.date, title: n.title.ka, excerpt: n.excerpt.ka, lead: n.lead.ka, image: img, imagePosition: n.pos, published: true } })
     await payload.update({ collection: 'news', id: doc.id, locale: 'en', data: { title: n.title.en, excerpt: n.excerpt.en, lead: n.lead.en } })
@@ -108,13 +140,19 @@ async function main() {
   }
 
   /* ---------- hero slides + promo banners ---------- */
-  const banners: { placement: 'hero' | 'promo'; kicker?: Loc; title: Loc; text: Loc; image: string; alt: Loc; pos: string; action: Loc; href: string }[] = [
-    { placement: 'hero', title: L('დაზღვევა, რომელიც მუშაობს', 'Insurance that works'), text: L('ჯანმრთელობის და სამოგზაურო დაზღვევა 2007 წლიდან.', 'Health and travel insurance since 2007.'), image: 'hero-home-tbilisi', alt: L('ქალი ლურჯ პალტოში თბილისის ქუჩაზე', 'Woman in a blue coat on a Tbilisi street'), pos: '83% 50%', action: L('აირჩიე დაზღვევა', 'Choose insurance'), href: '/#products' },
-    { placement: 'hero', title: L('ექიმთან - ხარჯებზე ფიქრის გარეშე', 'See a doctor without worrying about the cost'), text: L('ჯანმრთელობის დაზღვევა შენთვის, შენი ოჯახისთვის და შენი გუნდისთვის.', 'Health insurance for you, your family and your team.'), image: 'hero-health-clinic', alt: L('ექიმი პაციენტს ესაუბრება კლინიკაში', 'Doctor talking to a patient in a clinic'), pos: '80% 50%', action: L('გაიგე მეტი', 'Learn more'), href: '/health' },
-    { placement: 'hero', title: L('იმოგზაურე მშვიდად', 'Travel with peace of mind'), text: L('სამოგზაურო პოლისი ონლაინ - გამგზავრებამდე რამდენიმე წუთით ადრეც კი.', 'A travel policy online, even minutes before departure.'), image: 'hero-travel-airport', alt: L('მგზავრი ჩემოდნით აეროპორტში', 'Traveller with a suitcase at the airport'), pos: '86% 50%', action: L('გაიგე მეტი', 'Learn more'), href: '/travel' },
-    { placement: 'promo', kicker: L('კამპანია', 'Campaign'), title: L('სამოგზაურო პოლისი 15%-იანი ფასდაკლებით', 'Travel policy with a 15% discount'), text: L('იმოგზაურე მშვიდად: სამოგზაურო პოლისი ონლაინ, 15%-ით იაფად.', 'Travel with peace of mind: a travel policy online, 15% cheaper.'), image: 'hero-travel-airport', alt: L('მგზავრი ჩემოდნით აეროპორტში', 'Traveller with a suitcase at the airport'), pos: '50% 50%', action: L('გაიგე მეტი', 'Learn more'), href: '/offers/travel-15' },
-    { placement: 'promo', kicker: L('უპირატესობა', 'Advantage'), title: L('სწრაფი ანაზღაურება', 'Fast claims'), text: L('მოქნილი სისტემა და მინიმუმ ბიუროკრატია.', 'A flexible system and minimal bureaucracy.'), image: 'about-team-office', alt: L('ტაოს გუნდი ოფისში', 'The TAO team in the office'), pos: '50% 50%', action: L('გაიგე მეტი', 'Learn more'), href: '/about' },
-    { placement: 'promo', kicker: L('სიახლე', 'News'), title: L('ჯანმრთელობის დაზღვევა ახლა ონლაინ', 'Health insurance now online'), text: L('პოლისის შეძენა ახლა ტაოს პორტალზეა შესაძლებელი.', 'You can now buy a policy on the TAO portal.'), image: 'news-phone-online', alt: L('ტელეფონი ხელში, ონლაინ ყიდვა', 'Phone in hand, buying online'), pos: '50% 50%', action: L('გაიგე მეტი', 'Learn more'), href: '/news/health-online' },
+  // Hero slides (texts from the design), then the image-only promo banners of the design's banner strip
+  const heroLinks = ['/#products', '/health', '/travel']
+  const heroImages = [
+    { image: 'hero-home-tbilisi', alt: L('ქალი ლურჯ პალტოში თბილისის ქუჩაზე', 'Woman in a blue coat on a Tbilisi street'), pos: '83% 50%' },
+    { image: 'hero-health-clinic', alt: L('ექიმი პაციენტს ესაუბრება კლინიკაში', 'Doctor talking to a patient in a clinic'), pos: '80% 50%' },
+    { image: 'hero-travel-airport', alt: L('მგზავრი ჩემოდნით აეროპორტში', 'Traveller with a suitcase at the airport'), pos: '86% 50%' },
+  ]
+  const banners: { placement: 'hero' | 'promo'; title: Loc; text?: Loc; image: string; alt: Loc; pos: string; action?: Loc; href: string }[] = [
+    ...S.hero.map((h, i) => ({ placement: 'hero' as const, title: h.title, text: h.text, action: h.action, href: heroLinks[i] || '/', ...heroImages[i] })),
+    { placement: 'promo', title: L('სამოგზაურო დაზღვევა', 'Travel insurance'), image: 'hero-travel-airport', alt: L('მგზავრი ჩემოდნით აეროპორტში', 'Traveller with a suitcase at the airport'), pos: '50% 45%', href: '/travel' },
+    { placement: 'promo', title: L('ჯანმრთელობის დაზღვევა', 'Health insurance'), image: 'offer-family-health', alt: L('ოჯახი დივანზე წიგნს კითხულობს', 'Family reading a book on the sofa'), pos: '50% 40%', href: '/health' },
+    { placement: 'promo', title: L('ტაო დაზღვევის გუნდი', 'The TAO Insurance team'), image: 'about-team-office', alt: L('გუნდი ოფისში', 'Team in the office'), pos: '50% 35%', href: '/about' },
+    { placement: 'promo', title: L('შეთავაზებები', 'Offers'), image: 'photo-people', alt: L('წყვილი ლურჯ კართან', 'Couple at a blue door'), pos: '50% 40%', href: '/offers' },
   ]
   /** The old typed address as a link choice (page / offer / news / portal / other site). */
   async function linkFor(href: string) {
@@ -127,16 +165,36 @@ async function main() {
     if (href.startsWith('http')) return { type: 'url' as const, url: href }
     return { type: 'page' as const, page: href as '/' }
   }
+  if (UPDATE) {
+    // hero slides keep their place in the order: rewrite their texts in turn
+    const hero = await payload.find({ collection: 'banners', where: { placement: { equals: 'hero' } }, sort: '_order', limit: 3, locale: 'ka', depth: 0 })
+    for (const [i, doc] of hero.docs.entries()) {
+      const b = banners[i]
+      if (!b || b.placement !== 'hero') continue
+      await payload.update({ collection: 'banners', id: doc.id, locale: 'ka', data: { title: b.title.ka, text: b.text?.ka, actionLabel: b.action?.ka } })
+      await payload.update({ collection: 'banners', id: doc.id, locale: 'en', data: { title: b.title.en, text: b.text?.en, actionLabel: b.action?.en } })
+      console.log('banner updated', b.title.ka)
+    }
+    // the old text promo banners give way to the design's image banners (switched off, not deleted)
+    const keep = new Set(banners.filter((b) => b.placement === 'promo').map((b) => b.title.ka))
+    const oldPromo = await payload.find({ collection: 'banners', where: { placement: { equals: 'promo' } }, limit: 50, locale: 'ka', depth: 0 })
+    for (const doc of oldPromo.docs) {
+      if (keep.has(doc.title as string)) continue
+      await payload.update({ collection: 'banners', id: doc.id, data: { active: false } })
+      console.log('banner switched off', doc.title)
+    }
+  }
   for (const b of banners) {
+    if (UPDATE && b.placement === 'hero') continue
     const exists = await payload.find({ collection: 'banners', where: { and: [{ title: { equals: b.title.ka } }, { placement: { equals: b.placement } }] }, limit: 1, locale: 'ka' })
     if (exists.docs[0]) continue
     const img = await image(b.image, b.alt)
-    const doc = await payload.create({ collection: 'banners', locale: 'ka', data: { placement: b.placement, kicker: b.kicker?.ka, title: b.title.ka, text: b.text.ka, image: img, imagePosition: b.pos, actionLabel: b.action.ka, link: await linkFor(b.href), active: true } })
-    await payload.update({ collection: 'banners', id: doc.id, locale: 'en', data: { kicker: b.kicker?.en, title: b.title.en, text: b.text.en, actionLabel: b.action.en } })
+    const doc = await payload.create({ collection: 'banners', locale: 'ka', data: { placement: b.placement, title: b.title.ka, text: b.text?.ka, image: img, imagePosition: b.pos, actionLabel: b.action?.ka, link: await linkFor(b.href), active: true } })
+    await payload.update({ collection: 'banners', id: doc.id, locale: 'en', data: { title: b.title.en, text: b.text?.en, actionLabel: b.action?.en } })
     console.log('banner', b.title.ka)
   }
 
-  await fillNewsBodies(payload)
+  await fillNewsBodies(payload, UPDATE ? { force: true, slugs: updatedNews } : {})
 
   console.log('done')
   process.exit(0)

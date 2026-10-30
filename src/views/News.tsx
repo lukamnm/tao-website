@@ -27,7 +27,7 @@ export function News({ items, categories }: { items: NewsVM[]; categories: ListI
         <div style={{ boxSizing: 'border-box', maxWidth: 1280, margin: '0 auto', padding: '150px 24px 56px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 24 }}>
           <Breadcrumb current="სიახლეები" />
           <h1 className="tao-h tao-h--display tao-intro" style={{ ['--i' as string]: '1', margin: 0, color: 'var(--on-primary)', fontSize: 'min(76px, 5.3vw)', lineHeight: 0.95, whiteSpace: 'nowrap' }}>{t('სიახლეები')}</h1>
-          <p className="tao-intro" style={{ ['--i' as string]: '2', margin: 0, maxWidth: 560, fontSize: 19, lineHeight: 1.55, color: 'var(--on-blue-muted)' }}>{t('ტაოს ამბები, ახალი პროდუქტები, კამპანიები და პარტნიორობები.')}</p>
+          <p className="tao-intro" style={{ ['--i' as string]: '2', margin: 0, maxWidth: 560, fontSize: 19, lineHeight: 1.55, color: 'var(--on-blue-muted)' }}>{t('ტაო დაზღვევის ამბები, ახალი სერვისები, ახალი პროვაიდერები')}</p>
         </div>
       </section>
       <section id="list" style={{ background: 'var(--bg)', marginTop: 4, padding: '56px 0 96px' }}>
@@ -94,7 +94,7 @@ export function News({ items, categories }: { items: NewsVM[]; categories: ListI
                 <Icon name="search-normal" size={22} />
               </span>
               <h3 className="tao-h tao-h--h3" style={{ margin: 0 }}>{t('სიახლე ვერ ვიპოვეთ')}</h3>
-              <p style={{ margin: 0, maxWidth: 460, color: 'var(--text-secondary)' }}>{t('სცადე სხვა სიტყვა ან კატეგორია.')}</p>
+              <p style={{ margin: 0, maxWidth: 460, color: 'var(--text-secondary)' }}>{t('სცადე სხვა სიტყვა ან კატეგორია')}</p>
               <Button variant="primary" onClick={() => { setCat('all'); setQuery(''); setShown(FIRST) }}>
                 {t('ყველა სიახლე')}
               </Button>

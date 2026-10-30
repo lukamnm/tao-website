@@ -1,0 +1,742 @@
+{
+ "news": {
+  "new-look": {
+   "cat": "company",
+   "title": {
+    "ka": "ტაო დაზღვევის ახალი სახე",
+    "en": "TAO Insurance's new look"
+   },
+   "excerpt": {
+    "ka": "2026 წელს ტაო დაზღვევა ახალი ბრენდით და ვებგვერდით გაგრძელებს",
+    "en": "In 2026 TAO Insurance continues with a new brand and website"
+   },
+   "lead": {
+    "ka": "ტაო დაზღვევა ახალი ბრენდით და ახალი ვებგვერდით იწყებს. მიზანი მარტივია: დაზღვევა, რომელიც გასაგებია და საჭირო დროს მუშაობს.",
+    "en": "TAO Insurance starts with a new brand and a new website. The goal is simple: insurance that is clear and works when you need it."
+   },
+   "alt": {
+    "ka": "წყვილი ლურჯ კართან",
+    "en": "A couple by a blue door"
+   }
+  },
+  "health-online": {
+   "cat": "portal",
+   "title": {
+    "ka": "ჯანმრთელობის დაზღვევა ახლა ონლაინ",
+    "en": "Health insurance now online"
+   },
+   "excerpt": {
+    "ka": "პოლისის შეძენა ახლა ტაო დაზღვევის პორტალზეა შესაძლებელი",
+    "en": "You can now buy a policy on the TAO Insurance portal"
+   },
+   "lead": {
+    "ka": "ჯანმრთელობის დაზღვევის შეძენა ახლა ოფისში მისვლის გარეშე შეგიძლია: ტაო დაზღვევის პორტალზე პოლისს რამდენიმე წუთში გააფორმებ.",
+    "en": "You can now buy health insurance without visiting the office: set up your policy on the TAO Insurance portal in a few minutes."
+   },
+   "alt": {
+    "ka": "ტელეფონი ხელში, ონლაინ ყიდვა",
+    "en": "A phone in hand, buying online"
+   }
+  },
+  "before-you-travel": {
+   "cat": "services",
+   "title": {
+    "ka": "5 რამ, რაც მოგზაურობამდე უნდა გააკეთო",
+    "en": "5 things to do before you travel"
+   },
+   "excerpt": {
+    "ka": "მოკლე ჩამონათვალი, რომ მოგზაურობა უპრობლემოდ ჩაიაროს",
+    "en": "A short checklist for a trouble-free trip"
+   },
+   "lead": {
+    "ka": "ბილეთი და სასტუმრო დაჯავშნილია? სანამ ჩემოდანს ჩაკეტავ, გადახედე ამ მოკლე ჩამონათვალს.",
+    "en": "Tickets and hotel booked? Before you close your suitcase, check this short list."
+   },
+   "alt": {
+    "ka": "მგზავრი ჩემოდნით აეროპორტში",
+    "en": "A traveller with a suitcase at the airport"
+   }
+  },
+  "schengen-policy": {
+   "cat": "services",
+   "title": {
+    "ka": "სამოგზაურო პოლისი შენგენის ვიზისთვის",
+    "en": "Travel policy for a Schengen visa"
+   },
+   "excerpt": {
+    "ka": "პოლისი შენგენის ვიზის ყველა მოთხოვნას აკმაყოფილებს და ონლაინ ფორმდება",
+    "en": "The policy meets all Schengen visa requirements and is set up online"
+   },
+   "lead": {
+    "ka": "ვიზისთვის საჭირო სამოგზაურო პოლისი ახლა რამდენიმე წუთში, ონლაინ შეგიძლია გააფორმო. პოლისი შენგენის ზონის მოთხოვნებს სრულად აკმაყოფილებს.",
+    "en": "You can now get the travel policy you need for a visa online, in a few minutes. It fully meets Schengen area requirements."
+   },
+   "alt": {
+    "ka": "მგზავრი ჩემოდნით აეროპორტში",
+    "en": "A traveller with a suitcase at the airport"
+   }
+  },
+  "service-standard": {
+   "cat": "services",
+   "title": {
+    "ka": "მომსახურების ახალი სტანდარტი",
+    "en": "A new service standard"
+   },
+   "excerpt": {
+    "ka": "ცხელ ხაზზე უფრო სწრაფად გიპასუხებთ და საკითხს ერთ ზარში მოვაგვარებთ",
+    "en": "We answer the hotline faster and solve your issue in one call"
+   },
+   "lead": {
+    "ka": "ტაო დაზღვევა მომსახურების ახალ სტანდარტს ნერგავს: ცხელ ხაზზე ზარს უფრო სწრაფად ვპასუხობთ, ხოლო საკითხების უმეტესობას პირველივე ზარში ვაგვარებთ.",
+    "en": "TAO Insurance is introducing a new service standard: we answer hotline calls faster and solve most issues on the first call."
+   },
+   "alt": {
+    "ka": "გუნდი ოფისში",
+    "en": "Team at the office"
+   }
+  },
+  "family-package": {
+   "cat": "services",
+   "title": {
+    "ka": "ოჯახის პაკეტი ჯანმრთელობის დაზღვევაში",
+    "en": "Family package in health insurance"
+   },
+   "excerpt": {
+    "ka": "ოჯახის ყველა წევრი ერთ პოლისში, სპეციალურ ფასად",
+    "en": "All family members in one policy, at a special price"
+   },
+   "lead": {
+    "ka": "ახალი ოჯახის პაკეტით ოჯახის ყველა წევრის დაზღვევა ერთ პოლისში შეგიძლია, თითოეულისთვის ცალკე განაცხადის გარეშე",
+    "en": "With the new family package you can insure every family member in one policy, without a separate application for each"
+   },
+   "alt": {
+    "ka": "ოჯახი დივანზე წიგნს კითხულობს",
+    "en": "A family reading a book on the sofa"
+   }
+  },
+  "clinic-network": {
+   "cat": "providers",
+   "title": {
+    "ka": "პარტნიორი კლინიკების ქსელი გაფართოვდა",
+    "en": "Partner clinic network has grown"
+   },
+   "excerpt": {
+    "ka": "ჯანმრთელობის პოლისით მომსახურება ახლა მეტ ქალაქში შეგიძლია",
+    "en": "You can now use your health policy in more cities"
+   },
+   "lead": {
+    "ka": "ტაო დაზღვევის პარტნიორი კლინიკების ქსელს ახალი სამედიცინო დაწესებულებები შეუერთდა. მომსახურება ახლა თბილისის გარდა ბათუმსა და ქუთაისშიც ხელმისაწვდომია.",
+    "en": "New medical facilities have joined TAO Insurance's partner clinic network. Care is now available in Batumi and Kutaisi as well as Tbilisi."
+   },
+   "alt": {
+    "ka": "ექიმი პაციენტს ესაუბრება კლინიკაში",
+    "en": "A doctor talking to a patient at a clinic"
+   }
+  },
+  "small-business": {
+   "cat": "services",
+   "title": {
+    "ka": "ჯანმრთელობის დაზღვევა მცირე ბიზნესისთვის",
+    "en": "Health insurance for small businesses"
+   },
+   "excerpt": {
+    "ka": "გუნდის დაზღვევა 5 თანამშრომლიდან, მარტივი განაცხადით",
+    "en": "Team insurance from 5 employees, with a simple application"
+   },
+   "lead": {
+    "ka": "მცირე ბიზნესს ახლა შეუძლია, თანამშრომლები 5 ადამიანიდან დააზღვიოს. განაცხადი ერთია მთელი გუნდისთვის, პოლისი კი თითოეულის საჭიროებას ერგება.",
+    "en": "Small businesses can now insure teams of 5 or more people. One application covers the whole team, and the policy fits each person's needs."
+   },
+   "alt": {
+    "ka": "გუნდი ოფისში",
+    "en": "Team at the office"
+   }
+  },
+  "marathon": {
+   "cat": "company",
+   "title": {
+    "ka": "ტაო დაზღვევა ქალაქის მარათონის პარტნიორია",
+    "en": "TAO Insurance is the city marathon's partner"
+   },
+   "excerpt": {
+    "ka": "წელს მარათონის ყველა მონაწილე დაზღვეული იქნება",
+    "en": "This year every marathon runner will be insured"
+   },
+   "lead": {
+    "ka": "ტაო დაზღვევა თბილისის მარათონის ოფიციალური სადაზღვევო პარტნიორია. რბოლის დღეს ყველა რეგისტრირებული მონაწილე დაზღვეული იქნება.",
+    "en": "TAO Insurance is the official insurance partner of the Tbilisi Marathon. Every registered runner will be insured on race day."
+   },
+   "alt": {
+    "ka": "ქალი ლურჯ პალტოში თბილისის ქუჩაზე",
+    "en": "A woman in a blue coat on a Tbilisi street"
+   }
+  },
+  "summer-campaign": {
+   "cat": "services",
+   "title": {
+    "ka": "ზაფხულის სამოგზაურო კამპანია",
+    "en": "Summer travel campaign"
+   },
+   "excerpt": {
+    "ka": "სამოგზაურო პოლისი ონლაინ, ზაფხულის განსაკუთრებული ფასით",
+    "en": "Travel policy online at a special summer price"
+   },
+   "lead": {
+    "ka": "ზაფხულის მოგზაურობებისთვის ტაო დაზღვევა სამოგზაურო პოლისზე სპეციალურ ფასს გთავაზობს. პოლისს ონლაინ, რამდენიმე წუთში შეიძენ.",
+    "en": "For summer trips TAO Insurance offers a special price on travel policies. Buy online in a few minutes."
+   },
+   "alt": {
+    "ka": "მგზავრი ჩემოდნით აეროპორტში",
+    "en": "A traveller with a suitcase at the airport"
+   }
+  },
+  "claims-portal": {
+   "cat": "portal",
+   "title": {
+    "ka": "ანაზღაურების მოთხოვნა ახლა პორტალზე",
+    "en": "Claims are now on the portal"
+   },
+   "excerpt": {
+    "ka": "დოკუმენტების ატვირთვა და სტატუსის ნახვა ერთ სივრცეში",
+    "en": "Upload documents and see the status in one place"
+   },
+   "lead": {
+    "ka": "ანაზღაურების მოთხოვნისთვის ოფისში მისვლა აღარ გჭირდება: დოკუმენტებს პორტალზე ატვირთავ და სტატუსს იქვე ადევნებ თვალს.",
+    "en": "You no longer need to visit the office to claim: upload the documents on the portal and track the status there."
+   },
+   "alt": {
+    "ka": "ტელეფონი ხელში",
+    "en": "A phone in hand"
+   }
+  },
+  "year-results": {
+   "cat": "company",
+   "title": {
+    "ka": "ტაო დაზღვევის წლის შედეგები",
+    "en": "TAO Insurance's results of the year"
+   },
+   "excerpt": {
+    "ka": "ანაზღაურებული შემთხვევები, ახალი მომხმარებლები და გეგმები",
+    "en": "Claims paid, new customers and plans"
+   },
+   "lead": {
+    "ka": "გასულ წელს ტაო დაზღვევამ [N] სადაზღვევო შემთხვევა აანაზღაურა და [N] ახალ მომხმარებელს შეუერთდა. ვაჯამებთ წელს და ვყვებით გეგმებზე.",
+    "en": "Last year TAO Insurance paid [N] claims and welcomed [N] new customers. We sum up the year and share our plans."
+   },
+   "alt": {
+    "ka": "წყვილი ლურჯ კართან",
+    "en": "A couple by a blue door"
+   }
+  },
+  "assistance-partner": {
+   "cat": "providers",
+   "title": {
+    "ka": "ახალი ასისტანს პარტნიორი საზღვარგარეთ",
+    "en": "A new assistance partner abroad"
+   },
+   "excerpt": {
+    "ka": "სამოგზაურო პოლისით დახმარება 24/7, ნებისმიერ ქვეყანაში",
+    "en": "Help 24/7 with your travel policy, in any country"
+   },
+   "lead": {
+    "ka": "ტაო დაზღვევის სამოგზაურო პოლისის მფლობელებს ახალი საერთაშორისო ასისტანს პარტნიორი ემსახურება. საზღვარგარეთ ექიმი თუ დაგჭირდა, ცხელ ხაზზე 24/7 გიპასუხებენ და გეტყვიან, სად მიხვიდე.",
+    "en": "TAO Insurance travel policyholders are now served by a new international assistance partner. If you need a doctor abroad, the hotline answers 24/7 and tells you where to go."
+   },
+   "alt": {
+    "ka": "ქალი ლურჯ პალტოში თბილისის ქუჩაზე",
+    "en": "A woman in a blue coat on a Tbilisi street"
+   }
+  }
+ },
+ "offers": {
+  "travel-15": {
+   "title": {
+    "ka": "სამოგზაურო პოლისი 15%-იანი ფასდაკლებით",
+    "en": "Travel policy with 15% off"
+   },
+   "excerpt": {
+    "ka": "იმოგზაურე მშვიდად: სამოგზაურო პოლისი ონლაინ, 15%-ით იაფად.",
+    "en": "Travel with peace of mind: travel policy online, 15% cheaper."
+   },
+   "note": {
+    "ka": "",
+    "en": ""
+   },
+   "value": "15%",
+   "online": true,
+   "alt": {
+    "ka": "მგზავრი ჩემოდნით აეროპორტში",
+    "en": "A traveller with a suitcase at the airport"
+   }
+  },
+  "family": {
+   "title": {
+    "ka": "ოჯახის პაკეტი",
+    "en": "Family package"
+   },
+   "excerpt": {
+    "ka": "ჯანმრთელობის დაზღვევა მთელი ოჯახისთვის, სპეციალურ ფასად",
+    "en": "Health insurance for the whole family, at a special price"
+   },
+   "note": {
+    "ka": "ოჯახის ყველა წევრი ერთ პოლისში",
+    "en": "All family members in one policy"
+   },
+   "value": "[N]%",
+   "online": true,
+   "alt": {
+    "ka": "ოჯახი დივანზე წიგნს კითხულობს",
+    "en": "A family reading a book on the sofa"
+   }
+  },
+  "fitness": {
+   "title": {
+    "ka": "ფიტნეს-კლუბის აბონემენტი 20%-ით იაფად",
+    "en": "Gym membership 20% cheaper"
+   },
+   "excerpt": {
+    "ka": "ჯანმრთელობის პოლისის მფლობელებს პარტნიორ ფიტნეს-კლუბში 20%-იანი ფასდაკლება აქვთ",
+    "en": "Health policyholders get 20% off at a partner gym"
+   },
+   "note": {
+    "ka": "",
+    "en": ""
+   },
+   "value": "20%",
+   "online": false,
+   "alt": {
+    "ka": "წყვილი ლურჯ კართან",
+    "en": "A couple by a blue door"
+   }
+  },
+  "lab": {
+   "title": {
+    "ka": "10% ფასდაკლება ლაბორატორიულ კვლევებზე",
+    "en": "10% off laboratory tests"
+   },
+   "excerpt": {
+    "ka": "პარტნიორ ლაბორატორიაში ანალიზები და კვლევები 10%-ით იაფად, მაშინაც კი, როცა პოლისი მათ არ ფარავს",
+    "en": "Lab tests and diagnostics 10% cheaper at a partner laboratory, even when your policy doesn't cover them"
+   },
+   "note": {
+    "ka": "",
+    "en": ""
+   },
+   "value": "10%",
+   "online": false,
+   "alt": {
+    "ka": "ექიმი პაციენტს ესაუბრება კლინიკაში",
+    "en": "A doctor talking to a patient at a clinic"
+   }
+  },
+  "optics": {
+   "title": {
+    "ka": "სათვალეები და ლინზები 15%-ით იაფად",
+    "en": "Glasses and lenses 15% cheaper"
+   },
+   "excerpt": {
+    "ka": "პარტნიორ ოპტიკაში მხედველობის შემოწმება უფასოა, სათვალეები და ლინზები კი 15%-ით იაფი",
+    "en": "Eye tests are free at a partner optician, and glasses and lenses are 15% cheaper"
+   },
+   "note": {
+    "ka": "",
+    "en": ""
+   },
+   "value": "15%",
+   "online": false,
+   "alt": {
+    "ka": "ქალი ლურჯ პალტოში თბილისის ქუჩაზე",
+    "en": "A woman in a blue coat on a Tbilisi street"
+   }
+  },
+  "pharmacy": {
+   "title": {
+    "ka": "5% ქეშბექი პარტნიორ აფთიაქებში",
+    "en": "5% cashback at partner pharmacies"
+   },
+   "excerpt": {
+    "ka": "გადაიხადე პოლისის ბარათით და ყოველი შენაძენის 5% ბალანსზე დაგიბრუნდება",
+    "en": "Pay with your policy card and get 5% of every purchase back to your balance"
+   },
+   "note": {
+    "ka": "",
+    "en": ""
+   },
+   "value": "5%",
+   "online": false,
+   "alt": {
+    "ka": "ტელეფონი ხელში",
+    "en": "A phone in hand"
+   }
+  },
+  "flights": {
+   "title": {
+    "ka": "50 ₾ ფასდაკლება ავიაბილეთზე",
+    "en": "50 ₾ off a flight ticket"
+   },
+   "excerpt": {
+    "ka": "სამოგზაურო პოლისის მფლობელებს პარტნიორ ტურისტულ სააგენტოში ავიაბილეთზე 50 ლარიანი ფასდაკლება აქვთ",
+    "en": "Travel policy holders get 50 GEL off a flight ticket at a partner travel agency"
+   },
+   "note": {
+    "ka": "",
+    "en": ""
+   },
+   "value": "50 ₾",
+   "online": true,
+   "alt": {
+    "ka": "მგზავრი ჩემოდნით აეროპორტში",
+    "en": "A traveller with a suitcase at the airport"
+   }
+  },
+  "corporate": {
+   "title": {
+    "ka": "ჯგუფური დაზღვევა მცირე ბიზნესისთვის",
+    "en": "Group insurance for small businesses"
+   },
+   "excerpt": {
+    "ka": "გუნდის ჯანმრთელობის დაზღვევა 5 თანამშრომლიდან, სპეციალურ ფასად",
+    "en": "Health insurance for teams of 5 or more employees, at a special price"
+   },
+   "note": {
+    "ka": "გუნდისთვის 5 თანამშრომლიდან",
+    "en": "For teams of 5 or more employees"
+   },
+   "value": "[N]%",
+   "online": true,
+   "alt": {
+    "ka": "გუნდი ოფისში",
+    "en": "Team at the office"
+   }
+  },
+  "dental": {
+   "title": {
+    "ka": "სტომატოლოგიური მომსახურება 25%-ით იაფად",
+    "en": "Dental care 25% cheaper"
+   },
+   "excerpt": {
+    "ka": "პროფილაქტიკური დათვალიერება და წმენდა პარტნიორ კლინიკაში 25%-იანი ფასდაკლებით",
+    "en": "Preventive check-up and cleaning at a partner clinic with 25% off"
+   },
+   "note": {
+    "ka": "",
+    "en": ""
+   },
+   "value": "25%",
+   "online": false,
+   "alt": {
+    "ka": "ექიმი პაციენტს ესაუბრება კლინიკაში",
+    "en": "A doctor talking to a patient at a clinic"
+   }
+  },
+  "luggage": {
+   "title": {
+    "ka": "ჩემოდნები და სამოგზაურო აქსესუარები 15%-ით იაფად",
+    "en": "Suitcases and travel accessories 15% cheaper"
+   },
+   "excerpt": {
+    "ka": "სამოგზაურო პოლისის მფლობელებს პარტნიორ მაღაზიაში 15%-იანი ფასდაკლება აქვთ",
+    "en": "Travel policy holders get 15% off at a partner store"
+   },
+   "note": {
+    "ka": "",
+    "en": ""
+   },
+   "value": "15%",
+   "online": false,
+   "alt": {
+    "ka": "ქალი ლურჯ პალტოში თბილისის ქუჩაზე",
+    "en": "A woman in a blue coat on a Tbilisi street"
+   }
+  },
+  "summer": {
+   "title": {
+    "ka": "ზაფხულის აქცია სამოგზაურო პოლისზე",
+    "en": "Summer promotion on travel policies"
+   },
+   "excerpt": {
+    "ka": "ზაფხულის მოგზაურობებისთვის",
+    "en": "For summer trips"
+   },
+   "note": {
+    "ka": "",
+    "en": ""
+   },
+   "value": "20%",
+   "online": true,
+   "alt": {
+    "ka": "მგზავრი ჩემოდნით აეროპორტში",
+    "en": "A traveller with a suitcase at the airport"
+   }
+  },
+  "spring-checkup": {
+   "title": {
+    "ka": "გაზაფხულის პროფილაქტიკური შემოწმება",
+    "en": "Spring preventive check-up"
+   },
+   "excerpt": {
+    "ka": "პროფილაქტიკური კვლევები 30%-ით იაფად",
+    "en": "Preventive tests 30% cheaper"
+   },
+   "note": {
+    "ka": "",
+    "en": ""
+   },
+   "value": "30%",
+   "online": false,
+   "alt": {
+    "ka": "ექიმი პაციენტს ესაუბრება კლინიკაში",
+    "en": "A doctor talking to a patient at a clinic"
+   }
+  }
+ },
+ "hero": [
+  {
+   "title": {
+    "ka": "დაზღვევა, რომელიც მუშაობს",
+    "en": "Insurance that works"
+   },
+   "text": {
+    "ka": "ჯანმრთელობის და სამოგზაურო დაზღვევა 2007 წლიდან",
+    "en": "Health and travel insurance since 2007"
+   },
+   "action": {
+    "ka": "გაიგე მეტი",
+    "en": "Learn more"
+   }
+  },
+  {
+   "title": {
+    "ka": "ექიმთან - ხარჯებზე ფიქრის გარეშე",
+    "en": "See a doctor without worrying about costs"
+   },
+   "text": {
+    "ka": "ჯანმრთელობის დაზღვევა შენთვის, შენი ოჯახისთვის და შენი გუნდისთვის",
+    "en": "Health insurance for you, your family and your team"
+   },
+   "action": {
+    "ka": "გაიგე მეტი",
+    "en": "Learn more"
+   }
+  },
+  {
+   "title": {
+    "ka": "იმოგზაურე მშვიდად",
+    "en": "Travel with peace of mind"
+   },
+   "text": {
+    "ka": "სამოგზაურო პოლისი ონლაინ - გამგზავრებამდე რამდენიმე წუთით ადრეც კი",
+    "en": "Travel policy online - even a few minutes before you leave"
+   },
+   "action": {
+    "ka": "გაიგე მეტი",
+    "en": "Learn more"
+   }
+  }
+ ],
+ "bodies": {
+  "company": [
+   {
+    "h": {
+     "ka": "რა იცვლება",
+     "en": "What changes"
+    }
+   },
+   {
+    "p": {
+     "ka": "ცვლილება ეხება იმას, როგორ ვურთიერთობთ მომხმარებლებთან: ნაკლები ქაღალდი, მეტი ციფრული სერვისი და მარტივი, გასაგები ენა.",
+     "en": "The change is about how we work with customers: less paper, more digital service and simple, clear language."
+    }
+   },
+   {
+    "list": [
+     {
+      "ka": "პოლისის შეძენა ონლაინ, რამდენიმე წუთში",
+      "en": "Buy a policy online in a few minutes"
+     },
+     {
+      "ka": "ანაზღაურების მოთხოვნა პორტალზე",
+      "en": "Claims on the portal"
+     },
+     {
+      "ka": "ცხელი ხაზი 24/7",
+      "en": "Hotline 24/7"
+     }
+    ]
+   },
+   {
+    "q": {
+     "ka": "ჩვენთვის მთავარია, რომ დაზღვევა საჭირო დროს მუშაობდეს და ყველასთვის გასაგები იყოს",
+     "en": "For us, what matters is that insurance works when needed and is clear to everyone"
+    },
+    "cite": {
+     "ka": "[სახელი გვარი], ტაო დაზღვევის გენერალური დირექტორი",
+     "en": "[Name Surname], TAO Insurance CEO"
+    }
+   },
+   {
+    "h": {
+     "ka": "რა არ იცვლება",
+     "en": "What stays the same"
+    }
+   },
+   {
+    "p": {
+     "ka": "მოქმედი პოლისები და მათი პირობები უცვლელია. თუ კითხვა გაქვს, დაგვირეკე ან მოგვწერე, ყველა კითხვაზე გიპასუხებთ.",
+     "en": "Existing policies and their terms do not change. If you have a question, call or write to us - we will answer every question."
+    }
+   }
+  ],
+  "products": [
+   {
+    "h": {
+     "ka": "როგორ მუშაობს",
+     "en": "How it works"
+    }
+   },
+   {
+    "p": {
+     "ka": "გადადი ტაო დაზღვევის პორტალზე, აირჩიე პროდუქტი და შეავსე მოკლე განაცხადი. ფასს მაშინვე ნახავ, გადახდის შემდეგ კი პოლისი ელფოსტაზე მოგივა.",
+     "en": "Go to the TAO Insurance portal, choose a product and fill in a short application. You will see the price right away, and the policy arrives by email after payment."
+    }
+   },
+   {
+    "list": [
+     {
+      "ka": "აირჩიე პროდუქტი და პაკეტი",
+      "en": "Choose a product and package"
+     },
+     {
+      "ka": "შეავსე განაცხადი",
+      "en": "Fill in the application"
+     },
+     {
+      "ka": "გადაიხადე ონლაინ და მიიღე პოლისი",
+      "en": "Pay online and get your policy"
+     }
+    ]
+   },
+   {
+    "p": {
+     "ka": "პოლისის გაფორმება ტელეფონიდანაც შეგიძლია",
+     "en": "You can also set up your policy from your phone"
+    },
+    "alt": {
+     "ka": "ტელეფონი ხელში",
+     "en": "A phone in hand"
+    },
+    "img": "phone"
+   },
+   {
+    "h": {
+     "ka": "რა უნდა გაითვალისწინო",
+     "en": "What to keep in mind"
+    }
+   },
+   {
+    "p": {
+     "ka": "სანამ პოლისს შეიძენ, გაეცანი დაზღვევის პირობებს. დოკუმენტები პროდუქტის გვერდზე შეგიძლია ჩამოტვირთო.",
+     "en": "Before you buy a policy, read the insurance terms. You can download the documents on the product page."
+    }
+   }
+  ],
+  "campaigns": [
+   {
+    "h": {
+     "ka": "კამპანიის პირობები",
+     "en": "Campaign terms"
+    }
+   },
+   {
+    "p": {
+     "ka": "კამპანია მოქმედებს მითითებულ ვადაში შეძენილ ახალ პოლისებზე. ფასდაკლება ავტომატურად აისახება პორტალზე, პრომოკოდი საჭირო არ არის.",
+     "en": "The campaign applies to new policies bought within the stated period. The discount is applied automatically on the portal, no promo code needed."
+    }
+   },
+   {
+    "list": [
+     {
+      "ka": "მოქმედებს მხოლოდ ახალ პოლისებზე",
+      "en": "Valid for new policies only"
+     },
+     {
+      "ka": "არ ჯამდება სხვა აქციებთან",
+      "en": "Cannot be combined with other promotions"
+     },
+     {
+      "ka": "პოლისის პირობები უცვლელია",
+      "en": "Policy terms stay the same"
+     }
+    ]
+   },
+   {
+    "q": {
+     "ka": "გვინდოდა, რომ სრული დაცვა უფრო ხელმისაწვდომი ყოფილიყო",
+     "en": "We wanted full protection to be more affordable"
+    },
+    "cite": {
+     "ka": "[სახელი გვარი], მარკეტინგის ხელმძღვანელი",
+     "en": "[Name Surname], Head of Marketing"
+    }
+   },
+   {
+    "p": {
+     "ka": "დეტალები და აქტიური შეთავაზებები ნახე შეთავაზებების გვერდზე",
+     "en": "See the details and current offers on the offers page"
+    }
+   }
+  ],
+  "partners": [
+   {
+    "h": {
+     "ka": "რას ნიშნავს ეს შენთვის",
+     "en": "What this means for you"
+    }
+   },
+   {
+    "p": {
+     "ka": "პარტნიორობა ტაო დაზღვევის მომხმარებლებს მეტ არჩევანს და სწრაფ მომსახურებას აძლევს. საკმარისია, წარადგინო პოლისის ნომერი ან პირადობის მოწმობა.",
+     "en": "Partnerships give TAO Insurance customers more choice and faster service. Just show your policy number or ID card."
+    }
+   },
+   {
+    "list": [
+     {
+      "ka": "მომსახურება რიგის გარეშე",
+      "en": "Service without waiting"
+     },
+     {
+      "ka": "ანგარიშს პარტნიორთან ტაო დაზღვევა ასწორებს",
+      "en": "TAO Insurance settles the bill with the partner"
+     },
+     {
+      "ka": "სრული სია პოლისის დოკუმენტებშია",
+      "en": "The full list is in your policy documents"
+     }
+    ]
+   },
+   {
+    "q": {
+     "ka": "ერთად შეგვიძლია, მომხმარებელს დრო და ნერვები დავუზოგოთ",
+     "en": "Together we can save customers time and stress"
+    },
+    "cite": {
+     "ka": "[სახელი გვარი], [პარტნიორი]",
+     "en": "[Name Surname], [Partner]"
+    }
+   },
+   {
+    "p": {
+     "ka": "პარტნიორების განახლებულ სიას ვებგვერდზე და პორტალზე ნახავ",
+     "en": "See the updated list of partners on the website and the portal"
+    }
+   }
+  ]
+ },
+ "bodyFor": {
+  "providers": "partners",
+  "services": "products",
+  "portal": "products",
+  "company": "company"
+ }
+}

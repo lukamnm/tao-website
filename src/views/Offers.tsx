@@ -12,13 +12,15 @@ const PER = 9
 const SORTS = [
   { id: 'new', label: 'ახალი დამატებული' },
   { id: 'end', label: 'მალე სრულდება' },
-  { id: 'value', label: 'ფასდაკლების ზომით' },
+  { id: 'value', label: 'ფასდაკლებით' },
 ]
+
+type Key = 'cat' | 'fmt' | 'city'
 
 export function Offers({ offers, categories, cities }: { offers: OfferVM[]; categories: ListItem[]; cities: ListItem[] }) {
   const { t, settings } = useSite()
   const [product, setProduct] = useState('all')
-  const [sel, setSel] = useState<{ cat: string[]; city: string[] }>({ cat: [], city: [] })
+  const [sel, setSel] = useState<Record<Key, string[]>>({ cat: [], fmt: [], city: [] })
   const [sort, setSort] = useState('new')
   const [page, setPage] = useState(1)
   const [filtersOpen, setFiltersOpen] = useState(false)
@@ -27,7 +29,8 @@ export function Offers({ offers, categories, cities }: { offers: OfferVM[]; cate
   const match = (o: OfferVM, skip?: string) =>
     (skip === 'product' || product === 'all' || o.product === product) &&
     (skip === 'cat' || !sel.cat.length || sel.cat.includes(o.cat)) &&
-    (skip === 'city' || !sel.city.length || o.cities.some((c) => sel.city.includes(c)))
+    (skip === 'city' || !sel.city.length || o.cities.some((c) => sel.city.includes(c))) &&
+    (skip === 'fmt' || !sel.fmt.length || (sel.fmt.includes('online') && o.online))
 
   let results = offers.filter((o) => match(o))
   if (sort === 'end') results = results.slice().sort((a, b) => a.until.localeCompare(b.until))
@@ -37,26 +40,33 @@ export function Offers({ offers, categories, cities }: { offers: OfferVM[]; cate
   const pageItems = results.slice((cur - 1) * PER, cur * PER)
 
   const set = (fn: () => void) => { fn(); setPage(1) }
-  const toggle = (key: 'cat' | 'city', id: string) => () => set(() => setSel((s) => ({ ...s, [key]: s[key].includes(id) ? s[key].filter((x) => x !== id) : s[key].concat(id) })))
-  const count = (key: 'cat' | 'city', id: string) => offers.filter((o) => match(o, key) && (key === 'city' ? o.cities.includes(id) : o.cat === id)).length
+  const toggle = (key: Key, id: string) => () => set(() => setSel((s) => ({ ...s, [key]: s[key].includes(id) ? s[key].filter((x) => x !== id) : s[key].concat(id) })))
+  const has = (o: OfferVM, key: Key, id: string) => (key === 'city' ? o.cities.includes(id) : key === 'fmt' ? id === 'online' && o.online : o.cat === id)
+  const count = (key: Key, id: string) => offers.filter((o) => match(o, key) && has(o, key, id)).length
 
+  // Lists per filter group: categories and cities come from the CMS; "ფორმატი" holds the single "ონლაინ" option (OfferVM.online).
+  const lists: Record<Key, { id: string; label: string }[]> = {
+    cat: categories.map((x) => ({ id: x.key, label: x.name })),
+    fmt: [{ id: 'online', label: 'ონლაინ' }],
+    city: cities.filter((x) => x.key !== 'online').map((x) => ({ id: x.key, label: x.name })),
+  }
   const groups = [
-    { key: 'cat' as const, title: 'პარტნიორის კატეგორია', items: categories.map((x) => ({ id: x.key, label: x.name })) },
-    { key: 'city' as const, title: 'ქალაქი', items: cities.map((x) => ({ id: x.key, label: x.name })) },
+    { key: 'cat' as const, title: 'აირჩიე კატეგორია', items: lists.cat },
+    { key: 'fmt' as const, title: 'ფორმატი', items: lists.fmt },
+    { key: 'city' as const, title: 'ქალაქი / რეგიონი', items: lists.city },
   ]
 
   const chips = [{ id: 'all', short: 'ყველა', icon: '' }].concat(products.map((p) => ({ id: p.key, short: p.short, icon: p.icon })))
   const activeTags: { label: string; remove: () => void }[] = []
-  ;(['cat', 'city'] as const).forEach((key) => {
-    const src = key === 'cat' ? categories : cities
+  ;(['cat', 'fmt', 'city'] as const).forEach((key) => {
     sel[key].forEach((id) => {
-      const f = src.find((x) => x.key === id)
-      if (f) activeTags.push({ label: f.name, remove: toggle(key, id) })
+      const f = lists[key].find((x) => x.id === id)
+      if (f) activeTags.push({ label: f.label, remove: toggle(key, id) })
     })
   })
   const nFilters = activeTags.length
   const hasFilters = nFilters > 0 || product !== 'all'
-  const clearAll = () => set(() => { setProduct('all'); setSel({ cat: [], city: [] }) })
+  const clearAll = () => set(() => { setProduct('all'); setSel({ cat: [], fmt: [], city: [] }) })
   const goPage = (n: number) => {
     setPage(n)
     const el = document.getElementById('list')
@@ -76,7 +86,7 @@ export function Offers({ offers, categories, cities }: { offers: OfferVM[]; cate
           <div className="tao-intro" style={{ ['--i' as string]: '0', flex: '1 1 560px', minWidth: 0, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 24 }}>
             <Breadcrumb current="შეთავაზებები" />
             <h1 className="tao-h tao-h--display" style={{ margin: 0, color: 'var(--on-primary)', fontSize: 'min(76px, 5.3vw)', lineHeight: 0.95, whiteSpace: 'nowrap' }}>{t('შეთავაზებები')}</h1>
-            <p style={{ margin: 0, maxWidth: 520, fontSize: 19, lineHeight: 1.55, color: 'var(--on-blue-muted)' }}>{t('აქციები, ფასდაკლებები და სპეციალური პირობები ტაოსგან.')}</p>
+            <p style={{ margin: 0, maxWidth: 520, fontSize: 19, lineHeight: 1.55, color: 'var(--on-blue-muted)' }}>{t('აქციები, ფასდაკლებები და სპეციალური პირობები ტაო დაზღვევისგან')}</p>
           </div>
           <div className="tao-intro tao-ostats tao-ostats--one" style={{ ['--i' as string]: '2', flex: '0 1 auto', display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', borderTop: '1px solid var(--on-blue-line)', borderLeft: '1px solid var(--on-blue-line)' }}>
             <div style={{ boxSizing: 'border-box', padding: '20px 28px 22px', minWidth: 190, borderRight: '1px solid var(--on-blue-line)', borderBottom: '1px solid var(--on-blue-line)', display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -203,7 +213,6 @@ export function Offers({ offers, categories, cities }: { offers: OfferVM[]; cate
                     </Button>
                   ) : null}
                   {settings.facebook ? <Button variant="secondary" iconRight="export-square" href={settings.facebook} target="_blank" rel="noopener">Facebook</Button> : null}
-                  {settings.instagram ? <Button variant="secondary" iconRight="export-square" href={settings.instagram} target="_blank" rel="noopener">Instagram</Button> : null}
                 </div>
               </div>
             )}

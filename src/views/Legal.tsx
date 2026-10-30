@@ -41,7 +41,7 @@ export function Legal({ docs, updated }: { docs: DocumentVM[]; updated: string }
   const pageBtn: React.CSSProperties = { width: 44, height: 44, border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--link)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }
 
   return (
-    <InfoPage current="/legal" title="იურიდიული ინფორმაცია" lead="კომპანიის რეკვიზიტები, ლიცენზია, დაზღვევის პირობები და კორპორატიული დოკუმენტები." updated={updated}>
+    <InfoPage current="/legal" title="იურიდიული ინფორმაცია" lead="კომპანიის რეკვიზიტები, ლიცენზია, დაზღვევის პირობები და კორპორატიული დოკუმენტები" updated={updated}>
       <InfoSection id="company" number={1} title="კომპანიის რეკვიზიტები">
         <KeyValue
           rows={[
@@ -58,7 +58,7 @@ export function Legal({ docs, updated }: { docs: DocumentVM[]; updated: string }
       <InfoSection id="corporate" number={2} title="კორპორატიული დოკუმენტები">
         <DocList docs={corporate} emptyText="დოკუმენტები მალე დაემატება." />
       </InfoSection>
-      <InfoSection id="wordings" number={3} title="დაზღვევის პირობები" text="ყველა პროდუქტის დაზღვევის პირობები და დოკუმენტები - ახალიც და წინა ვერსიებიც.">
+      <InfoSection id="wordings" number={3} title="დაზღვევის პირობები" text="ყველა პროდუქტის დაზღვევის პირობები და დოკუმენტები - ახალიც და წინა ვერსიებიც">
         <Notice>{t('პოლისზე ვრცელდება ის პირობები, რომლებიც მოქმედებდა პოლისის შეძენის ან ბოლო განახლების დღეს. ამიტომ აქ ინახება ყველა ვერსია. მოძებნე დოკუმენტი პოლისის თარიღის მიხედვით.')}</Notice>
         <div className="tao-dtools" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div className="tao-dtools__row" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 180px 180px', gap: 12 }}>

@@ -6,7 +6,7 @@ export const Settings: GlobalConfig = {
   label: 'საიტის პარამეტრები',
   admin: {
     group: 'სისტემა',
-    description: 'ტელეფონი, მისამართი, პორტალის ბმული, სოციალური ქსელები და ციფრები "ჩვენ შესახებ" გვერდზე. ცვლილება საიტზე მაშინვე ჩანს.',
+    description: 'ტელეფონი, ოფისის და სერვის ცენტრის მისამართი, პორტალის ბმული, Facebook და ციფრები "ჩვენ შესახებ" გვერდზე. ცვლილება საიტზე მაშინვე ჩანს.',
   },
   access: { read: () => true },
   hooks: {
@@ -24,12 +24,12 @@ export const Settings: GlobalConfig = {
             {
               type: 'row',
               fields: [
-                { name: 'phone', type: 'text', label: 'ტელეფონი', defaultValue: '+995 32 280 10 01', admin: { width: '50%' } },
-                { name: 'email', type: 'email', label: 'ელფოსტა', defaultValue: 'info@taoinsurance.ge', admin: { width: '50%' } },
+                { name: 'phone', type: 'text', label: 'ტელეფონი', defaultValue: '+995 32 219 52 12', admin: { width: '50%' } },
+                { name: 'email', type: 'email', label: 'ელფოსტა', defaultValue: 'contact@taoinsurance.ge', admin: { width: '50%' } },
               ],
             },
-            { name: 'phoneHref', type: 'text', defaultValue: '+995322801001', admin: { hidden: true } },
-            { name: 'address', type: 'text', label: 'სრული მისამართი', localized: true, defaultValue: 'ანა პოლიტკოვსკაიას ქ. 16, 0186 თბილისი' },
+            { name: 'phoneHref', type: 'text', defaultValue: '+995322195212', admin: { hidden: true } },
+            { name: 'address', type: 'text', label: 'ოფისის სრული მისამართი', localized: true, defaultValue: 'ანა პოლიტკოვსკაიას ქ. 16, 0186 თბილისი' },
             {
               type: 'row',
               fields: [
@@ -38,7 +38,38 @@ export const Settings: GlobalConfig = {
               ],
             },
             { name: 'hours', type: 'text', label: 'სამუშაო საათები', localized: true, defaultValue: 'ორშ-პარ, 10:00-18:00' },
-            { name: 'mapUrl', type: 'text', label: 'Google Maps-ის ბმული', admin: { description: 'Google Maps-ში იპოვე ოფისი, დააჭირე "გაზიარება" და ბმული აქ ჩასვი.' } },
+            { name: 'mapUrl', type: 'text', label: 'ოფისი Google Maps-ზე', admin: { description: 'Google Maps-ში იპოვე ოფისი, დააჭირე "გაზიარება" და ბმული აქ ჩასვი.' } },
+          ],
+        },
+        {
+          label: 'სერვის ცენტრი',
+          description: 'ჩანს კონტაქტის გვერდზე და ყველა გვერდის ქვედა ნაწილში.',
+          fields: [
+            { name: 'serviceAddress', type: 'text', label: 'სრული მისამართი', localized: true, defaultValue: 'შალვა ნუცუბიძის ქ. 72, 0186 თბილისი' },
+            {
+              type: 'row',
+              fields: [
+                { name: 'serviceAddressShort', type: 'text', label: 'ქუჩა და ნომერი', localized: true, defaultValue: 'შალვა ნუცუბიძის ქ. 72', admin: { width: '50%' } },
+                { name: 'serviceCity', type: 'text', label: 'ინდექსი და ქალაქი', localized: true, defaultValue: '0186 თბილისი', admin: { width: '50%' } },
+              ],
+            },
+            {
+              name: 'serviceHours',
+              type: 'array',
+              label: 'სამუშაო საათები',
+              labels: { singular: 'სტრიქონი', plural: 'სტრიქონები' },
+              admin: { description: 'თითო სტრიქონი: დღეები და საათები. მაგ: "ორშაბათი - პარასკევი" და "9:00 - 18:00".' },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'days', type: 'text', label: 'დღეები', localized: true, required: true, admin: { width: '60%' } },
+                    { name: 'time', type: 'text', label: 'საათები', required: true, admin: { width: '40%' } },
+                  ],
+                },
+              ],
+            },
+            { name: 'serviceMapUrl', type: 'text', label: 'სერვის ცენტრი Google Maps-ზე', admin: { description: 'Google Maps-ში იპოვე სერვის ცენტრი, დააჭირე "გაზიარება" და ბმული აქ ჩასვი.' } },
           ],
         },
         {
@@ -50,12 +81,8 @@ export const Settings: GlobalConfig = {
           ],
         },
         {
-          label: 'სოციალური ქსელები',
-          fields: [
-            { name: 'facebook', type: 'text', label: 'Facebook', admin: { placeholder: 'https://facebook.com/...' } },
-            { name: 'instagram', type: 'text', label: 'Instagram', admin: { placeholder: 'https://instagram.com/...' } },
-            { name: 'linkedin', type: 'text', label: 'LinkedIn', admin: { placeholder: 'https://linkedin.com/company/...' } },
-          ],
+          label: 'Facebook',
+          fields: [{ name: 'facebook', type: 'text', label: 'Facebook-ის გვერდი', admin: { placeholder: 'https://facebook.com/...' } }],
         },
         {
           label: 'ციფრები',

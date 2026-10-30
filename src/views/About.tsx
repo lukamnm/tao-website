@@ -5,20 +5,20 @@ import { useSite } from '@/site/SiteProvider'
 import { Breadcrumb, InfoHero } from './shared'
 
 const VALUES = [
-  { title: 'გასაგები პირობები', text: 'პოლისში ყველაფერი მარტივად წერია, ზედმეტი წვრილი შრიფტის გარეშე.' },
-  { title: 'სწრაფი ანაზღაურება', text: 'მოქნილი სისტემა და მინიმუმ ბიუროკრატია.' },
-  { title: 'შენზე მორგებული', text: 'პოლისს შენს საჭიროებებს ვუსადაგებთ, არც მეტს, არც ნაკლებს.' },
+  { title: 'გასაგები პირობები', text: 'პოლისში ყველაფერი მარტივად წერია, ზედმეტი წვრილი შრიფტის გარეშე' },
+  { title: 'სწრაფი ანაზღაურება', text: 'მოქნილი სისტემა და მინიმუმ ბიუროკრატია' },
+  { title: 'შენზე მორგებული', text: 'პოლისს შენს საჭიროებებს ვუსადაგებთ, არც მეტს, არც ნაკლებს' },
   { title: 'სანდოობა', text: 'სიტყვას ვასრულებთ: საჭირო დროს შენს გვერდით ვართ.' },
-  { title: 'მუდმივი განვითარება', text: 'ვუსმენთ მომხმარებელს და სერვისს ყოველდღე ვხვეწავთ.' },
+  { title: 'მუდმივი განვითარება', text: 'ვუსმენთ მომხმარებელს და სერვისს ყოველდღე ვხვეწავთ' },
 ]
 const PRODUCTS = [
-  { title: 'ჯანმრთელობის დაზღვევა', text: 'ექიმი, კვლევები, სტაციონარი.', href: '/health', image: '/img/hero-health-clinic.jpg', alt: 'ექიმი პაციენტს ესაუბრება კლინიკაში', pos: '78% 50%' },
-  { title: 'სამოგზაურო დაზღვევა', text: 'სამედიცინო დაფარვა საზღვარგარეთ.', href: '/travel', image: '/img/hero-travel-airport.jpg', alt: 'მგზავრი ჩემოდნით აეროპორტში', pos: '50% 50%' },
+  { title: 'ჯანმრთელობის დაზღვევა', text: 'ექიმი, კვლევები, სტაციონარი', href: '/health', image: '/img/hero-health-clinic.jpg', alt: 'ექიმი პაციენტს ესაუბრება კლინიკაში', pos: '78% 50%' },
+  { title: 'სამოგზაურო დაზღვევა', text: 'სამედიცინო დაფარვა საზღვარგარეთ', href: '/travel', image: '/img/hero-travel-airport.jpg', alt: 'მგზავრი ჩემოდნით აეროპორტში', pos: '50% 50%' },
 ]
 const LINKS = [
-  { icon: 'receipt-item', title: 'შეთავაზებები', text: 'აქციები, ფასდაკლებები და პარტნიორების სპეციალური პირობები ტაოს მომხმარებლებისთვის.', action: 'ყველა შეთავაზება', href: '/offers' },
-  { icon: 'document-text', title: 'სიახლეები', text: 'ტაოს ამბები, ახალი პროდუქტები, კამპანიები და პარტნიორობები.', action: 'ყველა სიახლე', href: '/news' },
-  { icon: 'messages-2', title: 'კონტაქტი', text: 'დაგვირეკე, მოგვწერე ან გვეწვიე ოფისში.', action: 'დაგვიკავშირდი', href: '/contact' },
+  { icon: 'receipt-item', title: 'შეთავაზებები', text: 'აქციები, ფასდაკლებები და პარტნიორების სპეციალური პირობები ტაო დაზღვევის მომხმარებლებისთვის', action: 'ყველა შეთავაზება', href: '/offers' },
+  { icon: 'document-text', title: 'სიახლეები', text: 'ტაო დაზღვევის ამბები, ახალი სერვისები, ახალი პროვაიდერები', action: 'ყველა სიახლე', href: '/news' },
+  { icon: 'messages-2', title: 'კონტაქტი', text: 'თუ შეკითხვა გაქვს, დაგვირეკე ან მოგვწერე', action: 'დაგვიკავშირდი', href: '/contact' },
 ]
 
 export function About() {
@@ -43,16 +43,16 @@ export function About() {
       <section style={{ background: 'var(--bg)', marginTop: 4, padding: '64px 0 96px' }}>
         <div style={{ ...wrap, gap: 72 }}>
           <figure data-reveal="up" style={{ margin: 0, position: 'relative', aspectRatio: '21 / 9', borderRadius: 5, overflow: 'hidden', background: 'var(--bg-subtle)' }}>
-            <img src="/img/about-team-office.jpg" alt={t('ტაოს გუნდი ოფისში')} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 45%', display: 'block' }} />
+            <img src="/img/about-team-office.jpg" alt={t('ტაო დაზღვევის გუნდი ოფისში')} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 45%', display: 'block' }} />
           </figure>
           <div className="tao-abwho" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 2fr)', gap: 96, alignItems: 'start' }}>
             <div data-reveal="up">
               <SectionMarker number={1} title={t('ვინ ვართ')} />
             </div>
             <div data-reveal="up" style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 760 }}>
-              <p style={{ margin: 0, fontSize: 24, lineHeight: 1.5, fontWeight: 500 }}>{t('ტაო ქართული სადაზღვევო კომპანიაა, რომელიც 2007 წლიდან სთავაზობს მომხმარებლებს ჯანმრთელობის და სამოგზაურო დაზღვევას.')}</p>
-              <p style={{ margin: 0, fontSize: 17, lineHeight: 1.7, color: 'var(--text-secondary)' }}>{t('ვმუშაობთ როგორც ფიზიკურ პირებთან, ისე კომპანიებთან. პოლისს თითოეულის საჭიროებას ვუსადაგებთ, არც მეტს, არც ნაკლებს. პირობებს მარტივად ვწერთ, ზედმეტი წვრილი შრიფტის გარეშე, ანაზღაურებას კი სწრაფად და მინიმალური ბიუროკრატიით ვიხდით.')}</p>
-              <p style={{ margin: 0, fontSize: 17, lineHeight: 1.7, color: 'var(--text-secondary)' }}>{t('2026 წელს ტაო ახალი ბრენდით და ციფრული სერვისებით აგრძელებს: პოლისის შეძენა და ანაზღაურების მოთხოვნა ახლა ონლაინ, ტაოს პორტალზეა შესაძლებელი.')}</p>
+              <p style={{ margin: 0, fontSize: 24, lineHeight: 1.5, fontWeight: 500 }}>{t('სადაზღვევო კომპანია ტაო საქართველოს სადაზღვევო ბაზარზე 2007 წლიდან საქმიანობს. მრავალწლიანი გამოცდილება, საიმედოობა და მომხმარებლის საჭიროებებზე ორიენტირებული მიდგომა კომპანიის საქმიანობის საფუძველია.')}</p>
+              <p style={{ margin: 0, fontSize: 17, lineHeight: 1.7, color: 'var(--text-secondary)' }}>{t('ტაო დაზღვევა შექმნილია მათთვის, ვისაც სურს მარტივი, ხელმისაწვდომი და პრაქტიკული დაზღვევა. კომპანია მომხმარებლებს სთავაზობს მრავალფეროვან სადაზღვევო დაფარვას, პროვაიდერების ფართო ქსელსა და კომფორტულ მომსახურებას.')}</p>
+              <p style={{ margin: 0, fontSize: 17, lineHeight: 1.7, color: 'var(--text-secondary)' }}>{t('ტაოს დაზღვევის მთავარი პრინციპია, დაზღვევა არ იყოს მხოლოდ დაპირება - ის რეალურად უნდა მუშაობდეს მაშინ, როცა მომხმარებელს სჭირდება')}</p>
             </div>
           </div>
         </div>
@@ -77,7 +77,7 @@ export function About() {
                 <h2 className="tao-h tao-h--h2">{t('ჩვენი ღირებულებები')}</h2>
               </div>
             </div>
-            <p style={{ margin: 0, maxWidth: 320, color: 'var(--text-secondary)' }}>{t('ის, რითაც ყოველდღიურ გადაწყვეტილებებს ვიღებთ.')}</p>
+            <p style={{ margin: 0, maxWidth: 320, color: 'var(--text-secondary)' }}>{t('ის, რითაც ყოველდღიურ გადაწყვეტილებებს ვიღებთ')}</p>
           </div>
           <ol data-reveal="stagger" style={{ listStyle: 'none', margin: 0, padding: 0, borderTop: '1px solid var(--text)' }}>
             {VALUES.map((v, i) => (

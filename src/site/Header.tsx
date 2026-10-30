@@ -46,8 +46,8 @@ export function Header() {
 
   const bare = pathname.replace(/^\/en(?=\/|$)/, '') || '/'
   const isActive = (href: string) => bare === href || bare.startsWith(href + '/')
-  // Products menu: the products marked "show in menu" in the admin (each has its own page)
-  const PRODUCTS = settings.products.filter((p) => p.inMenu).map((p) => ({ href: p.href, icon: p.icon, title: p.name, text: p.menuText }))
+  // Products menu: the products marked "show in menu" in the admin (each has its own page); titles only
+  const PRODUCTS = settings.products.filter((p) => p.inMenu).map((p) => ({ href: p.href, icon: p.icon, title: p.name }))
   const productActive = bare === '/' || PRODUCTS.some((p) => isActive(p.href))
   const dock = docked ? DOCKED : FLOATING
 
@@ -133,8 +133,8 @@ export function Header() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <p className="tao-caps" style={{ margin: 0, fontSize: 12, fontWeight: 500, letterSpacing: '0.08em', color: 'var(--text-muted)' }}>{t('დაზღვევა')}</p>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 8 }}>
-                {PRODUCTS.map((p) => (
-                  <a key={p.href} href={L(p.href)} className="tao-mtile" style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: 16, border: '1px solid var(--border)', borderRadius: 5, color: 'var(--text)', textDecoration: 'none', fontSize: 14, fontWeight: 500, lineHeight: 1.3 }}>
+                {PRODUCTS.map((p, i) => (
+                  <a key={p.href} href={L(p.href)} className="tao-mtile" style={{ ...(PRODUCTS.length % 2 === 1 && i === PRODUCTS.length - 1 ? { gridColumn: '1 / -1' } : null), display: 'flex', flexDirection: 'column', gap: 12, padding: 16, border: '1px solid var(--border)', borderRadius: 5, color: 'var(--text)', textDecoration: 'none', fontSize: 14, fontWeight: 500, lineHeight: 1.3 }}>
                     <span style={{ width: 40, height: 40, boxSizing: 'border-box', border: '1px solid var(--link)', color: 'var(--link)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Icon name={p.icon} size={22} />
                     </span>
@@ -184,16 +184,15 @@ export function Header() {
                     {t('დაზღვევა')}
                     <Icon name="arrow-down-2" size={16} />
                   </a>
-                  <div className="tao-dd__panel" role="menu" aria-label={t('დაზღვევა')} style={{ position: 'absolute', top: '100%', left: '50%', zIndex: 60, paddingTop: 14, width: 340, transform: 'translateX(-50%)' }}>
+                  <div className="tao-dd__panel" role="menu" aria-label={t('დაზღვევა')} style={{ position: 'absolute', top: '100%', left: '50%', zIndex: 60, paddingTop: 14, width: 'max-content', minWidth: 240, transform: 'translateX(-50%)' }}>
                     <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, padding: 8, display: 'flex', flexDirection: 'column', gap: 2 }}>
                       {PRODUCTS.map((p) => (
-                        <a key={p.href} href={L(p.href)} className="tao-dd__item" role="menuitem" style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '12px 14px', borderRadius: 10, color: 'var(--text)', textDecoration: 'none' }}>
+                        <a key={p.href} href={L(p.href)} className="tao-dd__item" role="menuitem" style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '10px 16px 10px 10px', borderRadius: 10, color: 'var(--text)', textDecoration: 'none' }}>
                           <span className="tao-dd__icon" style={{ flex: 'none', width: 40, height: 40, borderRadius: 10, background: 'var(--primary-subtle)', color: 'var(--link)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <Icon name={p.icon} size={22} />
                           </span>
                           <span style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-                            <span style={{ fontSize: 15, fontWeight: 500, lineHeight: 1.3 }}>{t(p.title)}</span>
-                            <span style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{t(p.text)}</span>
+                            <span style={{ fontSize: 15, fontWeight: 500, lineHeight: 1.3, whiteSpace: 'nowrap' }}>{t(p.title)}</span>
                           </span>
                         </a>
                       ))}

@@ -86,6 +86,7 @@ export const Products: CollectionConfig = {
       options: [
         { label: 'ჯანმრთელობის დაზღვევის გვერდი', value: '/health' },
         { label: 'სამოგზაურო დაზღვევის გვერდი', value: '/travel' },
+        { label: 'ავტომობილის დაზღვევის გვერდი', value: '/car' },
       ],
       admin: { description: 'ახალ პროდუქტს საკუთარი გვერდი ჯერ არ აქვს: ის დიზაინით ემატება. მანამდე დატოვე ცარიელი.' },
     },
@@ -97,4 +98,4 @@ export const Products: CollectionConfig = {
 
 export const NewsCategories = listCollection('news-categories', 'სიახლის კატეგორია', 'სიახლის კატეგორიები', 'სიახლეების კატეგორიები (კომპანია, პროდუქტები...). ჩანს სიახლეების ფილტრში.', [{ collection: 'news', field: 'category', label: 'სიახლეები' }])
 export const OfferCategories = listCollection('offer-categories', 'პარტნიორის კატეგორია', 'პარტნიორის კატეგორიები', 'პარტნიორების სფეროები (კლინიკა, აფთიაქი...). ჩანს შეთავაზებების ფილტრში.', [{ collection: 'offers', field: 'category', label: 'შეთავაზებები' }])
-export const Cities = listCollection('cities', 'ქალაქი', 'ქალაქები', 'სად მოქმედებს შეთავაზება. ჩანს შეთავაზებების ფილტრში.', [{ collection: 'offers', field: 'cities', label: 'შეთავაზებები' }])
+export const Cities = listCollection('cities', 'ქალაქი / რეგიონი', 'ქალაქები / რეგიონები', 'სად მოქმედებს პარტნიორის შეთავაზება. ჩანს შეთავაზებების ფილტრში "ქალაქი / რეგიონი". ონლაინ შეთავაზება ცალკე ინიშნება თავად შეთავაზებაში.', [{ collection: 'offers', field: 'cities', label: 'შეთავაზებები' }])

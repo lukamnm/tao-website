@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next'
 import { getNews, getOffers } from '@/lib/content'
 import { siteUrl } from '@/lib/site-url'
 
-const STATIC = ['', '/health', '/travel', '/offers', '/news', '/about', '/contact', '/legal', '/financial', '/complaints', '/privacy', '/terms']
+const STATIC = ['', '/health', '/travel', '/car', '/offers', '/news', '/about', '/contact', '/legal', '/financial', '/complaints', '/privacy', '/terms']
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = siteUrl()

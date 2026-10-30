@@ -19,8 +19,8 @@ export function Financial({ docs, updated }: { docs: DocumentVM[]; updated: stri
   const qTitle = (d: DocumentVM) => (locale === 'en' ? `${d.year} ${d.quarter} financial statements` : `${d.year} ${d.quarter} ფინანსური ანგარიშგება`)
 
   return (
-    <InfoPage current="/financial" title="ფინანსური ინფორმაცია" lead="აუდიტირებული წლიური და კვარტალური ფინანსური ანგარიშგება." updated={updated}>
-      <InfoSection id="annual" number={1} title="წლიური ანგარიშგება" text="2009 წლიდან, დამოუკიდებელი აუდიტორის დასკვნით.">
+    <InfoPage current="/financial" title="ფინანსური ინფორმაცია" lead="აუდიტირებული წლიური და კვარტალური ფინანსური ანგარიშგება" updated={updated}>
+      <InfoSection id="annual" number={1} title="წლიური ანგარიშგება" text="2009 წლიდან, დამოუკიდებელი აუდიტორის დასკვნით">
         {annual.length ? (
           <div style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid var(--border)' }}>
             {shown.map((d) => (

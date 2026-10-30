@@ -43,7 +43,7 @@ export function Consent({ on, error, onToggle }: { on: boolean; error?: boolean;
         <a href={L('/privacy')} style={{ color: 'var(--link)' }} onClick={(e) => e.stopPropagation()}>
           {t('კონფიდენციალურობის პოლიტიკის')}
         </a>{' '}
-        {t('მიხედვით.')}
+        {t('მიხედვით')}
       </span>
     </button>
   )

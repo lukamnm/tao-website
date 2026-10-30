@@ -73,8 +73,9 @@ export const Offers: CollectionConfig = {
         {
           label: 'სად მოქმედებს',
           fields: [
-            { name: 'category', type: 'relationship', relationTo: 'offer-categories', label: 'პარტნიორის კატეგორია', admin: { condition: (d) => d?.type === 'partner' } },
-            { name: 'cities', type: 'relationship', relationTo: 'cities', hasMany: true, label: 'ქალაქები', admin: { description: 'ჩვეულებრივ "ონლაინ". პარტნიორისთვის აირჩიე ქალაქები, სადაც ფილიალები აქვს.' } },
+            { name: 'category', type: 'relationship', relationTo: 'offer-categories', label: 'კატეგორია', admin: { condition: (d) => d?.type === 'partner' } },
+            { name: 'online', type: 'checkbox', label: 'მოქმედებს ონლაინ', defaultValue: false, admin: { description: 'მონიშნე, თუ შეთავაზებით სარგებლობა ონლაინ შეიძლება (მაგ: ტაო დაზღვევის პორტალზე). შეთავაზებების ფილტრში "ფორმატი".' } },
+            { name: 'cities', type: 'relationship', relationTo: 'cities', hasMany: true, label: 'ქალაქები / რეგიონები', admin: { description: 'სად მოქმედებს: ქალაქები, სადაც პარტნიორს ფილიალები აქვს.' } },
             {
               name: 'partner',
               type: 'group',

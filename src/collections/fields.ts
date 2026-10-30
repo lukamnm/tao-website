@@ -20,6 +20,7 @@ export const SITE_PAGES = [
   { label: 'მთავარი გვერდი - პროდუქტები', value: '/#products' },
   { label: 'ჯანმრთელობის დაზღვევა', value: '/health' },
   { label: 'სამოგზაურო დაზღვევა', value: '/travel' },
+  { label: 'ავტომობილის კორპორატიული დაზღვევა', value: '/car' },
   { label: 'შეთავაზებები', value: '/offers' },
   { label: 'სიახლეები', value: '/news' },
   { label: 'ჩვენ შესახებ', value: '/about' },

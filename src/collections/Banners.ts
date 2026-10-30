@@ -3,7 +3,7 @@ import { contentHooks } from '@/lib/revalidate'
 import { imageFields, linkField } from './fields'
 import { previewUrl } from '@/lib/preview'
 
-// Home page hero slides and the promo banner block ("campaigns, benefits, announcements").
+// Home page hero slides (photo, title, text, button) and the promo banner strip (photo + link only).
 export const Banners: CollectionConfig = {
   slug: 'banners',
   labels: { singular: 'ბანერი', plural: 'ბანერები' },
@@ -12,7 +12,7 @@ export const Banners: CollectionConfig = {
     useAsTitle: 'title',
     group: 'კონტენტი',
     defaultColumns: ['title', 'placement', 'active'],
-    description: 'მთავარი გვერდის დიდი სლაიდერი და შავი პრომო-ბლოკი. რიგის შესაცვლელად გადაათრიე.',
+    description: 'მთავარი გვერდის დიდი სლაიდერი და პრომო-ბანერები (ფოტო-ზოლი გვერდის შუაში). რიგის შესაცვლელად გადაათრიე.',
     preview: (_doc, { locale }) => previewUrl('/', locale),
   },
   access: { read: () => true },
@@ -26,15 +26,14 @@ export const Banners: CollectionConfig = {
       defaultValue: 'hero',
       options: [
         { label: 'დიდი სლაიდერი (გვერდის თავში)', value: 'hero' },
-        { label: 'პრომო-ბლოკი (შავი ბლოკი გვერდის შუაში)', value: 'promo' },
+        { label: 'პრომო-ბანერი (მხოლოდ ფოტო და ბმული, გვერდის შუაში)', value: 'promo' },
       ],
       admin: { layout: 'horizontal' },
     },
-    { name: 'kicker', type: 'text', label: 'მცირე წარწერა', localized: true, admin: { placeholder: 'მაგ: კამპანია', description: 'ჩანს სათაურის ზემოთ და გადამრთველ ღილაკზე.', condition: (d) => d?.placement === 'promo' } },
-    { name: 'title', type: 'text', label: 'სათაური', required: true, localized: true },
-    { name: 'text', type: 'textarea', label: 'ტექსტი', localized: true, admin: { description: '1 წინადადება' } },
-    ...imageFields(),
-    { name: 'actionLabel', type: 'text', label: 'ღილაკის ტექსტი', localized: true, defaultValue: 'გაიგე მეტი' },
+    { name: 'title', type: 'text', label: 'სათაური', required: true, localized: true, admin: { description: 'პრომო-ბანერზე საიტზე არ ჩანს: მხოლოდ სიაში გეხმარება მის პოვნაში.' } },
+    { name: 'text', type: 'textarea', label: 'ტექსტი', localized: true, admin: { description: '1 წინადადება', condition: (d) => d?.placement !== 'promo' } },
+    ...imageFields({ label: 'ფოტო' }),
+    { name: 'actionLabel', type: 'text', label: 'ღილაკის ტექსტი', localized: true, defaultValue: 'გაიგე მეტი', admin: { condition: (d) => d?.placement !== 'promo' } },
     linkField(),
     { name: 'active', type: 'checkbox', label: 'საიტზე ჩანს', defaultValue: true, admin: { components: { Cell: '/components/admin/YesNoCell#YesNoCell' }, position: 'sidebar' } },
     {

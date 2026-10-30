@@ -13,14 +13,11 @@ const TASKS = [
   { href: '/admin/collections/banners', title: 'ბანერების შეცვლა', text: 'მთავარი გვერდის სლაიდერი და პრომო', icon: 'global' },
   { href: '/admin/collections/documents/create', title: 'დოკუმენტის ატვირთვა', text: 'PDF: პირობები, ანგარიშგება', icon: 'document-download' },
   { href: '/admin/collections/products', title: 'პროდუქტები და კატეგორიები', text: 'დამატება, სახელის შეცვლა, წაშლა', icon: 'shield-tick' },
-  { href: '/admin/globals/settings', title: 'საიტის პარამეტრები', text: 'ტელეფონი, მისამართი, სოც. ქსელები', icon: 'call-calling' },
+  { href: '/admin/globals/settings', title: 'საიტის პარამეტრები', text: 'ტელეფონი, მისამართები, სამუშაო საათები', icon: 'call-calling' },
 ]
 
 export async function Welcome({ payload, user }: Props) {
-  const [messages, requests] = await Promise.all([
-    payload.count({ collection: 'contact-messages', where: { status: { equals: 'new' } }, overrideAccess: true }).catch(() => ({ totalDocs: 0 })),
-    payload.count({ collection: 'corporate-requests', where: { status: { equals: 'new' } }, overrideAccess: true }).catch(() => ({ totalDocs: 0 })),
-  ])
+  const messages = await payload.count({ collection: 'contact-messages', where: { status: { equals: 'new' } }, overrideAccess: true }).catch(() => ({ totalDocs: 0 }))
   const name = user?.name || user?.email?.split('@')[0] || ''
   return (
     <div className="tao-welcome">
@@ -40,11 +37,6 @@ export async function Welcome({ payload, user }: Props) {
           <strong>{messages.totalDocs}</strong>
           <span>ახალი შეტყობინება</span>
           <em>კონტაქტის ფორმიდან</em>
-        </a>
-        <a href="/admin/collections/corporate-requests?where[status][equals]=new" className={requests.totalDocs ? 'is-new' : ''}>
-          <strong>{requests.totalDocs}</strong>
-          <span>ახალი კორპორატიული მოთხოვნა</span>
-          <em>ჯანმრთელობის დაზღვევის გვერდიდან</em>
         </a>
       </div>
 
