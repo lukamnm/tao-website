@@ -29,7 +29,7 @@ export const Settings: GlobalConfig = {
               ],
             },
             { name: 'phoneHref', type: 'text', defaultValue: '+995322195212', admin: { hidden: true } },
-            { name: 'address', type: 'text', label: 'ოფისის სრული მისამართი', localized: true, defaultValue: 'ანა პოლიტკოვსკაიას ქ. 16, 0186 თბილისი' },
+            { name: 'address', type: 'text', label: 'ოფისის სრული მისამართი', localized: true, defaultValue: 'ანა პოლიტკოვსკაიას ქ. 16, 0186 თბილისი', admin: { description: 'საიტზე: კონტაქტის გვერდზე „მთავარი ოფისი“, ფუტერში „იურიდიული მისამართი“' } },
             {
               type: 'row',
               fields: [

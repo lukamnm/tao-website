@@ -1,5 +1,5 @@
 /* The starting entries of the editable lists. The same values are inserted by the migrations
-   src/migrations/20261030_110141_admin_lists.ts and 20261030_125200_design_v2_data.ts on PostgreSQL; the seed adds whatever is missing
+   src/migrations/20261030_110141_admin_lists.ts and 20261030_130100_design_v2_data.ts on PostgreSQL; the seed adds whatever is missing
    (a fresh SQLite file for local work). After that, editors change the lists in the admin. */
 
 export type ListSlug = 'products' | 'news-categories' | 'offer-categories' | 'cities'

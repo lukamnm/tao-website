@@ -39,8 +39,8 @@ export function Footer() {
         <Logo variant="whitetext" height={36} href="#top" />
         <p style={{ margin: 0, fontSize: 16, color: '#A8ADB3' }}>{t('დაზღვევა, რომელიც მუშაობს')}</p>
         <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
-          {addr('ოფისი', settings.address)}
-          {addr('სერვის ცენტრი', settings.service.address)}
+          {addr('ოფისი', settings.service.address)}
+          {addr('იურიდიული მისამართი', settings.address)}
           <div style={{ display: 'flex', gap: 16, paddingTop: 8 }}>
             {socials.map((s) => (
               <a key={s.label} href={s.href} className="tao-flink" style={flink} target={s.href.startsWith('http') ? '_blank' : undefined} rel="noopener">

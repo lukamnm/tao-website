@@ -277,7 +277,7 @@ export function Home({ slides, banners, offers, news }: Props) {
       {banners.length ? (
         <section className="tao-bnrsec" aria-roledescription="carousel" aria-label={t('ბანერები')} style={{ padding: '0 0 80px' }}>
           <div style={{ boxSizing: 'border-box', maxWidth: 1280, margin: '0 auto', padding: '0 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
-            <div data-reveal="up" className="tao-bnr" style={{ position: 'relative', width: '100%', aspectRatio: '1232 / 224', borderRadius: 5, overflow: 'hidden', background: 'var(--bg-subtle)' }}>
+            <div data-reveal="up" className="tao-bnr" style={{ position: 'relative', width: '100%', aspectRatio: '1232 / 400', borderRadius: 5, overflow: 'hidden', background: 'var(--bg-subtle)' }}>
               {banners.map((b, i) => {
                 const on = i === bIdx
                 return (
