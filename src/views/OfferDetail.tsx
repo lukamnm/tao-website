@@ -99,7 +99,7 @@ export function OfferDetail({ offer: o, others }: { offer: OfferVM; others: Offe
             {steps.length ? (
               <>
                 <h2 className="tao-h tao-h--h3" style={{ margin: '28px 0 0' }}>{t('როგორ ვისარგებლო')}</h2>
-                <ol style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', borderTop: '1px solid var(--border)' }}>
+                <ol className="tao-plain" style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', borderTop: '1px solid var(--border)' }}>
                   {steps.map((s, i) => (
                     <li key={i} style={{ display: 'flex', gap: 18, alignItems: 'flex-start', padding: '18px 0', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>
                       <span style={{ flex: 'none', width: 32, height: 32, boxSizing: 'border-box', border: '1px solid var(--link)', color: 'var(--link)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15 }}>{i + 1}</span>
@@ -112,7 +112,7 @@ export function OfferDetail({ offer: o, others }: { offer: OfferVM; others: Offe
             {terms.length ? (
               <>
                 <h2 className="tao-h tao-h--h3" style={{ margin: '28px 0 0' }}>{t('პირობები')}</h2>
-                <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <ul className="tao-plain" style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 12 }}>
                   {terms.map((tm, i) => (
                     <li key={i} style={{ display: 'flex', gap: 14, alignItems: 'flex-start', fontSize: 16, lineHeight: 1.55, color: 'var(--text-secondary)' }}>
                       <span aria-hidden="true" style={{ flex: 'none', width: 8, height: 8, marginTop: 9, background: 'var(--link)' }} />
@@ -137,7 +137,7 @@ export function OfferDetail({ offer: o, others }: { offer: OfferVM; others: Offe
               ))}
             </dl>
             {contacts.length ? (
-              <div style={{ padding: '20px 24px 0', display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div style={{ padding: hasCta ? '20px 24px 0' : '20px 24px 24px', display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <p className="tao-caps" style={{ margin: 0, fontSize: 12, fontWeight: 500, letterSpacing: '0.08em', color: 'var(--text-muted)' }}>{t('პარტნიორის კონტაქტი')}</p>
                 {contacts.map((c) => (
                   <a key={c.label} href={c.href} className="tao-pcontact" target={c.icon === 'call-calling' ? undefined : '_blank'} rel="noopener" style={{ display: 'flex', alignItems: 'center', gap: 12, color: 'var(--text)', textDecoration: 'none', minWidth: 0 }}>

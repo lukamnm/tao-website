@@ -1084,6 +1084,9 @@ export interface Setting {
   phone?: string | null;
   email?: string | null;
   phoneHref?: string | null;
+  /**
+   * საიტზე: კონტაქტის გვერდზე „მთავარი ოფისი“, ფუტერში „იურიდიული მისამართი“
+   */
   address?: string | null;
   addressShort?: string | null;
   city?: string | null;

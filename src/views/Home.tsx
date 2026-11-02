@@ -71,6 +71,22 @@ export function Home({ slides, banners, offers, news }: Props) {
   const idxRef = useRef(0)
   idxRef.current = idx
 
+  // Slide photos are loaded and decoded up front: the reveal starts only once the next photo is ready,
+  // otherwise the browser keeps painting the previous photo during the animation and then jumps.
+  const decoded = useRef<Record<string, Promise<void>>>({})
+  const ready = useCallback((src?: string | null) => {
+    if (!src) return Promise.resolve()
+    if (!decoded.current[src]) {
+      const im = new Image()
+      im.src = src
+      decoded.current[src] = im.decode().catch(() => undefined)
+    }
+    return decoded.current[src]
+  }, [])
+  useEffect(() => {
+    slides.forEach((s) => ready(s.image))
+  }, [slides, ready])
+
   const go = useCallback(
     (d: number) => {
       const next = (idxRef.current + d + n) % n
@@ -81,7 +97,10 @@ export function Home({ slides, banners, offers, news }: Props) {
       if (busy.current) return
       busy.current = true
       setPhase('out')
-      window.setTimeout(() => {
+      const nextReady = ready(slides[next]?.image)
+      const outDone = new Promise((r) => window.setTimeout(r, 380))
+      const giveUp = new Promise((r) => window.setTimeout(r, 2500))
+      Promise.all([outDone, Promise.race([nextReady, giveUp])]).then(() => {
         setIdx(next)
         setPhase('pre')
         requestAnimationFrame(() =>
@@ -90,9 +109,9 @@ export function Home({ slides, banners, offers, news }: Props) {
             busy.current = false
           }),
         )
-      }, 380)
+      })
     },
-    [n],
+    [n, slides, ready],
   )
 
   const [tick, setTick] = useState(0) // restarts the autoplay timer after manual navigation
@@ -281,7 +300,7 @@ export function Home({ slides, banners, offers, news }: Props) {
               {banners.map((b, i) => {
                 const on = i === bIdx
                 return (
-                  <a key={b.id} href={hrefOf(b)} className="tao-bnr__slide" role="group" aria-roledescription="slide" aria-label={i + 1 + ' / ' + banners.length} aria-hidden={!on} tabIndex={on ? 0 : -1} style={css`position: absolute; inset: 0; display: block; transition: opacity 600ms ease, visibility 600ms; ${on ? 'opacity: 1; visibility: visible; z-index: 1;' : 'opacity: 0; visibility: hidden; z-index: 0;'}`}>
+                  <a key={b.id} href={hrefOf(b)} className="tao-bnr__slide" role="group" aria-roledescription="slide" aria-label={i + 1 + ' / ' + banners.length} aria-hidden={!on} tabIndex={on ? 0 : -1} style={css`position: absolute; inset: 0; display: block; ${on ? 'opacity: 1; visibility: visible; z-index: 1; transition: opacity 600ms ease;' : 'opacity: 0; visibility: hidden; z-index: 0; transition: opacity 0s 600ms, visibility 0s 600ms;'}`}>
                     <img src={b.image} alt={b.imageAlt} style={css`display: block; width: 100%; height: 100%; object-fit: cover; object-position: ${b.pos};`} />
                   </a>
                 )
