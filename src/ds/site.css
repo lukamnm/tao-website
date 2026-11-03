@@ -203,7 +203,6 @@ article.tao-hcard:hover .tao-btn--ghost .tao-icon,article.tao-hcard:hover .tao-b
 .tao-abval__n{transition:background-color 200ms ease,color 200ms ease}
 .tao-abval:hover .tao-abval__n{background:var(--primary);color:var(--on-primary)!important}
 .tao-ctile{transition:background-color 200ms ease}
-.tao-ctile:hover{background:var(--primary-hover)}
 .tao-ctile:last-child{border-right:1px solid var(--on-blue-line)}
 .tao-ctile__arrow{transition:transform 200ms ease}
 .tao-ctile:hover .tao-ctile__arrow{transform:translateX(4px)}

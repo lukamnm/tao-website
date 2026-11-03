@@ -278,7 +278,7 @@ export interface Product {
   /**
    * ახალ პროდუქტს საკუთარი გვერდი ჯერ არ აქვს: ის დიზაინით ემატება. მანამდე დატოვე ცარიელი.
    */
-  pagePath?: ('/health' | '/travel' | '/car') | null;
+  pagePath?: ('/health' | '/travel' | '/car' | '/property') | null;
   /**
    * მხოლოდ იმ პროდუქტებისთვის, რომლებსაც გვერდი აქვთ.
    */
@@ -492,15 +492,16 @@ export interface Banner {
           | '/health'
           | '/travel'
           | '/car'
+          | '/property'
           | '/offers'
           | '/news'
           | '/about'
           | '/contact'
           | '/legal'
           | '/financial'
-          | '/complaints'
-          | '/privacy'
-          | '/terms'
+          | '/other'
+          | '/other#terms'
+          | '/other#complaints'
         )
       | null;
     offer?: (number | null) | Offer;
@@ -526,7 +527,7 @@ export interface Banner {
 export interface Document {
   id: number;
   title: string;
-  section: 'legal' | 'financial';
+  section: 'legal' | 'financial' | 'complaints';
   docType: 'terms' | 'sheet' | 'sample' | 'other' | 'annual' | 'quarterly';
   /**
    * ცარიელი = ზოგადი დოკუმენტი
@@ -1074,7 +1075,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
- * ტელეფონი, ოფისის და სერვის ცენტრის მისამართი, პორტალის ბმული, Facebook და ციფრები "ჩვენ შესახებ" გვერდზე. ცვლილება საიტზე მაშინვე ჩანს.
+ * ტელეფონები და ელფოსტა (ჯანმრთელობის და ავტომობილის დაზღვევა), იურიდიული მისამართი, სერვის ცენტრი, პორტალის ბმული, Facebook და ციფრები "ჩვენ შესახებ" გვერდზე. ცვლილება საიტზე მაშინვე ჩანს.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "settings".
@@ -1083,16 +1084,19 @@ export interface Setting {
   id: number;
   phone?: string | null;
   email?: string | null;
+  carPhone?: string | null;
+  carEmail?: string | null;
   phoneHref?: string | null;
+  carPhoneHref?: string | null;
   /**
-   * საიტზე: კონტაქტის გვერდზე „მთავარი ოფისი“, ფუტერში „იურიდიული მისამართი“
+   * ჩანს ფუტერში და კონტაქტის გვერდზე, „იურიდიული მისამართი“
    */
   address?: string | null;
   addressShort?: string | null;
   city?: string | null;
   hours?: string | null;
   /**
-   * Google Maps-ში იპოვე ოფისი, დააჭირე "გაზიარება" და ბმული აქ ჩასვი.
+   * Google Maps-ში იპოვე მისამართი, დააჭირე "გაზიარება" და ბმული აქ ჩასვი.
    */
   mapUrl?: string | null;
   serviceAddress?: string | null;
@@ -1141,7 +1145,10 @@ export interface Setting {
 export interface SettingsSelect<T extends boolean = true> {
   phone?: T;
   email?: T;
+  carPhone?: T;
+  carEmail?: T;
   phoneHref?: T;
+  carPhoneHref?: T;
   address?: T;
   addressShort?: T;
   city?: T;

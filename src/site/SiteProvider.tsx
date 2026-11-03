@@ -35,3 +35,10 @@ export function useSite(): SiteCtx {
   if (!v) throw new Error('useSite outside SiteProvider')
   return v
 }
+
+/** The current URL hash to carry over on a language switch (e.g. the "Other information" tab), "#top" excluded. */
+export function keepHash(): string {
+  if (typeof window === 'undefined') return ''
+  const h = window.location.hash
+  return h && h !== '#top' ? h : ''
+}

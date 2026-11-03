@@ -3,8 +3,11 @@ import { NextResponse, type NextRequest } from 'next/server'
 /* Next 16 proxy (formerly middleware).
    1. URL scheme: Georgian at "/", English at "/en/...". Internally every public page lives under
       /[locale]/..., so "/health" is rewritten to "/ka/health" and "/en/health" stays as is.
-   2. /account/* is guarded by the Neon Auth session (visitor accounts, set up by the Neon session). */
+   2. /account/* is guarded by the Neon Auth session (visitor accounts, set up by the Neon session).
+   3. Retired pages: /privacy, /terms and /complaints (and /en/...) were merged into /other, one tab each;
+      they get a permanent redirect to the matching tab hash (the fragment is kept in the Location header). */
 const PUBLIC_FILE = /\.[a-zA-Z0-9]+$/
+const MOVED = /^(\/en)?\/(privacy|terms|complaints)\/?$/
 
 export default async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl
@@ -15,6 +18,14 @@ export default async function proxy(req: NextRequest) {
       return auth.middleware({ loginUrl: '/auth/sign-in' })(req)
     }
     return NextResponse.next()
+  }
+
+  const moved = MOVED.exec(pathname)
+  if (moved) {
+    const url = req.nextUrl.clone()
+    url.pathname = (moved[1] || '') + '/other'
+    url.hash = moved[2]
+    return NextResponse.redirect(url, 308)
   }
 
   if (

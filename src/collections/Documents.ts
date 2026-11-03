@@ -30,6 +30,7 @@ export const Documents: CollectionConfig = {
           options: [
             { label: 'იურიდიული ინფორმაცია', value: 'legal' },
             { label: 'ფინანსური ინფორმაცია', value: 'financial' },
+            { label: 'სხვა ინფორმაცია: პრეტენზიების განხილვა', value: 'complaints' },
           ],
           admin: { width: '50%' },
         },

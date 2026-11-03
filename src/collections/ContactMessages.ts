@@ -1,11 +1,13 @@
 import type { CollectionConfig } from 'payload'
 
-// Inbox of the contact form. Created by the website (server action), read only by signed-in users.
+// Inbox of the old contact form. The form was removed from the site (design v4); the collection stays hidden
+// so earlier messages are kept in the database.
 export const ContactMessages: CollectionConfig = {
   slug: 'contact-messages',
   labels: { singular: 'შეტყობინება', plural: 'შეტყობინებები' },
   admin: {
     useAsTitle: 'name',
+    hidden: true,
     group: 'შემოსული',
     defaultColumns: ['name', 'topic', 'phone', 'status', 'createdAt'],
     description: 'საიტის კონტაქტის ფორმიდან შემოსული წერილები. პასუხის შემდეგ შეცვალე სტატუსი.',

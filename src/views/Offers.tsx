@@ -5,6 +5,7 @@ import { useSite } from '@/site/SiteProvider'
 import { Breadcrumb } from './shared'
 import { OfferCard } from './OfferCard'
 import type { ListItem, OfferVM } from '@/lib/content'
+import '@/ds/pages/offers.css'
 
 /* Offers listing (design "06 Offers"): product chips, sort, side filters, grid with pagination. */
 
@@ -44,7 +45,7 @@ export function Offers({ offers, categories, cities }: { offers: OfferVM[]; cate
   const has = (o: OfferVM, key: Key, id: string) => (key === 'city' ? o.cities.includes(id) : key === 'fmt' ? id === 'online' && o.online : o.cat === id)
   const count = (key: Key, id: string) => offers.filter((o) => match(o, key) && has(o, key, id)).length
 
-  // Lists per filter group: categories and cities come from the CMS; "ფორმატი" holds the single "ონლაინ" option (OfferVM.online).
+  // Lists per filter group: categories and cities come from the CMS; "fmt" holds the single "ონლაინ" option (OfferVM.online), shown as its own switch row.
   const lists: Record<Key, { id: string; label: string }[]> = {
     cat: categories.map((x) => ({ id: x.key, label: x.name })),
     fmt: [{ id: 'online', label: 'ონლაინ' }],
@@ -52,9 +53,9 @@ export function Offers({ offers, categories, cities }: { offers: OfferVM[]; cate
   }
   const groups = [
     { key: 'cat' as const, title: 'აირჩიე კატეგორია', items: lists.cat },
-    { key: 'fmt' as const, title: 'ფორმატი', items: lists.fmt },
     { key: 'city' as const, title: 'ქალაქი / რეგიონი', items: lists.city },
   ]
+  const onlineOn = sel.fmt.includes('online')
 
   const chips = [{ id: 'all', short: 'ყველა', icon: '' }].concat(products.map((p) => ({ id: p.key, short: p.short, icon: p.icon })))
   const activeTags: { label: string; remove: () => void }[] = []
@@ -108,7 +109,6 @@ export function Offers({ offers, categories, cities }: { offers: OfferVM[]; cate
               ) : null}
             </div>
             <fieldset style={{ margin: 0, padding: '20px 0 22px', border: 0, borderBottom: '1px solid var(--border)', minWidth: 0 }}>
-              <legend className="tao-caps" style={legend}>{t('დალაგება')}</legend>
               <div role="radiogroup" aria-label={t('დალაგება')} style={{ clear: 'both', display: 'flex', flexDirection: 'column', gap: 2 }}>
                 {SORTS.map((so) => (
                   <button key={so.id} type="button" role="radio" aria-checked={sort === so.id} onClick={() => set(() => setSort(so.id))} className={'tao-ocheck tao-oradio' + (sort === so.id ? ' is-on' : '')} style={checkBtn}>
@@ -141,6 +141,18 @@ export function Offers({ offers, categories, cities }: { offers: OfferVM[]; cate
                 </div>
               </fieldset>
             ))}
+            <div style={{ padding: '16px 0', borderBottom: '1px solid var(--border)' }}>
+              <button type="button" role="switch" aria-checked={onlineOn} onClick={toggle('fmt', 'online')} className={'tao-oswitch' + (onlineOn ? ' is-on' : '')} style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%', padding: '10px 8px 10px 6px', border: 0, borderRadius: 5, background: 'transparent', textAlign: 'left', fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 500, lineHeight: 1.35, color: 'var(--text)', cursor: 'pointer' }}>
+                <span style={{ display: 'flex', flex: 'none', color: 'var(--link)' }}>
+                  <Icon name="global" size={18} />
+                </span>
+                <span style={{ flex: 1, minWidth: 0 }}>{t('ონლაინ შეთავაზებები')}</span>
+                <span style={{ flex: 'none', fontSize: 13, fontWeight: 400, color: 'var(--text-muted)' }}>{count('fmt', 'online')}</span>
+                <span className="tao-oswitch__track" aria-hidden="true" style={{ flex: 'none', position: 'relative', width: 36, height: 20, boxSizing: 'border-box', borderRadius: 10, background: 'var(--control-border)' }}>
+                  <span className="tao-oswitch__knob" style={{ position: 'absolute', top: 2, left: 2, width: 16, height: 16, borderRadius: '50%', background: 'var(--surface)' }} />
+                </span>
+              </button>
+            </div>
             <div className="tao-oside__done" style={{ paddingTop: 20 }}>
               <Button variant="primary" block onClick={() => setFiltersOpen(false)}>
                 {t(`ნახე შედეგები (${results.length})`)}

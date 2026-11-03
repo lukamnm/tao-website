@@ -21,15 +21,16 @@ export const SITE_PAGES = [
   { label: 'ჯანმრთელობის დაზღვევა', value: '/health' },
   { label: 'სამოგზაურო დაზღვევა', value: '/travel' },
   { label: 'ავტომობილის კორპორატიული დაზღვევა', value: '/car' },
+  { label: 'ქონების კორპორატიული დაზღვევა', value: '/property' },
   { label: 'შეთავაზებები', value: '/offers' },
   { label: 'სიახლეები', value: '/news' },
   { label: 'ჩვენ შესახებ', value: '/about' },
   { label: 'კონტაქტი', value: '/contact' },
   { label: 'იურიდიული ინფორმაცია', value: '/legal' },
   { label: 'ფინანსური ინფორმაცია', value: '/financial' },
-  { label: 'პრეტენზიების განხილვის წესი', value: '/complaints' },
-  { label: 'კონფიდენციალურობის პოლიტიკა', value: '/privacy' },
-  { label: 'საიტის გამოყენების წესები', value: '/terms' },
+  { label: 'სხვა ინფორმაცია - კონფიდენციალურობის პოლიტიკა', value: '/other' },
+  { label: 'სხვა ინფორმაცია - საიტის გამოყენების წესები', value: '/other#terms' },
+  { label: 'სხვა ინფორმაცია - პრეტენზიების განხილვის წესი', value: '/other#complaints' },
 ]
 
 /** Where a button leads: chosen from lists instead of typing an address. */

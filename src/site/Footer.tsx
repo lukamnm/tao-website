@@ -2,7 +2,7 @@
 import React from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { Button, Icon, LanguageSwitch, Logo } from '@/ds'
-import { useSite } from './SiteProvider'
+import { keepHash, useSite } from './SiteProvider'
 import { switchLocalePath } from '@/i18n'
 
 /* Footer: bento of separate panels on the page ground (help panel in TAO blue, the rest black). */
@@ -13,13 +13,18 @@ export function Footer() {
   const year = new Date().getFullYear()
   const onLang = (v: string) => {
     if (v === locale) return
-    router.push(switchLocalePath(locale, pathname))
+    router.push(switchLocalePath(locale, pathname) + keepHash())
   }
   const tile: React.CSSProperties = { boxSizing: 'border-box', display: 'flex', alignItems: 'center', gap: 20, padding: '16px 16px', borderTop: '1px solid var(--on-blue-line)', color: 'var(--on-primary)', textDecoration: 'none' }
   const flink: React.CSSProperties = { color: 'var(--on-primary)', textDecoration: 'none', fontSize: 15 }
   const kicker: React.CSSProperties = { margin: '0 0 20px', fontSize: 12, fontWeight: 500, letterSpacing: '0.08em', color: '#A8ADB3' }
   const ul: React.CSSProperties = { listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 12 }
   const socials = [{ label: 'Facebook', href: settings.facebook || '#facebook' }]
+  // Help panel: one group per line (health insurance: the main line; corporate motor insurance: its own line)
+  const helpGroups = [
+    { title: 'ჯანმრთელობის დაზღვევა', phone: settings.phone, phoneHref: settings.phoneHref, email: settings.email },
+    { title: 'ავტომობილის კორპორატიული დაზღვევა', phone: settings.car.phone, phoneHref: settings.car.phoneHref, email: settings.car.email },
+  ]
   const caps: React.CSSProperties = { margin: 0, fontSize: 12, fontWeight: 500, letterSpacing: '0.08em', color: '#A8ADB3' }
   const addr = (label: string, text: string) => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -39,7 +44,7 @@ export function Footer() {
         <Logo variant="whitetext" height={36} href="#top" />
         <p style={{ margin: 0, fontSize: 16, color: '#A8ADB3' }}>{t('დაზღვევა, რომელიც მუშაობს')}</p>
         <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
-          {addr('ოფისი', settings.service.address)}
+          {addr('სერვის ცენტრი (ჯანმრთელობის დაზღვევა)', settings.service.address)}
           {addr('იურიდიული მისამართი', settings.address)}
           <div style={{ display: 'flex', gap: 16, paddingTop: 8 }}>
             {socials.map((s) => (
@@ -58,19 +63,24 @@ export function Footer() {
             {t('დაგვიკავშირდი')}
           </Button>
         </div>
-        <div style={{ flex: '1.6 1 460px', minWidth: 0, display: 'flex', flexDirection: 'column' }}>
-          <a href={'tel:' + settings.phoneHref} className="tao-helptile" style={tile}>
-            <span style={{ display: 'flex', flex: 'none' }}><Icon name="call-calling" size={22} /></span>
-            <span className="tao-caps" style={{ flex: '0 0 160px', fontSize: 12, fontWeight: 500, letterSpacing: '0.08em', color: 'var(--on-blue-muted)' }}>{t('ტელეფონი')}</span>
-            <span style={{ flex: 1, minWidth: 0, fontSize: 20, fontWeight: 500, whiteSpace: 'nowrap' }}>{settings.phone}</span>
-            <span style={{ display: 'flex', flex: 'none' }}><Icon name="arrow-right" size={18} /></span>
-          </a>
-          <a href={'mailto:' + settings.email} className="tao-helptile" style={{ ...tile, borderBottom: '1px solid var(--on-blue-line)' }}>
-            <span style={{ display: 'flex', flex: 'none' }}><Icon name="sms" size={22} /></span>
-            <span className="tao-caps" style={{ flex: '0 0 160px', fontSize: 12, fontWeight: 500, letterSpacing: '0.08em', color: 'var(--on-blue-muted)' }}>{t('ელფოსტა')}</span>
-            <span style={{ flex: 1, minWidth: 0, fontSize: 20, fontWeight: 500, whiteSpace: 'nowrap' }}>{settings.email}</span>
-            <span style={{ display: 'flex', flex: 'none' }}><Icon name="arrow-right" size={18} /></span>
-          </a>
+        <div className="tao-helpgroups" style={{ flex: '1.6 1 460px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: 28 }}>
+          {helpGroups.map((g) => (
+            <div key={g.title} style={{ display: 'flex', flexDirection: 'column' }}>
+              <p className="tao-caps" style={{ margin: '0 0 12px', fontSize: 12, fontWeight: 500, letterSpacing: '0.08em', color: 'var(--on-primary)' }}>{t(g.title)}</p>
+              <a href={'tel:' + g.phoneHref} className="tao-helptile" style={tile}>
+                <span style={{ display: 'flex', flex: 'none' }}><Icon name="call-calling" size={22} /></span>
+                <span className="tao-caps" style={{ flex: '0 0 160px', fontSize: 12, fontWeight: 500, letterSpacing: '0.08em', color: 'var(--on-blue-muted)' }}>{t('ტელეფონი')}</span>
+                <span style={{ flex: 1, minWidth: 0, fontSize: 20, fontWeight: 500, whiteSpace: 'nowrap' }}>{g.phone}</span>
+                <span style={{ display: 'flex', flex: 'none' }}><Icon name="arrow-right" size={18} /></span>
+              </a>
+              <a href={'mailto:' + g.email} className="tao-helptile" style={{ ...tile, borderBottom: '1px solid var(--on-blue-line)' }}>
+                <span style={{ display: 'flex', flex: 'none' }}><Icon name="sms" size={22} /></span>
+                <span className="tao-caps" style={{ flex: '0 0 160px', fontSize: 12, fontWeight: 500, letterSpacing: '0.08em', color: 'var(--on-blue-muted)' }}>{t('ელფოსტა')}</span>
+                <span style={{ flex: 1, minWidth: 0, fontSize: 20, fontWeight: 500, whiteSpace: 'nowrap' }}>{g.email}</span>
+                <span style={{ display: 'flex', flex: 'none' }}><Icon name="arrow-right" size={18} /></span>
+              </a>
+            </div>
+          ))}
         </div>
       </div>
       <nav aria-label={t('ფუტერის ბმულები')} className="tao-bento__links" style={{ borderRadius: 5, boxSizing: 'border-box', minWidth: 0, background: 'var(--brand-black)', color: 'var(--on-primary)', padding: '40px 48px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 32 }}>
@@ -96,9 +106,7 @@ export function Footer() {
           <ul style={ul}>
             <li><a href={L('/legal')} className="tao-flink" style={flink}>{t('იურიდიული ინფორმაცია')}</a></li>
             <li><a href={L('/financial')} className="tao-flink" style={flink}>{t('ფინანსური ინფორმაცია')}</a></li>
-            <li><a href={L('/complaints')} className="tao-flink" style={flink}>{t('პრეტენზიების განხილვის წესი')}</a></li>
-            <li><a href={L('/privacy')} className="tao-flink" style={flink}>{t('კონფიდენციალურობის პოლიტიკა')}</a></li>
-            <li><a href={L('/terms')} className="tao-flink" style={flink}>{t('საიტის გამოყენების წესები')}</a></li>
+            <li><a href={L('/other')} className="tao-flink" style={flink}>{t('სხვა ინფორმაცია')}</a></li>
           </ul>
         </div>
       </nav>

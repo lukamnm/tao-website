@@ -6,13 +6,19 @@ export const Settings: GlobalConfig = {
   label: 'საიტის პარამეტრები',
   admin: {
     group: 'სისტემა',
-    description: 'ტელეფონი, ოფისის და სერვის ცენტრის მისამართი, პორტალის ბმული, Facebook და ციფრები "ჩვენ შესახებ" გვერდზე. ცვლილება საიტზე მაშინვე ჩანს.',
+    description: 'ტელეფონები და ელფოსტა (ჯანმრთელობის და ავტომობილის დაზღვევა), იურიდიული მისამართი, სერვის ცენტრი, პორტალის ბმული, Facebook და ციფრები "ჩვენ შესახებ" გვერდზე. ცვლილება საიტზე მაშინვე ჩანს.',
   },
   access: { read: () => true },
   hooks: {
     afterChange: [revalidateGlobal],
     // The dialable number (tel:) is made from the displayed one, so nobody has to type it twice.
-    beforeChange: [({ data }) => ({ ...data, phoneHref: typeof data?.phone === 'string' ? '+' + data.phone.replace(/\D/g, '') : data?.phoneHref })],
+    beforeChange: [
+      ({ data }) => ({
+        ...data,
+        phoneHref: typeof data?.phone === 'string' ? '+' + data.phone.replace(/\D/g, '') : data?.phoneHref,
+        carPhoneHref: typeof data?.carPhone === 'string' ? '+' + data.carPhone.replace(/\D/g, '') : data?.carPhoneHref,
+      }),
+    ],
   },
   fields: [
     {
@@ -24,12 +30,20 @@ export const Settings: GlobalConfig = {
             {
               type: 'row',
               fields: [
-                { name: 'phone', type: 'text', label: 'ტელეფონი', defaultValue: '+995 32 219 52 12', admin: { width: '50%' } },
-                { name: 'email', type: 'email', label: 'ელფოსტა', defaultValue: 'contact@taoinsurance.ge', admin: { width: '50%' } },
+                { name: 'phone', type: 'text', label: 'ტელეფონი: ჯანმრთელობის დაზღვევა', defaultValue: '+995 32 219 52 12', admin: { width: '50%' } },
+                { name: 'email', type: 'email', label: 'ელფოსტა: ჯანმრთელობის დაზღვევა', defaultValue: 'contact@taoinsurance.ge', admin: { width: '50%' } },
+              ],
+            },
+            {
+              type: 'row',
+              fields: [
+                { name: 'carPhone', type: 'text', label: 'ტელეფონი: ავტომობილის კორპორატიული დაზღვევა', defaultValue: '+995 32 280 10 01', admin: { width: '50%' } },
+                { name: 'carEmail', type: 'email', label: 'ელფოსტა: ავტომობილის კორპორატიული დაზღვევა', defaultValue: 'info@taoinsurance.ge', admin: { width: '50%' } },
               ],
             },
             { name: 'phoneHref', type: 'text', defaultValue: '+995322195212', admin: { hidden: true } },
-            { name: 'address', type: 'text', label: 'ოფისის სრული მისამართი', localized: true, defaultValue: 'ანა პოლიტკოვსკაიას ქ. 16, 0186 თბილისი', admin: { description: 'საიტზე: კონტაქტის გვერდზე „მთავარი ოფისი“, ფუტერში „იურიდიული მისამართი“' } },
+            { name: 'carPhoneHref', type: 'text', defaultValue: '+995322801001', admin: { hidden: true } },
+            { name: 'address', type: 'text', label: 'იურიდიული მისამართი (სრული)', localized: true, defaultValue: 'ანა პოლიტკოვსკაიას ქ. 16, 0186 თბილისი', admin: { description: 'ჩანს ფუტერში და კონტაქტის გვერდზე, „იურიდიული მისამართი“' } },
             {
               type: 'row',
               fields: [
@@ -38,12 +52,12 @@ export const Settings: GlobalConfig = {
               ],
             },
             { name: 'hours', type: 'text', label: 'სამუშაო საათები', localized: true, defaultValue: 'ორშ-პარ, 10:00-18:00' },
-            { name: 'mapUrl', type: 'text', label: 'ოფისი Google Maps-ზე', admin: { description: 'Google Maps-ში იპოვე ოფისი, დააჭირე "გაზიარება" და ბმული აქ ჩასვი.' } },
+            { name: 'mapUrl', type: 'text', label: 'იურიდიული მისამართი Google Maps-ზე', admin: { description: 'Google Maps-ში იპოვე მისამართი, დააჭირე "გაზიარება" და ბმული აქ ჩასვი.' } },
           ],
         },
         {
           label: 'სერვის ცენტრი',
-          description: 'ჩანს კონტაქტის გვერდზე და ყველა გვერდის ქვედა ნაწილში.',
+          description: 'სერვის ცენტრი (ჯანმრთელობის დაზღვევა). ჩანს კონტაქტის გვერდზე და ყველა გვერდის ქვედა ნაწილში.',
           fields: [
             { name: 'serviceAddress', type: 'text', label: 'სრული მისამართი', localized: true, defaultValue: 'შალვა ნუცუბიძის ქ. 72, 0186 თბილისი' },
             {

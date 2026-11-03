@@ -1,0 +1,7 @@
+/* Offers page (design v4): "ონლაინ შეთავაზებები" switch row in the filters */
+.tao-oswitch:hover{background:var(--bg-subtle)!important}
+.tao-oswitch__track{transition:background-color 150ms ease}
+.tao-oswitch__knob{transition:transform 150ms ease}
+.tao-oswitch.is-on .tao-oswitch__track{background:var(--primary)!important}
+.tao-oswitch.is-on .tao-oswitch__knob{transform:translateX(16px)}
+.tao-oswitch:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}

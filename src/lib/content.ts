@@ -14,6 +14,8 @@ export type SiteSettings = {
   phone: string
   phoneHref: string
   email: string
+  /** Corporate motor insurance has its own line and mailbox (design v4) */
+  car: { phone: string; phoneHref: string; email: string }
   address: string
   addressShort: string
   city: string
@@ -92,6 +94,7 @@ export async function getSettings(locale: Locale): Promise<SiteSettings> {
     phone: str(s.phone, '+995 32 219 52 12'),
     phoneHref: str(s.phoneHref, '+995322195212'),
     email: str(s.email, 'contact@taoinsurance.ge'),
+    car: { phone: str(s.carPhone, '+995 32 280 10 01'), phoneHref: str(s.carPhoneHref, '+995322801001'), email: str(s.carEmail, 'info@taoinsurance.ge') },
     address: str(s.address, 'ანა პოლიტკოვსკაიას ქ. 16, 0186 თბილისი'),
     addressShort: str(s.addressShort, 'ანა პოლიტკოვსკაიას ქ. 16'),
     city: str(s.city, '0186 თბილისი'),
@@ -341,7 +344,7 @@ export type DocumentVM = {
 
 const fmtSize = (bytes: number) => (bytes >= 1024 * 1024 ? (bytes / 1024 / 1024).toFixed(1) + ' MB' : Math.max(1, Math.round(bytes / 1024)) + ' KB')
 
-export async function getDocuments(locale: Locale, section: 'legal' | 'financial'): Promise<DocumentVM[]> {
+export async function getDocuments(locale: Locale, section: 'legal' | 'financial' | 'complaints'): Promise<DocumentVM[]> {
   const payload = await getPayload()
   const res = await payload.find({ collection: 'documents', locale, fallbackLocale: 'ka', where: { section: { equals: section } }, sort: '-date', limit: 500, depth: 1 })
   return (res.docs as AnyDoc[]).map((d) => {

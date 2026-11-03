@@ -87,6 +87,7 @@ export const Products: CollectionConfig = {
         { label: 'ჯანმრთელობის დაზღვევის გვერდი', value: '/health' },
         { label: 'სამოგზაურო დაზღვევის გვერდი', value: '/travel' },
         { label: 'ავტომობილის დაზღვევის გვერდი', value: '/car' },
+        { label: 'ქონების დაზღვევის გვერდი', value: '/property' },
       ],
       admin: { description: 'ახალ პროდუქტს საკუთარი გვერდი ჯერ არ აქვს: ის დიზაინით ემატება. მანამდე დატოვე ცარიელი.' },
     },

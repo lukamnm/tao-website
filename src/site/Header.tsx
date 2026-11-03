@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { Button, Icon, Logo } from '@/ds'
 import { css, cx } from './css'
-import { useSite } from './SiteProvider'
+import { keepHash, useSite } from './SiteProvider'
 import { switchLocalePath } from '@/i18n'
 import { getAnimation, getLottie, noHover, reducedMotion, type AnimationItem } from './lottie'
 
@@ -48,6 +48,11 @@ export function Header() {
   const isActive = (href: string) => bare === href || bare.startsWith(href + '/')
   // Products menu: the products marked "show in menu" in the admin (each has its own page); titles only
   const PRODUCTS = settings.products.filter((p) => p.inMenu).map((p) => ({ href: p.href, icon: p.icon, title: p.name }))
+  // Mobile menu: both phone lines (health insurance, corporate motor insurance)
+  const phones = [
+    { label: 'ჯანმრთელობის დაზღვევა', phone: settings.phone, href: settings.phoneHref },
+    { label: 'ავტომობილის კორპორატიული დაზღვევა', phone: settings.car.phone, href: settings.car.phoneHref },
+  ]
   const productActive = bare === '/' || PRODUCTS.some((p) => isActive(p.href))
   const dock = docked ? DOCKED : FLOATING
 
@@ -105,7 +110,7 @@ export function Header() {
   }, [])
 
   const switchLang = () => {
-    const next = switchLocalePath(locale, pathname)
+    const next = switchLocalePath(locale, pathname) + keepHash()
     try {
       localStorage.setItem('tao-lang', locale === 'en' ? 'ka' : 'en')
     } catch {}
@@ -159,7 +164,14 @@ export function Header() {
               {t('ჩემი პროფილი')}
             </Button>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, fontSize: 14 }}>
-              <a href={'tel:' + settings.phoneHref} style={{ color: 'var(--link)', textDecoration: 'none', fontWeight: 500 }}>{settings.phone}</a>
+              <div className="tao-mphones" style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {phones.map((ph) => (
+                  <a key={ph.label} href={'tel:' + ph.href} style={{ display: 'flex', flexDirection: 'column', color: 'var(--link)', textDecoration: 'none', fontWeight: 500 }}>
+                    <span className="tao-caps" style={{ fontSize: 11, letterSpacing: '0.08em', color: 'var(--text-muted)' }}>{t(ph.label)}</span>
+                    {ph.phone}
+                  </a>
+                ))}
+              </div>
               <button type="button" onClick={switchLang} className="tao-caps" style={{ border: 0, background: 'transparent', padding: '4px 0', cursor: 'pointer', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, letterSpacing: '0.08em', color: 'var(--text-secondary)' }}>
                 ქარ / ENG
               </button>

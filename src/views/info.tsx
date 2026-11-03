@@ -10,12 +10,10 @@ import type { DocumentVM } from '@/lib/content'
 const NAV = [
   { href: '/legal', icon: 'document-text', label: 'იურიდიული ინფორმაცია' },
   { href: '/financial', icon: 'receipt-item', label: 'ფინანსური ინფორმაცია' },
-  { href: '/complaints', icon: 'messages-2', label: 'პრეტენზიების განხილვის წესი' },
-  { href: '/privacy', icon: 'security-safe', label: 'კონფიდენციალურობის პოლიტიკა' },
-  { href: '/terms', icon: 'shield-tick', label: 'საიტის გამოყენების წესები' },
+  { href: '/other', icon: 'info-circle', label: 'სხვა ინფორმაცია' },
 ]
 
-export function InfoPage({ current, title, lead, updated, children }: { current: string; title: string; lead: string; updated?: string; children: React.ReactNode }) {
+export function InfoPage({ current, title, lead, updated, children }: { current: string; title: string; lead?: string; updated?: string; children: React.ReactNode }) {
   const { t, L } = useSite()
   return (
     <>
@@ -24,7 +22,7 @@ export function InfoPage({ current, title, lead, updated, children }: { current:
           <div style={{ flex: '1 1 640px', minWidth: 0, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 24 }}>
             <Breadcrumb current={title} parent={{ label: 'ჩვენ შესახებ', href: '/about' }} />
             <h1 className="tao-h tao-h--display tao-intro" style={{ ['--i' as string]: '1', margin: 0, maxWidth: 900, color: 'var(--on-primary)', fontSize: 'min(64px, 4.5vw)', lineHeight: 1 }}>{t(title)}</h1>
-            <p className="tao-intro" style={{ ['--i' as string]: '2', margin: 0, maxWidth: 560, fontSize: 19, lineHeight: 1.55, color: 'var(--on-blue-muted)' }}>{t(lead)}</p>
+            {lead ? <p className="tao-intro" style={{ ['--i' as string]: '2', margin: 0, maxWidth: 560, fontSize: 19, lineHeight: 1.55, color: 'var(--on-blue-muted)' }}>{t(lead)}</p> : null}
           </div>
           {updated ? (
             <p className="tao-caps tao-intro" style={{ ['--i' as string]: '3', margin: 0, fontSize: 12, fontWeight: 500, letterSpacing: '0.08em', color: 'var(--on-blue-muted)' }}>{t('განახლდა:')} {updated}</p>

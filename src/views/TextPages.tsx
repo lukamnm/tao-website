@@ -1,13 +1,16 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Button, Icon } from '@/ds'
 import { useSite } from '@/site/SiteProvider'
 import { InfoPage, InfoSection, Prose, P, Bullets, Notice, KeyValue, DocList } from './info'
+import '@/ds/pages/other.css'
 import { RichText } from './RichText'
 import type { DocumentVM, PageVM } from '@/lib/content'
 
-/* Complaints procedure, privacy policy and terms of use. The design's text is the default; when the admin
-   has created a "Pages" document with the same slug, its rich text replaces the sections. */
+/* "Other information" (/other): one info page with three tabs in the URL hash, #privacy (default), #terms
+   and #complaints. Privacy policy and terms of use: the design's text is the default; when the admin has
+   created a "Pages" document with the same slug (privacy / terms), its rich text replaces the sections.
+   Complaints: only the documents list. The old /privacy, /terms and /complaints URLs redirect here (src/proxy.ts). */
 
 function CmsBody({ page }: { page: PageVM }) {
   return (
@@ -24,66 +27,7 @@ function CmsBody({ page }: { page: PageVM }) {
   )
 }
 
-export function Complaints({ page, docs, updated }: { page: PageVM | null; docs: DocumentVM[]; updated: string }) {
-  const { t, L, settings } = useSite()
-  const ways = [
-    { icon: 'sms', label: 'ელფოსტით', value: settings.email, href: 'mailto:' + settings.email },
-    { icon: 'location', label: 'ოფისში', value: settings.address, href: L('/contact#office') },
-    { icon: 'messages-2', label: 'ფორმით', value: 'კონტაქტის გვერდზე, თემა „პრეტენზია“', href: L('/contact') },
-  ]
-  const steps = [
-    { title: 'რეგისტრაცია', text: 'პრეტენზიას ვარეგისტრირებთ და მიღებას [N] სამუშაო დღეში გიდასტურებთ' },
-    { title: 'კვალიფიკაცია', text: 'ვამოწმებთ, აკმაყოფილებს თუ არა პრეტენზია დაკვალიფიცირების კრიტერიუმებს' },
-    { title: 'განხილვა', text: 'ვსწავლობთ დოკუმენტებს და საჭიროების შემთხვევაში დამატებით ინფორმაციას გთხოვთ' },
-    { title: 'პასუხი', text: 'დასაბუთებულ წერილობით პასუხს [N] სამუშაო დღეში გიგზავნით' },
-  ]
-  return (
-    <InfoPage current="/complaints" title={page?.title || 'პრეტენზიების განხილვის წესი'} lead="როგორ წარადგინო პრეტენზია და როგორ განვიხილავთ მას" updated={page?.effectiveDate || updated}>
-      {page ? (
-        <CmsBody page={page} />
-      ) : (
-        <>
-          <InfoSection id="submit" number={1} title="როგორ წარვადგინო პრეტენზია">
-            <Prose>
-              <P>{t('თუ ტაო დაზღვევის მომსახურება ან გადაწყვეტილება არ გაკმაყოფილებს, შეგიძლია წარმოგვიდგინო წერილობითი პრეტენზია. პრეტენზიას განიხილავს თანამშრომელი, რომელიც საკითხის თავდაპირველ გადაწყვეტაში არ მონაწილეობდა.')}</P>
-            </Prose>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 4 }}>
-              {ways.map((w) => (
-                <a key={w.label} href={w.href} className="tao-docrow" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 5, padding: 24, display: 'flex', flexDirection: 'column', gap: 12, color: 'var(--text)', textDecoration: 'none' }}>
-                  <span className="tao-docrow__dl" style={{ width: 44, height: 44, boxSizing: 'border-box', border: '1px solid var(--link)', color: 'var(--link)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Icon name={w.icon} size={22} />
-                  </span>
-                  <span className="tao-caps" style={{ fontSize: 12, fontWeight: 500, letterSpacing: '0.08em', color: 'var(--text-muted)' }}>{t(w.label)}</span>
-                  <span style={{ fontSize: 17, fontWeight: 500, lineHeight: 1.4 }}>{t(w.value)}</span>
-                </a>
-              ))}
-            </div>
-          </InfoSection>
-          <InfoSection id="steps" number={2} title="განხილვის ეტაპები">
-            <ol style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 4 }}>
-              {steps.map((s, i) => (
-                <li key={s.title} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 5, padding: 24, display: 'flex', flexDirection: 'column', gap: 14 }}>
-                  <span style={{ width: 40, height: 40, boxSizing: 'border-box', border: '1px solid var(--link)', color: 'var(--link)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 16 }}>{i + 1}</span>
-                  <h4 className="tao-h tao-h--h4" style={{ margin: 0, fontSize: 19 }}>{t(s.title)}</h4>
-                  <p style={{ margin: 0, fontSize: 15, color: 'var(--text-secondary)' }}>{t(s.text)}</p>
-                </li>
-              ))}
-            </ol>
-            <Notice>{t('თუ პასუხი არ დაგაკმაყოფილა, შეგიძლია მიმართო სადაზღვევო სახელმწიფო ზედამხედველობის სამსახურს ან სასამართლოს')}</Notice>
-          </InfoSection>
-          <InfoSection id="details" number={3} title="რა უნდა მიუთითო">
-            <Bullets items={['სახელი, გვარი, პირადი ნომერი და საკონტაქტო ინფორმაცია', 'პოლისის ან სადაზღვევო შემთხვევის ნომერი', 'პრეტენზიის არსი: რა მოხდა და რას ითხოვ', 'დამადასტურებელი დოკუმენტები, ასეთის არსებობის შემთხვევაში'].map((s) => t(s))} />
-          </InfoSection>
-        </>
-      )}
-      <InfoSection id="documents" number={page ? 1 : 4} title="დოკუმენტები">
-        <DocList docs={docs} emptyText="დოკუმენტები მალე დაემატება." />
-      </InfoSection>
-    </InfoPage>
-  )
-}
-
-export function Privacy({ page, updated, pdf }: { page: PageVM | null; updated: string; pdf?: DocumentVM }) {
+function PrivacyPanel({ page, pdf }: { page: PageVM | null; pdf?: DocumentVM }) {
   const { t, settings } = useSite()
   const rights = [
     ['ინფორმაციის მიღება', 'იცოდე, რა მონაცემებს ვამუშავებთ და რა მიზნით'],
@@ -103,7 +47,7 @@ export function Privacy({ page, updated, pdf }: { page: PageVM | null; updated: 
     ['ელექტრონული ხელმოწერა', ': დოკუმენტების დისტანციური გაფორმება, საჭიროების შემთხვევაში'],
   ]
   return (
-    <InfoPage current="/privacy" title={page?.title || 'კონფიდენციალურობის პოლიტიკა'} lead="როგორ ვაგროვებთ, ვიყენებთ და ვიცავთ შენს პერსონალურ მონაცემებს" updated={page?.effectiveDate || updated}>
+    <>
       {pdf ? (
         <div data-reveal="up" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '20px 24px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 5 }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: 15 }}>
@@ -189,14 +133,14 @@ export function Privacy({ page, updated, pdf }: { page: PageVM | null; updated: 
           </InfoSection>
         </>
       )}
-    </InfoPage>
+    </>
   )
 }
 
-export function Terms({ page, updated }: { page: PageVM | null; updated: string }) {
+function TermsPanel({ page }: { page: PageVM | null }) {
   const { t, L, settings } = useSite()
   return (
-    <InfoPage current="/terms" title={page?.title || 'საიტის გამოყენების წესები'} lead="წესები, რომლებიც taoinsurance.ge-ის გამოყენებისას მოქმედებს" updated={page?.effectiveDate || updated}>
+    <>
       {page ? (
         <CmsBody page={page} />
       ) : (
@@ -223,7 +167,7 @@ export function Terms({ page, updated }: { page: PageVM | null; updated: string 
           <InfoSection id="t7" title="პერსონალური მონაცემები და ქუქიები">
             <Prose>
               <P>
-                {t('მონაცემების დამუშავება რეგულირდება')} <a href={L('/privacy')} style={{ color: 'var(--link)' }}>{t('კონფიდენციალურობის პოლიტიკით')}</a>
+                {t('მონაცემების დამუშავება რეგულირდება')} <a href={L('/other#privacy')} style={{ color: 'var(--link)' }}>{t('კონფიდენციალურობის პოლიტიკით')}</a>
                 {t('. საიტი იყენებს ქუქი-ფაილებს მუშაობისთვის და ანალიტიკისთვის; არააუცილებელ ქუქიებზე უარის თქმა ბრაუზერის პარამეტრებში შეგიძლია.')}
               </P>
             </Prose>
@@ -238,6 +182,88 @@ export function Terms({ page, updated }: { page: PageVM | null; updated: string 
           </InfoSection>
         </>
       )}
+    </>
+  )
+}
+
+const TABS = [
+  { id: 'privacy', label: 'კონფიდენციალურობის პოლიტიკა', icon: 'security-safe' },
+  { id: 'terms', label: 'საიტის გამოყენების წესები', icon: 'shield-tick' },
+  { id: 'complaints', label: 'პრეტენზიების განხილვის წესი', icon: 'messages-2' },
+] as const
+type TabId = (typeof TABS)[number]['id']
+const tabOf = (hash: string): TabId | null => {
+  const h = hash.replace(/^#/, '')
+  return TABS.some((x) => x.id === h) ? (h as TabId) : null
+}
+
+export function Other({ privacy, terms, pdf, complaintDocs }: { privacy: PageVM | null; terms: PageVM | null; pdf?: DocumentVM; complaintDocs: DocumentVM[] }) {
+  const { t } = useSite()
+  const [tab, setTab] = useState<TabId>('privacy')
+  const tabsRef = useRef<HTMLDivElement>(null)
+
+  // the tab comes from the URL hash: on load, and when an in-page link (e.g. "#privacy" in the terms) changes it
+  useEffect(() => {
+    const fromHash = tabOf(window.location.hash)
+    if (fromHash) setTab(fromHash)
+    const onHash = () => {
+      const h = tabOf(window.location.hash)
+      if (!h) return
+      setTab(h)
+      window.scrollTo(0, 0)
+    }
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [])
+
+  // narrow screens: keep the active tab inside the horizontally scrolling tab row
+  useEffect(() => {
+    const row = tabsRef.current
+    const btn = row?.querySelector<HTMLElement>('[aria-selected="true"]')
+    if (!row || !btn) return
+    if (btn.offsetLeft < row.scrollLeft) row.scrollLeft = btn.offsetLeft
+    else if (btn.offsetLeft + btn.offsetWidth > row.scrollLeft + row.clientWidth) row.scrollLeft = btn.offsetLeft + btn.offsetWidth - row.clientWidth
+  }, [tab])
+
+  const pick = (id: TabId) => {
+    setTab(id)
+    try {
+      window.history.replaceState(window.history.state, '', '#' + id)
+    } catch {}
+  }
+
+  const panel: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: 72 }
+  return (
+    <InfoPage current="/other" title="სხვა ინფორმაცია">
+      <div ref={tabsRef} role="tablist" aria-label={t('სხვა ინფორმაცია')} className="tao-itabs" style={{ display: 'flex', flexWrap: 'nowrap', gap: 8, marginBottom: -24, overflowX: 'auto', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+        {TABS.map((x) => (
+          <button
+            key={x.id}
+            type="button"
+            role="tab"
+            id={'tab-' + x.id}
+            aria-controls={'panel-' + x.id}
+            aria-selected={tab === x.id}
+            onClick={() => pick(x.id)}
+            className={'tao-itab' + (tab === x.id ? ' is-on' : '')}
+            style={{ flex: 'none', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 8, height: 44, padding: '0 16px', boxSizing: 'border-box', border: '1px solid var(--border)', borderRadius: 5, background: 'var(--surface)', fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 500, color: 'var(--text)', cursor: 'pointer' }}
+          >
+            <Icon name={x.icon} size={18} />
+            {t(x.label)}
+          </button>
+        ))}
+      </div>
+      <div role="tabpanel" className="tao-ipanel" id="panel-privacy" aria-labelledby="tab-privacy" hidden={tab !== 'privacy'} style={panel}>
+        <PrivacyPanel page={privacy} pdf={pdf} />
+      </div>
+      <div role="tabpanel" className="tao-ipanel" id="panel-terms" aria-labelledby="tab-terms" hidden={tab !== 'terms'} style={panel}>
+        <TermsPanel page={terms} />
+      </div>
+      <div role="tabpanel" className="tao-ipanel" id="panel-complaints" aria-labelledby="tab-complaints" hidden={tab !== 'complaints'} style={panel}>
+        <section id="documents" data-reveal="up" style={{ display: 'flex', flexDirection: 'column', gap: 28, scrollMarginTop: 100 }}>
+          <DocList docs={complaintDocs} emptyText="დოკუმენტები მალე დაემატება." />
+        </section>
+      </div>
     </InfoPage>
   )
 }

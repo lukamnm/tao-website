@@ -16,8 +16,7 @@ const TASKS = [
   { href: '/admin/globals/settings', title: 'საიტის პარამეტრები', text: 'ტელეფონი, მისამართები, სამუშაო საათები', icon: 'call-calling' },
 ]
 
-export async function Welcome({ payload, user }: Props) {
-  const messages = await payload.count({ collection: 'contact-messages', where: { status: { equals: 'new' } }, overrideAccess: true }).catch(() => ({ totalDocs: 0 }))
+export async function Welcome({ user }: Props) {
   const name = user?.name || user?.email?.split('@')[0] || ''
   return (
     <div className="tao-welcome">
@@ -29,14 +28,6 @@ export async function Welcome({ payload, user }: Props) {
         <a className="tao-welcome__site" href={siteUrl()} target="_blank" rel="noopener">
           საიტის ნახვა
           <Icon name="export-square" size={18} />
-        </a>
-      </div>
-
-      <div className="tao-welcome__inbox">
-        <a href="/admin/collections/contact-messages?where[status][equals]=new" className={messages.totalDocs ? 'is-new' : ''}>
-          <strong>{messages.totalDocs}</strong>
-          <span>ახალი შეტყობინება</span>
-          <em>კონტაქტის ფორმიდან</em>
         </a>
       </div>
 

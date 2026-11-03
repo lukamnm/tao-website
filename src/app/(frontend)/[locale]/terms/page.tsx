@@ -1,21 +1,8 @@
-import React from 'react'
-import type { Metadata } from 'next'
-import { isLocale, makeT, type Locale } from '@/i18n'
-import { getPage } from '@/lib/content'
-import { Terms } from '@/views/TextPages'
-import { latestUpdate } from '@/lib/updated'
+import { permanentRedirect } from 'next/navigation'
+import { isLocale, localePath } from '@/i18n'
 
-export const revalidate = 60
-
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
-  const { locale } = await params
-  const t = makeT(isLocale(locale) ? locale : 'ka')
-  return { title: t('საიტის გამოყენების წესები'), alternates: { languages: { ka: '/terms', en: '/en/terms' } } }
-}
-
+// Merged into "Other information". The public URL is redirected in src/proxy.ts; this covers any other way in.
 export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale: l } = await params
-  const locale = (isLocale(l) ? l : 'ka') as Locale
-  const page = await getPage(locale, 'terms')
-  return <Terms page={page} updated={latestUpdate(locale, [])} />
+  const { locale } = await params
+  permanentRedirect(localePath(isLocale(locale) ? locale : 'ka', '/other#terms'))
 }

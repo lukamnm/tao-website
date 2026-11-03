@@ -6,10 +6,11 @@ import { Breadcrumb } from './shared'
 import { OfferCard } from './OfferCard'
 import type { OfferVM } from '@/lib/content'
 
-/* Product pages (design "Health", "Travel", "Car" - ავტომობილის კორპორატიული დაზღვევა). */
+/* Product pages (design "Health", "Travel", "Car" - ავტომობილის კორპორატიული დაზღვევა,
+   "Property" - ქონების კორპორატიული დაზღვევა). */
 
 export type ProductConfig = {
-  product: 'health' | 'travel' | 'car'
+  product: 'health' | 'travel' | 'car' | 'property'
   /** hero title lines (joined with a space for the breadcrumb and aria-label) */
   title: string[]
   /** hero title font-size (default: the two-line size) */
@@ -18,10 +19,32 @@ export type ProductConfig = {
   image: string
   imageAlt: string
   imagePos: string
-  covers: { icon: string; title: string; text: string }[]
+  /** section 01 title (default "რას ფარავს") */
+  coversTitle?: string
+  /** section 01 grid columns (default 4) */
+  coversCols?: number
+  /** section 01 card min-height (default 240) */
+  coverMinHeight?: number
+  /** smaller card titles (property: 18px / 1.3) */
+  coverTitleSmall?: boolean
+  covers: { icon: string; title: string; text?: string }[]
+  /** paragraphs under the section 01 grid (property) */
+  coversProse?: string[]
   schemes?: { icon: string; title: string; steps: string[] }[]
   schemesTitle?: string
   schemesText?: string
+  /** section 02 "coverage area" (car): numbered cards in the cover style, then text cards */
+  area?: {
+    title: string
+    items: { icon: string; title: string; note?: string }[]
+    cards: { title: string; text: string }[]
+  }
+  /** section 02 "property types" (property): bullet list, then an add-on card */
+  types?: {
+    title: string
+    items: string[]
+    extra: { label: string; title: string; texts: string[] }
+  }
   faq: { q: string; a: string }[]
 }
 
@@ -83,68 +106,117 @@ export const TRAVEL: ProductConfig = {
   ],
 }
 
-/* The design writes the hotline into the first car step; at render time it is swapped for the admin phone (settings.phone). */
-const DESIGN_PHONE = '+995 32 219 52 12'
+/* Business FAQ shared by the car and property designs (identical lists in both). */
+const BUSINESS_FAQ: ProductConfig['faq'] = [
+  { q: 'რატომ არის საჭირო დააზღვიოთ თქვენი ბიზნესი?', a: 'ბიზნესის დაზღვევა უზრუნველყოფს ფინანსურ დაცვას მოულოდნელი მოვლენებისგან, რამაც შეიძლება გამოიწვიოს მნიშვნელოვანი ფინანსური ზარალი. დაზღვევა გეხმარებათ დაიცვათ თქვენი აქტივები, თანამშრომლები და თქვენი ბიზნეს საქმიანობის უწყვეტობა.' },
+  { q: 'რა არის პროფესიული პასუხისმგებლობის დაზღვევა?', a: 'პროფესიული პასუხისმგებლობის დაზღვევა, რომელიც ასევე ცნობილია როგორც შეცდომებისა და უმოქმედობის (E&O) დაზღვევა, იცავს ბიზნესებს, რომლებიც უზრუნველყოფენ პროფესიულ მომსახურებას დაუდევრობის ან შეცდომებისგან, რაც იწვევს კლიენტების ფინანსურ ზარალს.' },
+  { q: 'რა არის პასუხისმგებლობის ზოგადი დაზღვევა და რატომ არის ის მნიშვნელოვანი?', a: 'პასუხისმგებლობის ზოგადი დაზღვევა უზრუნველყოფს მესამე მხარის სხეულის დაზიანების და ქონებრივი ზიანის დაფარვას. ეს აუცილებელია თქვენი ბიზნესის დასაცავად საერთო რისკებისა და სამართლებრივი ვალდებულებებისგან.' },
+  { q: 'როგორ იცავს თქვენს ბიზნესს ქონების დაზღვევა?', a: 'ქონების დაზღვევა ფარავს თქვენი ბიზნესის ქონების, მათ შორის შენობების, ინვენტარის, აღჭურვილობისა და სხვა აქტივების დაზიანებას ან ზარალს, ისეთი მოვლენების გამო, როგორიცაა ხანძარი, ქურდობა ან სტიქიური უბედურებები.' },
+  { q: 'რა ფაქტორები მოქმედებს ბიზნესის დაზღვევის ღირებულებაზე?', a: 'ბიზნესის დაზღვევის ღირებულებაზე შეიძლება გავლენა იქონიოს ისეთმა ფაქტორებმა, როგორიცაა თქვენი ბიზნესის ზომა, ინდუსტრია, მდებარეობა, დაფარვის ლიმიტები და ა.შ.' },
+  { q: 'როგორ განსაზღვროთ სწორი სადაზღვევო პროდუქტი თქვენი ბიზნესისთვის?', a: 'ტაო დაზღვევის გუნდი დაგეხმარებათ სწორად შეაფასოთ თქვენი ბიზნესის რისკები და მოირგოთ თქვენთვის საჭირო სადაზღვევო პროდუქტები.' },
+  { q: 'რა სახის ბიზნეს დაზღვევა არსებობს?', a: 'ბიზნესის დაზღვევა მოიცავს პასუხისმგებლობის, ქონების, ბიზნესის უწყვეტობის, ავტოტრანსპორტის, თანამშრომლების, პროფესიული პასუხისმგებლობის დაზღვევას და ა.შ. თქვენი ბიზნესის სპეციფიკური საჭიროებები განსაზღვრავს შესაბამის დაფარვას.' },
+  { q: 'რა არის ბიზნესის დაზღვევა?', a: 'ბიზნესის დაზღვევა არის დაფარვის სახეობა, რომელიც იცავს თქვენს ბიზნესს სხვადასხვა რისკებით გამოწვეული ფინანსური ზარალისგან, როგორიცაა ქონების დაზიანება, ბიზნესის შეწყვეტა და ა.შ.' },
+]
 
 export const CAR: ProductConfig = {
   product: 'car',
   title: ['ავტომობილის', 'კორპორატიული', 'დაზღვევა'],
   titleSize: 'min(64px, 4.4vw)',
-  lead: 'კომპანიის ავტოპარკის დაცვა დაზიანების, ქურდობისა და მესამე პირის მიმართ პასუხისმგებლობისგან',
+  lead: 'ტრანსპორტის დაზღვევა ბიზნესისთვის გთავაზობთ ნებისმიერი სახის (მსუბუქი, სატვირთო, ავტობუსი და სხვა) ავტოტრანსპორტის დაზღვევას',
   image: '/img/hero-car-mountain.jpg',
   imageAlt: 'ლურჯი მანქანა მთის გზაზე',
   imagePos: '50% 50%',
+  coversTitle: 'ტრანსპორტის დაზღვევა ფარავს:',
+  coverMinHeight: 200,
   covers: [
-    { icon: 'car', title: 'დაზიანება', text: 'ავარიის, ბუნებრივი მოვლენების ან ვანდალიზმის შედეგად მიყენებული ზარალი' },
-    { icon: 'security-safe', title: 'ქურდობა', text: 'ავტომობილის ან მისი ნაწილების ქურდობა და ძარცვა' },
-    { icon: 'shield-tick', title: 'მესამე პირის პასუხისმგებლობა', text: 'სხვისი ავტომობილის ან ქონების დაზიანება, პოლისის ლიმიტის ფარგლებში' },
-    { icon: 'health', title: 'მძღოლი და მგზავრები', text: 'უბედური შემთხვევა მძღოლისა და მგზავრებისთვის' },
-    { icon: '24-support', title: 'ასისტანსი 24/7', text: 'დახმარება გზაზე და ევაკუატორის გამოძახება' },
-    { icon: 'building', title: 'სერვის ცენტრები', text: 'შეკეთება პარტნიორ სერვის ცენტრებში' },
-    { icon: 'document-text', title: 'მთელი ავტოპარკი', text: 'ერთი პოლისი კომპანიის ყველა ავტომობილისთვის' },
-    { icon: 'global', title: 'საქართველოს მასშტაბით', text: 'პოლისი მოქმედებს მთელი საქართველოს ტერიტორიაზე' },
+    { icon: 'car', title: 'ავტოსაგზაო შემთხვევა' },
+    { icon: 'info-circle', title: 'აფეთქება' },
+    { icon: 'shield-tick', title: 'გარეგანი დაზიანება' },
+    { icon: 'warning-2', title: 'ხანძარი' },
+    { icon: 'global', title: 'სტიქიური მოვლენები' },
+    { icon: 'close-circle', title: 'ვანდალიზმი' },
+    { icon: 'security-safe', title: 'ძარცვა, ქურდობა, ყაჩაღობა' },
   ],
-  schemesTitle: 'შემთხვევის დროს',
-  schemesText: 'რა უნდა გააკეთო, თუ ავტომობილი დაზიანდა ან დაიკარგა',
-  schemes: [
-    {
-      icon: 'warning-2',
-      title: 'თუ ავარია მოხდა',
-      steps: [
-        'დაგვირეკე +995 32 219 52 12 და გვაცნობე შემთხვევის შესახებ',
-        'გამოიძახე საპატრულო პოლიცია და შეინახე ოქმი',
-        'ჩვენი ექსპერტი დაათვალიერებს ავტომობილს და შეაფასებს ზარალს',
+  area: {
+    title: 'დაზღვევის მოქმედების არეალი:',
+    items: [
+      { icon: 'location', title: 'საქართველო' },
+      { icon: 'location', title: 'დსთ-ს ქვეყნები' },
+      { icon: 'location', title: 'თურქეთი' },
+      { icon: 'global', title: 'მსოფლიოს მასშტაბით სხვა ქვეყნები', note: '(მომხმარებლის სურვილის შემთხვევაში)' },
+    ],
+    cards: [
+      { title: 'მძღოლისა და მგზავრთა უბედური შემთხვევისგან დაზღვევა', text: 'ანაზღაურდება ზარალი, რომელიც დაზღვეული ავტოტრანსპორტის მართვისას მიადგა მძღოლს ან/და მგზავრებს (გარდაცვალება, სხეულის დაზიანება).' },
+      { title: 'ავტომფლობელთა მესამე პირის პასუხისმგებლობის დაზღვევა', text: 'სამოქალაქო პასუხისმგებლობის ნებაყოფლობითი დაზღვევით ანაზღაურდება მატერიალური ზარალი, რომელიც წარმოიშვა მძღოლის მიერ დაზღვეული ავტოტრანსპორტის მართვისას მესამე მხარის ჯანმრთელობის ან ქონების მიმართ მიყენებული ზიანის შედეგად.' },
+    ],
+  },
+  faq: BUSINESS_FAQ,
+}
+
+/* The design's hero photo is a blob ("თანამედროვე ოფისი თბილისში"); the closest existing image is the About office photo. */
+export const PROPERTY: ProductConfig = {
+  product: 'property',
+  title: ['ქონების', 'კორპორატიული', 'დაზღვევა'],
+  titleSize: 'min(64px, 4.4vw)',
+  lead: 'ქონების დაზღვევა დაგეხმარებათ დაიცვათ თქვენი ბიზნესის კუთვნილი ქონება და უზრუნველყოფს თქვენს ფინანსურ სტაბილურობას',
+  image: '/img/about-team-office.jpg',
+  imageAlt: 'თანამედროვე ოფისი თბილისში',
+  imagePos: '70% 50%',
+  coversTitle: 'ბიზნეს ქონება ფარავს:',
+  coversCols: 5,
+  coverMinHeight: 200,
+  coverTitleSmall: true,
+  covers: [
+    { icon: 'global', title: 'წყალდიდობა' },
+    { icon: 'airplane', title: 'თვითმფრინავის ან სხვა საჰაერო ტრანსპორტის ჩამოვარდნა' },
+    { icon: 'car', title: 'ავტოტრანსპორტის შეჯახება' },
+    { icon: 'house', title: 'წყალგაყვანილობის სისტემის მწყობრიდან უეცარი და მოულოდნელი გამოსვლა' },
+    { icon: 'building', title: 'მიწისძვრა' },
+    { icon: 'info-circle', title: 'შტორმი, ქარიშხალი, უხვთოვლიანობა' },
+    { icon: 'warning-2', title: 'ნიადაგის ჩამოშლა, მეწყერი' },
+    { icon: 'security-safe', title: 'ძარცვა, ქურდობა, ყაჩაღობა' },
+    { icon: 'shield-tick', title: 'ხანძარი, აფეთქება, მეხის დაცემა' },
+    { icon: 'close-circle', title: 'მესამე მხარის მიერ განზრახ მიყენებული ზიანი' },
+  ],
+  coversProse: [
+    'დაზღვევის ფარგლებში ტაო დაზღვევა გთავაზობთ თქვენი ქონების, დასაწყობებული მარაგების, მანქანა-დანადგარების, სხვა სასაქონლო-მატერიალური ფასეულობებისა და საქმიანობის შეჩერების დაზღვევას.',
+    'სადაზღვევო პოლისი უზრუნველყოფს თქვენს ფინანსურ დაცვას კრიტიკული სიტუაციებისგან. მოულოდნელი და გაუთვალისწინებელი შემთხვევებით გამოწვეულმა ფინანსურმა ზარალმა შეიძლება სოლიდური ზიანი მიაყენოს თქვენს კომპანიას. ქონების დაზღვევა, როგორც რისკის მართვის მექანიზმი, მსგავსი შემთხვევების თავიდან არიდების საუკეთესო გზაა.',
+  ],
+  types: {
+    title: 'დააზღვიეთ სხვადასხვა ტიპის ქონება:',
+    items: [
+      'შენობა-ნაგებობები, მანქანა-დანადგარები, საწარმო-ტექნოლოგიური ხაზები, სამეურნეო ინვენტარი',
+      'მარაგები, ინტერიერის საგნები, მოპირკეთება (ფანჯრის მინები, სარკეები, ვიტრინები და სხვა)',
+      'საკომუნიკაციო მოწყობილობები, მაღალი ძაბვის სისტემები და მსგავსი საწარმო-ტექნიკური დანიშნულების მექანიზმები და მოწყობილობები',
+      'საყოფაცხოვრებო ტექნიკა, ავეჯი და სხვა (ელექტროტექნიკა, კომპიუტერები და სხვა)',
+      'ოფისები (მათ შორის: ბანკები, ბიზნეს ცენტრები)',
+      'სასტუმროები, მაღაზიები, სავაჭრო ცენტრები',
+      'საგანმანათლებლო დაწესებულებები, კლინიკები',
+      'ავტოგასამართი სადგურები, ნავთობის ბაზები',
+      'ქარხნები, საწარმოები, საამქროები და სხვა',
+    ],
+    extra: {
+      label: 'დამატებით შეგიძლიათ შეიძინოთ:',
+      title: 'საქმიანობის შეჩერებით გამოწვეული შემოსავლების დაკარგვის დაზღვევა',
+      texts: [
+        'ქონების დაზღვევის პოლისით დაფარული რისკით დაზღვეული ქონების დაზიანების და/ან განადგურების შემთხვევაში თქვენ აგინაზღაურდებათ ქონების აღნიშნული ზიანის შედეგად საქმიანობის შეჩერებით გამოწვეული ზარალი',
+        'აღნიშნული დამატებითი დაფარვის შეძენა შესაძლებელია მხოლოდ ქონების დაზღვევის პოლისთან ერთად',
       ],
     },
-    {
-      icon: 'security-safe',
-      title: 'თუ ავტომობილი მოიპარეს',
-      steps: [
-        'დაუყოვნებლივ შეატყობინე პოლიციას',
-        'დაგვიკავშირდი და გვაცნობე შემთხვევის შესახებ',
-        'წარმოგვიდგინე დოკუმენტები და ანაზღაურებას პოლისის პირობების მიხედვით მიიღებ',
-      ],
-    },
-  ],
-  faq: [
-    { q: 'ვის შეუძლია ავტომობილის კორპორატიული დაზღვევის გაფორმება?', a: 'კომპანიებს, რომლებსაც ერთი ან მეტი ავტომობილი აქვთ' },
-    { q: 'შეიძლება მთელი ავტოპარკის ერთ პოლისში დაზღვევა?', a: 'კი, კომპანიის ყველა ავტომობილი შეიძლება ერთ პოლისში გაერთიანდეს' },
-    { q: 'როგორ გავაფორმო პოლისი?', a: 'დაგვირეკე ან მოგვწერე, ჩვენი გუნდი შეგიდგენს შეთავაზებას შენი კომპანიის საჭიროებების მიხედვით' },
-    { q: 'რა ვქნა, თუ ავარია მოხდა?', a: 'დაგვირეკე და გამოიძახე საპატრულო პოლიცია, შემდეგ ჩვენი ექსპერტი ზარალს შეაფასებს' },
-    { q: 'რა არის ფრანშიზა?', a: 'თანხა, რომელსაც დაზღვეული თავად იხდის, დანარჩენს კი ჩვენ ვანაზღაურებთ. ის წინასწარ არის განსაზღვრული პოლისში.' },
-  ],
+  },
+  faq: BUSINESS_FAQ,
 }
 
 const WRAP: React.CSSProperties = { boxSizing: 'border-box', maxWidth: 1280, margin: '0 auto', padding: '0 24px', display: 'flex', flexDirection: 'column', gap: 48 }
 const NUM: React.CSSProperties = { flex: 'none', width: 32, height: 32, boxSizing: 'border-box', border: '1px solid var(--link)', color: 'var(--link)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 500, fontSize: 14 }
 
 export function Product({ cfg, offers = [] }: { cfg: ProductConfig; offers?: OfferVM[] }) {
-  const { t, L, settings } = useSite()
+  const { t, L } = useSite()
   const [faqOpen, setFaqOpen] = useState(0)
   let n = 0
   const next = () => ++n
-  // the design's hotline inside step texts follows the admin phone
-  const stepText = (st: string) => t(st).split(DESIGN_PHONE).join(settings.phone)
+  // a white section 02 (schemes, area, types) puts the FAQ on white too; otherwise the FAQ takes the grey ground
+  const plainFaq = !!(cfg.schemes || cfg.area || cfg.types)
 
   return (
     <>
@@ -186,22 +258,94 @@ export function Product({ cfg, offers = [] }: { cfg: ProductConfig; offers?: Off
       <section id="covered" style={{ background: 'var(--bg)', marginTop: 4, padding: '96px 0' }}>
         <div style={WRAP}>
           <div data-reveal="up" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 24 }}>
-            <SectionMarker number={next()} title={t('რას ფარავს')} />
+            <SectionMarker number={next()} title={t(cfg.coversTitle || 'რას ფარავს')} />
             <SectionMarker number={n} variant="diagonal" />
           </div>
-          <div data-reveal="stagger" className="tao-cover" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', borderTop: '1px solid var(--border)', borderLeft: '1px solid var(--border)' }}>
+          <div data-reveal="stagger" className="tao-cover" style={{ display: 'grid', gridTemplateColumns: `repeat(${cfg.coversCols || 4}, minmax(0, 1fr))`, borderTop: '1px solid var(--border)', borderLeft: '1px solid var(--border)' }}>
             {cfg.covers.map((c) => (
-              <div key={c.title} className="tao-coveritem" style={{ boxSizing: 'border-box', padding: '32px 28px 36px', borderRight: '1px solid var(--border)', borderBottom: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: 16, minHeight: 240 }}>
+              <div key={c.title} className="tao-coveritem" style={{ boxSizing: 'border-box', padding: '32px 28px 36px', borderRight: '1px solid var(--border)', borderBottom: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: 16, minHeight: cfg.coverMinHeight || 240 }}>
                 <span className="tao-coveritem__icon" style={{ width: 52, height: 52, boxSizing: 'border-box', border: '1px solid var(--link)', color: 'var(--link)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Icon name={c.icon} size={22} />
                 </span>
-                <h3 className="tao-h tao-h--h4" style={{ margin: '8px 0 0' }}>{t(c.title)}</h3>
-                <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: 15 }}>{t(c.text)}</p>
+                <h3 className="tao-h tao-h--h4" style={cfg.coverTitleSmall ? { margin: '8px 0 0', fontSize: 18, lineHeight: 1.3 } : { margin: '8px 0 0' }}>{t(c.title)}</h3>
+                {c.text ? <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: 15 }}>{t(c.text)}</p> : null}
               </div>
             ))}
           </div>
+          {cfg.coversProse ? (
+            <div data-reveal="up" className="tao-iprose" style={{ display: 'flex', flexDirection: 'column', gap: 14, maxWidth: 860 }}>
+              {cfg.coversProse.map((p) => (
+                <p key={p} style={{ margin: 0, fontSize: 17, lineHeight: 1.7, color: 'var(--text-secondary)' }}>{t(p)}</p>
+              ))}
+            </div>
+          ) : null}
         </div>
       </section>
+
+      {/* Car: coverage area as numbered cards in the cover style, then two text cards */}
+      {cfg.area ? (
+        <section style={{ padding: '96px 0' }}>
+          <div style={WRAP}>
+            <div data-reveal="up">
+              <SectionMarker number={next()} title={t(cfg.area.title)} />
+            </div>
+            <div data-reveal="up" style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
+              <div className="tao-cover" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', borderTop: '1px solid var(--border)', borderLeft: '1px solid var(--border)', background: 'var(--surface)' }}>
+                {cfg.area.items.map((a, i) => (
+                  <div key={a.title} className="tao-coveritem" style={{ boxSizing: 'border-box', padding: 28, borderRight: '1px solid var(--border)', borderBottom: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: 20, minHeight: 200 }}>
+                    <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span className="tao-coveritem__icon" style={{ width: 52, height: 52, boxSizing: 'border-box', border: '1px solid var(--link)', color: 'var(--link)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Icon name={a.icon} size={22} />
+                      </span>
+                      <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, color: 'var(--text-muted)' }}>{String(i + 1).padStart(2, '0')}</span>
+                    </span>
+                    <span style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                      <h3 className="tao-h tao-h--h4" style={{ margin: 0 }}>{t(a.title)}</h3>
+                      {a.note ? <span style={{ fontSize: 14, lineHeight: 1.5, color: 'var(--text-secondary)' }}>{t(a.note)}</span> : null}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(380px, 100%), 1fr))', gap: 24 }}>
+                {cfg.area.cards.map((c) => (
+                  <div key={c.title} style={{ boxSizing: 'border-box', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 5, padding: 32, display: 'flex', flexDirection: 'column', gap: 14, minWidth: 0 }}>
+                    <h3 className="tao-h tao-h--h4" style={{ margin: 0 }}>{t(c.title)}</h3>
+                    <p style={{ margin: 0, fontSize: 16, lineHeight: 1.6, color: 'var(--text-secondary)' }}>{t(c.text)}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {/* Property: insurable property types as a bullet list, then the add-on card */}
+      {cfg.types ? (
+        <section style={{ padding: '96px 0' }}>
+          <div style={WRAP}>
+            <div data-reveal="up">
+              <SectionMarker number={next()} title={t(cfg.types.title)} />
+            </div>
+            <div data-reveal="up" style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
+              <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(440px, 100%), 1fr))', gap: '14px 48px' }}>
+                {cfg.types.items.map((it) => (
+                  <li key={it} style={{ display: 'flex', gap: 14, alignItems: 'flex-start', fontSize: 16, lineHeight: 1.6, color: 'var(--text)' }}>
+                    <span aria-hidden="true" style={{ flex: 'none', width: 8, height: 8, marginTop: 9, background: 'var(--link)' }} />
+                    <span>{t(it)}</span>
+                  </li>
+                ))}
+              </ul>
+              <div style={{ boxSizing: 'border-box', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 5, padding: 32, display: 'flex', flexDirection: 'column', gap: 14, minWidth: 0 }}>
+                <p className="tao-caps" style={{ margin: 0, fontSize: 12, fontWeight: 500, letterSpacing: '0.08em', color: 'var(--link)' }}>{t(cfg.types.extra.label)}</p>
+                <h3 className="tao-h tao-h--h4" style={{ margin: 0 }}>{t(cfg.types.extra.title)}</h3>
+                {cfg.types.extra.texts.map((p) => (
+                  <p key={p} style={{ margin: 0, fontSize: 16, lineHeight: 1.6, color: 'var(--text-secondary)' }}>{t(p)}</p>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {/* How to use: two schemes (travel, car) */}
       {cfg.schemes ? (
@@ -223,7 +367,7 @@ export function Product({ cfg, offers = [] }: { cfg: ProductConfig; offers?: Off
                     {sc.steps.map((st, i) => (
                       <li key={i} style={{ display: 'flex', gap: 18, alignItems: 'flex-start', padding: '20px 0', borderBottom: '1px solid var(--border)' }}>
                         <span style={{ ...NUM, fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15 }}>{i + 1}</span>
-                        <span style={{ paddingTop: 4, fontSize: 16, lineHeight: 1.5 }}>{stepText(st)}</span>
+                        <span style={{ paddingTop: 4, fontSize: 16, lineHeight: 1.5 }}>{t(st)}</span>
                       </li>
                     ))}
                   </ol>
@@ -254,7 +398,7 @@ export function Product({ cfg, offers = [] }: { cfg: ProductConfig; offers?: Off
       ) : null}
 
       {/* FAQ: question list only, full width (no number) */}
-      <section id="faq" style={{ background: cfg.schemes ? undefined : 'var(--bg)', padding: '96px 0' }}>
+      <section id="faq" style={{ background: plainFaq ? undefined : 'var(--bg)', padding: '96px 0' }}>
         <div style={{ boxSizing: 'border-box', maxWidth: 1280, margin: '0 auto', padding: '0 24px', display: 'flex', flexWrap: 'wrap', gap: 48 }}>
           <div data-reveal="up" style={{ flex: '1 1 100%', minWidth: 0 }}>
             <div className="tao-faq" style={{ borderTop: '1px solid var(--text)' }}>
