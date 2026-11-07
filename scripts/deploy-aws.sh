@@ -54,7 +54,8 @@ $SSH -f -N -M -S "$CTL" -o ExitOnForwardFailure=yes -L "$PORT:127.0.0.1:5432" "$
 rm "$SRC/.env"
 
 echo "== uploading release $SHA"
-(cd "$SRC" && tar -c --exclude=.next/cache --exclude=node_modules .) | \
+# everything except the top-level node_modules (the server has its own); .next/node_modules must go along
+(cd "$SRC" && tar -c --exclude=.next/cache $(ls -A | grep -vx node_modules)) | \
   $SSH "$HOST" "sudo -u tao bash -c 'rm -rf $REL && mkdir -p $REL && tar -x -C $REL'"
 cat "$WORK/aws-fix-paths.py" | $SSH "$HOST" "sudo tee /home/tao/aws-fix-paths.py >/dev/null"
 
@@ -68,12 +69,19 @@ $SSH "$HOST" "sudo -u tao bash -c 'set -e; cd $REL; ln -sf /home/tao/secrets/app
   python3 /home/tao/aws-fix-paths.py $REL $MARK'"
 
 echo "== switching"
-$SSH "$HOST" "sudo -u tao ln -sfn $REL /home/tao/app && sudo systemctl restart tao-web && ls -1dt /home/tao/releases/* | tail -n +4 | sudo xargs -r rm -rf"
+PREV=$($SSH "$HOST" "readlink /home/tao/app")
+$SSH "$HOST" "sudo -u tao ln -sfn $REL /home/tao/app && sudo systemctl restart tao-web"
 
 for i in $(seq 1 30); do
   code=$($SSH "$HOST" "curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3000/" || true)
-  if [ "$code" = 200 ]; then echo "== live: $SHA"; exit 0; fi
+  if [ "$code" = 200 ]; then
+    $SSH "$HOST" "sudo bash -c 'ls -1dt /home/tao/releases/* | tail -n +4 | xargs -r rm -rf'"
+    echo "== live: $SHA"
+    exit 0
+  fi
   sleep 2
 done
-echo "Site did not answer 200 after restart (last: $code). Check: sudo journalctl -u tao-web -n 50" >&2
+echo "Site did not answer 200 (last: $code): rolling back to $PREV" >&2
+$SSH "$HOST" "sudo -u tao ln -sfn $PREV /home/tao/app && sudo systemctl restart tao-web"
+echo "Rolled back. Logs: sudo journalctl -u tao-web -n 50" >&2
 exit 1
