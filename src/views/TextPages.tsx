@@ -225,7 +225,7 @@ export function Other({ privacy, terms, pdf, complaintDocs }: { privacy: PageVM 
   const panel: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: 72 }
   return (
     <InfoPage current="/other" title="სხვა ინფორმაცია">
-      <div role="tablist" aria-label={t('სხვა ინფორმაცია')} className="tao-itabs" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, max-content)', gap: 8, marginBottom: -24 }}>
+      <div role="tablist" aria-label={t('სხვა ინფორმაცია')} className="tao-itabs" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, max-content))', gap: 8, marginBottom: -24 }}>
         {TABS.map((x) => (
           <button
             key={x.id}
