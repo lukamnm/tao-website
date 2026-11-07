@@ -69,7 +69,7 @@ $SSH "$HOST" "sudo -u tao bash -c 'set -e; cd $REL; ln -sf /home/tao/secrets/app
   python3 /home/tao/aws-fix-paths.py $REL $MARK'"
 
 echo "== switching"
-PREV=$($SSH "$HOST" "readlink /home/tao/app")
+PREV=$($SSH "$HOST" "sudo readlink /home/tao/app")
 $SSH "$HOST" "sudo -u tao ln -sfn $REL /home/tao/app && sudo systemctl restart tao-web"
 
 for i in $(seq 1 30); do
