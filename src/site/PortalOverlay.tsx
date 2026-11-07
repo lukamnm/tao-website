@@ -1,17 +1,17 @@
 'use client'
 import React, { useEffect, useRef, useState } from 'react'
-import { useSite } from './SiteProvider'
+import { portalForLocale, useSite } from './SiteProvider'
 import { getAnimation, getLottie, type AnimationItem } from './lottie'
 
 /* Any link to the TAO portal shows the small TAO loader for a moment, then hands over to the portal. */
 export function PortalOverlay() {
-  const { settings, t } = useSite()
+  const { settings, t, locale } = useSite()
   const [on, setOn] = useState(false)
   const box = useRef<HTMLDivElement>(null)
   const anim = useRef<AnimationItem | null>(null)
 
   useEffect(() => {
-    const base = settings.portalUrl.replace(/\/+$/, '')
+    const base = portalForLocale(settings.portalUrl, locale).replace(/\/+$/, '')
     const onClick = (e: MouseEvent) => {
       if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
       const a = (e.target as HTMLElement | null)?.closest?.('a[href]') as HTMLAnchorElement | null
@@ -28,7 +28,7 @@ export function PortalOverlay() {
     }
     document.addEventListener('click', onClick, true)
     return () => document.removeEventListener('click', onClick, true)
-  }, [settings.portalUrl])
+  }, [settings.portalUrl, locale])
 
   useEffect(() => {
     if (!on) return

@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Icon } from '@/ds'
 import { useSite } from '@/site/SiteProvider'
 import { InfoPage, InfoSection, Prose, P, Bullets, Notice, KeyValue, DocList } from './info'
@@ -200,7 +200,6 @@ const tabOf = (hash: string): TabId | null => {
 export function Other({ privacy, terms, pdf, complaintDocs }: { privacy: PageVM | null; terms: PageVM | null; pdf?: DocumentVM; complaintDocs: DocumentVM[] }) {
   const { t } = useSite()
   const [tab, setTab] = useState<TabId>('privacy')
-  const tabsRef = useRef<HTMLDivElement>(null)
 
   // the tab comes from the URL hash: on load, and when an in-page link (e.g. "#privacy" in the terms) changes it
   useEffect(() => {
@@ -216,15 +215,6 @@ export function Other({ privacy, terms, pdf, complaintDocs }: { privacy: PageVM 
     return () => window.removeEventListener('hashchange', onHash)
   }, [])
 
-  // narrow screens: keep the active tab inside the horizontally scrolling tab row
-  useEffect(() => {
-    const row = tabsRef.current
-    const btn = row?.querySelector<HTMLElement>('[aria-selected="true"]')
-    if (!row || !btn) return
-    if (btn.offsetLeft < row.scrollLeft) row.scrollLeft = btn.offsetLeft
-    else if (btn.offsetLeft + btn.offsetWidth > row.scrollLeft + row.clientWidth) row.scrollLeft = btn.offsetLeft + btn.offsetWidth - row.clientWidth
-  }, [tab])
-
   const pick = (id: TabId) => {
     setTab(id)
     try {
@@ -235,7 +225,7 @@ export function Other({ privacy, terms, pdf, complaintDocs }: { privacy: PageVM 
   const panel: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: 72 }
   return (
     <InfoPage current="/other" title="სხვა ინფორმაცია">
-      <div ref={tabsRef} role="tablist" aria-label={t('სხვა ინფორმაცია')} className="tao-itabs" style={{ display: 'flex', flexWrap: 'nowrap', gap: 8, marginBottom: -24, overflowX: 'auto', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+      <div role="tablist" aria-label={t('სხვა ინფორმაცია')} className="tao-itabs" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, max-content)', gap: 8, marginBottom: -24 }}>
         {TABS.map((x) => (
           <button
             key={x.id}
@@ -246,7 +236,7 @@ export function Other({ privacy, terms, pdf, complaintDocs }: { privacy: PageVM 
             aria-selected={tab === x.id}
             onClick={() => pick(x.id)}
             className={'tao-itab' + (tab === x.id ? ' is-on' : '')}
-            style={{ flex: 'none', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 8, height: 44, padding: '0 16px', boxSizing: 'border-box', border: '1px solid var(--border)', borderRadius: 5, background: 'var(--surface)', fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 500, color: 'var(--text)', cursor: 'pointer' }}
+            style={{ minWidth: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, minHeight: 48, padding: '8px 14px', textAlign: 'center', lineHeight: 1.3, boxSizing: 'border-box', border: '1px solid var(--border)', borderRadius: 5, background: 'var(--surface)', fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 500, color: 'var(--text)', cursor: 'pointer' }}
           >
             <Icon name={x.icon} size={18} />
             {t(x.label)}

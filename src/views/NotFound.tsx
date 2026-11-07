@@ -15,22 +15,15 @@ export function NotFound() {
   return (
     <>
       <section data-hero="" className="tao-canvas" style={{ margin: 4, borderRadius: 5, overflow: 'hidden', color: 'var(--on-primary)' }}>
-        <div style={{ boxSizing: 'border-box', maxWidth: 1280, minHeight: 640, margin: '0 auto', padding: '160px 24px 80px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 48 }}>
-          <div style={{ flex: '1 1 560px', minWidth: 0, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 24 }}>
-            <span className="tao-nf__code tao-intro" aria-hidden="true" style={{ ['--i' as string]: '0' }}>404</span>
-            <h1 className="tao-h tao-h--display tao-intro" style={{ ['--i' as string]: '1', margin: 0, color: 'var(--on-primary)', fontSize: 'min(56px, 4vw)', lineHeight: 1 }}>{t('გვერდი ვერ მოიძებნა')}</h1>
-            <p className="tao-intro" style={{ ['--i' as string]: '2', margin: 0, maxWidth: 480, fontSize: 19, lineHeight: 1.55, color: 'var(--on-blue-muted)' }}>{t('შესაძლოა, ბმული შეიცვალა ან გვერდი წაიშალა. დაბრუნდი მთავარ გვერდზე ან აირჩიე სასურველი განყოფილება.')}</p>
-            <div className="tao-intro" style={{ ['--i' as string]: '3', display: 'flex', flexWrap: 'wrap', gap: 12, paddingTop: 8 }}>
-              <Button variant="onBlue" icon="arrow-left" href={L('/')}>
-                {t('მთავარ გვერდზე')}
-              </Button>
-            </div>
-          </div>
-          <div className="tao-intro" style={{ ['--i' as string]: '2', flex: '1 1 400px', minWidth: 0, position: 'relative', minHeight: 420 }}>
-            <div style={{ position: 'absolute', inset: 0, border: '1px solid var(--on-blue-line)', borderRadius: 5, transform: 'translate(14px, -14px)' }} />
-            <div style={{ position: 'absolute', inset: 0, borderRadius: 5, overflow: 'hidden', background: 'var(--surface)' }}>
-              <img src="/img/illustration-404.jpg" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-            </div>
+        <div style={{ boxSizing: 'border-box', maxWidth: 1280, minHeight: 640, margin: '0 auto', padding: '160px 24px 88px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 28, textAlign: 'center' }}>
+          <span className="tao-nf__code tao-intro" aria-hidden="true" style={{ ['--i' as string]: '0', display: 'block', fontSize: 'min(300px, 26vw)', lineHeight: 0.8, color: 'var(--on-primary)' }}>404</span>
+          <span className="tao-intro" aria-hidden="true" style={{ ['--i' as string]: '1', display: 'block', width: 72, height: 2, background: 'var(--on-blue-line)' }} />
+          <h1 className="tao-h tao-h--display tao-intro" style={{ ['--i' as string]: '1', margin: 0, color: 'var(--on-primary)', fontSize: 'min(56px, 4.6vw)', lineHeight: 1 }}>{t('გვერდი ვერ მოიძებნა')}</h1>
+          <p className="tao-intro" style={{ ['--i' as string]: '2', margin: 0, maxWidth: 520, fontSize: 19, lineHeight: 1.55, color: 'var(--on-blue-muted)' }}>{t('შესაძლოა, ბმული შეიცვალა ან გვერდი წაიშალა. დაბრუნდი მთავარ გვერდზე ან აირჩიე სასურველი განყოფილება.')}</p>
+          <div className="tao-intro" style={{ ['--i' as string]: '3', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 12, paddingTop: 8 }}>
+            <Button variant="onBlue" icon="arrow-left" href={L('/')}>
+              {t('მთავარ გვერდზე')}
+            </Button>
           </div>
         </div>
       </section>

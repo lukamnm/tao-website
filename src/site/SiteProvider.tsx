@@ -16,13 +16,18 @@ export type SiteCtx = {
 
 const Ctx = createContext<SiteCtx | null>(null)
 
+/** The admin stores the Georgian portal address (.../portal/ge/...); the English site opens .../portal/en/... */
+export function portalForLocale(url: string, locale: Locale): string {
+  return locale === 'en' ? url.replace(/\/portal\/ge(?=[/?#]|$)/, '/portal/en') : url
+}
+
 export function SiteProvider({ locale, settings, children }: { locale: Locale; settings: SiteSettings; children: React.ReactNode }) {
   const value = useMemo<SiteCtx>(
     () => ({
       locale,
       t: makeT(locale),
       L: (p) => localePath(locale, p),
-      P: (product = '') => settings.portal[product] || settings.portalUrl,
+      P: (product = '') => portalForLocale(settings.portal[product] || settings.portalUrl, locale),
       settings,
     }),
     [locale, settings],

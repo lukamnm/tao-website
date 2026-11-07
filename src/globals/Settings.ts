@@ -90,7 +90,7 @@ export const Settings: GlobalConfig = {
           label: 'პორტალი',
           description: 'კონკრეტული პროდუქტის ყიდვის ბმული იწერება თავად პროდუქტში (კატეგორიები → პროდუქტები).',
           fields: [
-            { name: 'portalUrl', type: 'text', label: 'ტაოს პორტალი', defaultValue: 'https://portal.taoinsurance.ge', admin: { description: '"ჩემი პროფილი" ღილაკი ამ მისამართზე გადადის.' } },
+            { name: 'portalUrl', type: 'text', label: 'ტაოს პორტალი', defaultValue: 'https://portal.taoinsurance.ge', admin: { description: '"ჩემი პროფილი" ღილაკი ამ მისამართზე გადადის. ჩაწერეთ ქართული მისამართი (.../portal/ge): ინგლისურ საიტზე /portal/ge ავტომატურად /portal/en-ით იცვლება.' } },
             { name: 'portalClaimUrl', type: 'text', label: 'ანაზღაურების მოთხოვნა პორტალზე', admin: { description: 'თუ ცარიელია, პორტალის მთავარი გვერდი გაიხსნება.' } },
           ],
         },

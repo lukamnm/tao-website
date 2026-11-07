@@ -2,6 +2,9 @@
 .tao-itab{transition:background-color 150ms ease,color 150ms ease,border-color 150ms ease}
 .tao-itab:hover{border-color:var(--link)!important;color:var(--link)!important}
 .tao-itab.is-on,.tao-itab.is-on:hover{background:var(--primary)!important;border-color:var(--primary)!important;color:var(--on-primary)!important}
-.tao-itabs::-webkit-scrollbar{display:none}
+/* Large screens: the three tabs in one row at their own width. Small desktop and tablet: three equal columns
+   (labels may wrap, icons hidden). Mobile: one under another, full width. */
+@media (max-width:1200px){.tao-itabs{grid-template-columns:repeat(3,minmax(0,1fr))!important}.tao-itab{font-size:14px!important}.tao-itab .tao-icon{display:none}}
+@media (max-width:700px){.tao-itabs{grid-template-columns:1fr!important}.tao-itab{justify-content:flex-start!important;text-align:left!important}.tao-itab .tao-icon{display:inline-flex}}
 .tao-itab:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}
 .tao-ipanel[hidden]{display:none!important}
