@@ -14,10 +14,10 @@ const dbName = (() => {
 export const isRealtimeConfigured = () =>
   !!process.env.NEON_REALTIME_SECRET && !!process.env.NEON_REALTIME_URL
 
-export const realtime = createRealtime({
-  secret: process.env.NEON_REALTIME_SECRET || 'missing-realtime-secret-run-neon-env-pull',
-  db: dbName,
-})
+// Created on first use: createRealtime() rejects a missing secret, and on AWS hosting there is none.
+let instance: ReturnType<typeof createRealtime> | undefined
+const realtime = () =>
+  (instance ??= createRealtime({ secret: process.env.NEON_REALTIME_SECRET!, db: dbName }))
 
 /** One row per status of the contact inbox (Payload collection `contact-messages`). No personal data leaves the server. */
 export type InboxRow = { status: string; total: number; latest: Date | null }
@@ -29,4 +29,4 @@ export const inboxByStatusQuery = () =>
      GROUP BY coalesce(status, 'new')`,
   )
 
-export const sealInbox = () => realtime.seal({ query: inboxByStatusQuery() })
+export const sealInbox = () => realtime().seal({ query: inboxByStatusQuery() })

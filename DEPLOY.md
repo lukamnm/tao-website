@@ -46,11 +46,46 @@ The database structure never changes on its own. Every change is a file in `src/
 
 Products, news categories, partner categories and cities are records in the admin ("კატეგორიები"), not code. Editors add, rename, reorder (drag) and remove them. A list entry still used by offers, news, documents or banners cannot be deleted; the admin says where it is used. Each entry has a hidden `key` (e.g. `health`) that the site code and the product pages rely on; it is made from the name once and never changes.
 
-## Moving to AWS later
+## AWS hosting (Lightsail, Stockholm)
 
-Same code, same database structure. Change `DATABASE_URL` to RDS (PostgreSQL), the `AWS_*` variables to a real S3 bucket (remove `AWS_ENDPOINT_URL_S3`), host the Next app on Amplify Hosting or App Runner, run `npm run build && npm start`. Export the Neon database with `pg_dump` and import it into RDS; copy the bucket contents with `aws s3 sync`.
+The site runs on one AWS Lightsail server in eu-north-1 (Stockholm; this AWS project allows only eu-north-1
+and us-east-1). Neon and Vercel are not used by it.
 
-Two ways to fill RDS, both give the same result:
+| What | Where |
+|---|---|
+| Server | Lightsail instance `tao-web`, Ubuntu 24.04, 1 GB RAM + 4 GB swap (largest size the new account allows; move to 2 GB via a snapshot when AWS lifts the limit) |
+| Address | static IP `13.62.200.190` (`tao-ip`); test URL `https://13-62-200-190.sslip.io` |
+| Web server | Caddy (`/etc/caddy/Caddyfile`): HTTPS certificates automatic, proxies to the site on port 3000 |
+| Site | systemd service `tao-web` (`next start`), runs as user `tao` from `/home/tao/app` (symlink to `/home/tao/releases/<sha>-<time>`) |
+| Database | PostgreSQL 18 on the same server, database and role `tao`; password in `/home/tao/secrets/dbpass` |
+| Settings | `/home/tao/secrets/app.env` (DATABASE_URL, PAYLOAD_SECRET, bucket keys, NEXT_PUBLIC_SITE_URL) |
+| Uploads | Lightsail bucket `tao-website-files` (S3 API, `AWS_ENDPOINT_URL_S3=https://s3.eu-north-1.amazonaws.com`) |
+| Backups | daily Lightsail snapshot of the whole server (01:00) + nightly `pg_dump` to `/home/tao/backups` (00:30, kept 14 days) |
+| Firewall | Lightsail: only 22 (SSH key), 80, 443 open |
+| SSH | `ssh -i ~/.ssh/tao_lightsail ubuntu@13.62.200.190` |
 
-1. **Copy everything (recommended):** `pg_dump` from Neon, `pg_restore` into RDS. All content, users, messages and the `payload_migrations` table come along, so the first build on AWS finds nothing to migrate.
-2. **Empty database:** point `DATABASE_URL` to an empty RDS database and build: the migrations create every table and the default lists, then `npm run seed` adds the sample content.
+### Deploying a change
+
+Commit, then from the project folder in Git Bash:
+
+```bash
+bash scripts/deploy-aws.sh
+```
+
+1 GB RAM is too little for `next build`, so the script builds on the PC (through an SSH tunnel to the server
+database, which also applies pending migrations), uploads the result, fixes the PC paths in it
+(`scripts/aws-fix-paths.py`), switches and restarts. A failed build leaves the running site as it was.
+Pushing to GitHub still deploys the Vercel copy (on Neon) as before; the two databases are separate now.
+
+### Switching taoinsurance.ge to the server
+
+1. The domain's DNS manager adds A records `taoinsurance.ge` and `www.taoinsurance.ge` -> `13.62.200.190`.
+2. In `/etc/caddy/Caddyfile` replace the sslip.io name with `taoinsurance.ge, www.taoinsurance.ge` and
+   `sudo systemctl reload caddy` (certificates are issued on the first request).
+3. In `app.env` set `NEXT_PUBLIC_SITE_URL=https://taoinsurance.ge` and `NEXT_PUBLIC_INDEXABLE=1`, then deploy
+   again (NEXT_PUBLIC values are fixed at build time).
+
+### Neon-only extras
+
+Visitor accounts (`/auth`, `/account`), Neon Realtime and the AI gateway (`/neon-status`, `/api/neon/*`) need
+Neon variables; without them they are off (`/auth` and `/account` answer 404). The public site does not use them.

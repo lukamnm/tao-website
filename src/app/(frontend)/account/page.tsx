@@ -1,11 +1,12 @@
-import { auth } from '@/lib/auth/server'
-import { redirect } from 'next/navigation'
+import { auth, isNeonAuthConfigured } from '@/lib/auth/server'
+import { notFound, redirect } from 'next/navigation'
 import { signOutAction } from '../auth/actions'
 
 // Protected by src/proxy.ts (Neon Auth middleware); the session is checked again here.
 export const dynamic = 'force-dynamic'
 
 export default async function AccountPage() {
+  if (!isNeonAuthConfigured()) notFound()
   const { data: session } = await auth.getSession()
   if (!session?.user) redirect('/auth/sign-in')
   return (
