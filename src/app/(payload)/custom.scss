@@ -151,6 +151,11 @@ a { color: inherit; }
   font-size: 14px;
   font-weight: 500;
 }
+/* It is a link, and `a { color: inherit }` above would make its text black: keep it white */
+a.list-create-new-doc__create-new-button.btn--style-pill,
+a.list-create-new-doc__create-new-button.btn--style-pill:hover,
+a.btn--style-primary,
+a.btn--style-primary:hover { color: #fff; }
 
 /* Yes / no in lists */
 .tao-yesno { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; }
