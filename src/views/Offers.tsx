@@ -34,7 +34,7 @@ export function Offers({ offers, categories, cities }: { offers: OfferVM[]; cate
     (skip === 'fmt' || !sel.fmt.length || (sel.fmt.includes('online') && o.online))
 
   let results = offers.filter((o) => match(o))
-  if (sort === 'end') results = results.slice().sort((a, b) => a.until.localeCompare(b.until))
+  if (sort === 'end') results = results.slice().sort((a, b) => Number(a.unlimited) - Number(b.unlimited) || a.until.localeCompare(b.until)) // no end date goes last
   if (sort === 'value') results = results.slice().sort((a, b) => b.pct - a.pct)
   const pagesN = Math.max(1, Math.ceil(results.length / PER))
   const cur = Math.min(page, pagesN)

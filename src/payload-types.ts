@@ -379,7 +379,11 @@ export interface Offer {
   /**
    * ამ დღის შემდეგ საიტზე აღარ ჩანს
    */
-  until: string;
+  until?: string | null;
+  /**
+   * მონიშნე, თუ შეთავაზებას დასრულების თარიღი არ აქვს. საიტზე ეწერება "მოქმედებს უვადოდ" და არასდროს ქრება.
+   */
+  unlimited?: boolean | null;
   category?: (number | null) | OfferCategory;
   /**
    * მონიშნე, თუ შეთავაზებით სარგებლობა ონლაინ შეიძლება (მაგ: ტაო დაზღვევის პორტალზე). შეთავაზებების ფილტრში "ფორმატი".
@@ -799,6 +803,7 @@ export interface OffersSelect<T extends boolean = true> {
   imagePosition?: T;
   from?: T;
   until?: T;
+  unlimited?: T;
   category?: T;
   online?: T;
   cities?: T;
@@ -1117,7 +1122,7 @@ export interface Setting {
    */
   serviceMapUrl?: string | null;
   /**
-   * "ჩემი პროფილი" ღილაკი ამ მისამართზე გადადის.
+   * "ჩემი პროფილი" ღილაკი ამ მისამართზე გადადის. ჩაწერეთ ქართული მისამართი (.../portal/ge): ინგლისურ საიტზე /portal/ge ავტომატურად /portal/en-ით იცვლება.
    */
   portalUrl?: string | null;
   /**

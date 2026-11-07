@@ -11,7 +11,7 @@ export const Offers: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     group: 'კონტენტი',
-    defaultColumns: ['title', 'product', 'until', 'featured'],
+    defaultColumns: ['title', 'product', 'until', 'unlimited', 'featured'],
     listSearchableFields: ['title'],
     description: 'აქციები, ფასდაკლებები და პარტნიორების შეთავაზებები. ვადაგასული შეთავაზება საიტზე ავტომატურად ქრება.',
     preview: (doc, { locale }) => previewUrl(`/offers/${doc.slug}`, locale),
@@ -24,7 +24,8 @@ export const Offers: CollectionConfig = {
       ({ data }) => {
         const v = typeof data?.value === 'string' ? data.value : ''
         const m = v.match(/(\d+(?:[.,]\d+)?)\s*%/)
-        return { ...data, pct: m ? Math.round(parseFloat(m[1].replace(',', '.'))) : 0 }
+        // an offer without an end date keeps no stale date behind the hidden field
+        return { ...data, pct: m ? Math.round(parseFloat(m[1].replace(',', '.'))) : 0, ...(data?.unlimited ? { until: null } : {}) }
       },
     ],
   },
@@ -65,9 +66,17 @@ export const Offers: CollectionConfig = {
               type: 'row',
               fields: [
                 { name: 'from', type: 'date', label: 'მოქმედებს დან', required: true, admin: { width: '50%', date: { pickerAppearance: 'dayOnly', displayFormat: 'dd.MM.yyyy' } } },
-                { name: 'until', type: 'date', label: 'მოქმედებს მდე', required: true, admin: { width: '50%', date: { pickerAppearance: 'dayOnly', displayFormat: 'dd.MM.yyyy' }, description: 'ამ დღის შემდეგ საიტზე აღარ ჩანს' } },
+                {
+                  name: 'until',
+                  type: 'date',
+                  label: 'მოქმედებს მდე',
+                  // required unless the offer has no end date ("უვადო" below)
+                  validate: (v: unknown, { siblingData }: { siblingData: Record<string, unknown> }) => (siblingData?.unlimited || v ? true : 'მიუთითე თარიღი ან მონიშნე "უვადო"'),
+                  admin: { width: '50%', condition: (_, s) => !s?.unlimited, date: { pickerAppearance: 'dayOnly', displayFormat: 'dd.MM.yyyy' }, description: 'ამ დღის შემდეგ საიტზე აღარ ჩანს' },
+                },
               ],
             },
+            { name: 'unlimited', type: 'checkbox', label: 'უვადო', defaultValue: false, admin: { components: { Cell: '/components/admin/YesNoCell#YesNoCell' }, description: 'მონიშნე, თუ შეთავაზებას დასრულების თარიღი არ აქვს. საიტზე ეწერება "მოქმედებს უვადოდ" და არასდროს ქრება.' } },
           ],
         },
         {

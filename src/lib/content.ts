@@ -191,6 +191,7 @@ export type OfferVM = {
   pos: string
   from: string
   until: string
+  unlimited: boolean
   valid: string
   period: string
   body: unknown
@@ -231,9 +232,12 @@ function offerVM(o: AnyDoc, locale: Locale): OfferVM {
     imageAlt: mediaAlt(o.image),
     pos: str(o.imagePosition, '50% 50%'),
     from: str(o.from),
-    until: str(o.until),
-    valid: o.until ? fmtUntil(locale, o.until) : '',
-    period: o.from && o.until ? fmtDMY(o.from) + ' - ' + fmtDMY(o.until) : '',
+    until: o.unlimited ? '' : str(o.until),
+    unlimited: !!o.unlimited,
+    valid: o.unlimited ? (locale === 'en' ? 'No end date' : 'მოქმედებს უვადოდ') : o.until ? fmtUntil(locale, o.until) : '',
+    period: o.unlimited
+      ? o.from ? (locale === 'en' ? 'From ' + fmtDMY(o.from) + ', no end date' : fmtDMY(o.from) + '-დან, უვადოდ') : locale === 'en' ? 'No end date' : 'უვადოდ'
+      : o.from && o.until ? fmtDMY(o.from) + ' - ' + fmtDMY(o.until) : '',
     body: o.body ?? null,
     steps: Array.isArray(o.steps) ? o.steps.map((s: AnyDoc) => str(s.text)) : [],
     terms: Array.isArray(o.terms) ? o.terms.map((s: AnyDoc) => str(s.text)) : [],
@@ -246,7 +250,7 @@ export async function getOffers(locale: Locale, opts: { activeOnly?: boolean; pr
   const payload = await getPayload()
   const today = new Date().toISOString().slice(0, 10)
   const and: AnyDoc[] = []
-  if (opts.activeOnly !== false) and.push({ until: { greater_than_equal: today } })
+  if (opts.activeOnly !== false) and.push({ or: [{ unlimited: { equals: true } }, { until: { greater_than_equal: today } }] })
   if (opts.product) and.push({ 'product.key': { equals: opts.product } })
   const res = await payload.find({ collection: 'offers', locale, fallbackLocale: 'ka', where: and.length ? { and } : undefined, sort: '-from', limit: 200, depth: 1 })
   return (res.docs as AnyDoc[]).map((o) => offerVM(o, locale))
