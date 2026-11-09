@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { getPayload } from './payload'
 import type { Locale } from '@/i18n'
 import { fmtDMY, fmtDate, fmtUntil, fmtMonth } from '@/i18n'
@@ -31,6 +32,8 @@ export type SiteSettings = {
   siteDescription: string
   ogImage: string
   products: ProductVM[]
+  /** Offers are shown anywhere on the site (admin switch, and at least one active offer) */
+  offersOn: boolean
 }
 
 type AnyDoc = Record<string, any>
@@ -84,9 +87,13 @@ export const getNewsCategories = (locale: Locale) => getList('news-categories', 
 export const getOfferCategories = (locale: Locale) => getList('offer-categories', locale)
 export const getCities = (locale: Locale) => getList('cities', locale)
 
-export async function getSettings(locale: Locale): Promise<SiteSettings> {
+export const getSettings = cache(async (locale: Locale): Promise<SiteSettings> => {
   const payload = await getPayload()
-  const [s, products] = await Promise.all([payload.findGlobal({ slug: 'settings', locale, fallbackLocale: 'ka' }) as Promise<AnyDoc>, getProducts(locale)])
+  const [s, products, active] = await Promise.all([
+    payload.findGlobal({ slug: 'settings', locale, fallbackLocale: 'ka' }) as Promise<AnyDoc>,
+    getProducts(locale),
+    payload.count({ collection: 'offers', where: activeOffer() }),
+  ])
   const portalUrl = str(s.portalUrl, 'https://portal.taoinsurance.ge')
   const portal: Record<string, string> = { '': portalUrl, claim: str(s.portalClaimUrl, portalUrl) }
   for (const p of products) portal[p.key] = p.portal || portalUrl
@@ -115,7 +122,14 @@ export async function getSettings(locale: Locale): Promise<SiteSettings> {
     siteDescription: str(s.siteDescription),
     ogImage: mediaUrl(s.ogImage, 'wide'),
     products,
+    offersOn: !!s.offersOn && active.totalDocs > 0,
   }
+})
+
+/** Offers still running today (or with no end date). */
+function activeOffer(): AnyDoc {
+  const today = new Date().toISOString().slice(0, 10)
+  return { or: [{ unlimited: { equals: true } }, { until: { greater_than_equal: today } }] }
 }
 
 /* ---------- Banners ---------- */
@@ -248,9 +262,8 @@ function offerVM(o: AnyDoc, locale: Locale): OfferVM {
 
 export async function getOffers(locale: Locale, opts: { activeOnly?: boolean; product?: string } = {}): Promise<OfferVM[]> {
   const payload = await getPayload()
-  const today = new Date().toISOString().slice(0, 10)
   const and: AnyDoc[] = []
-  if (opts.activeOnly !== false) and.push({ or: [{ unlimited: { equals: true } }, { until: { greater_than_equal: today } }] })
+  if (opts.activeOnly !== false) and.push(activeOffer())
   if (opts.product) and.push({ 'product.key': { equals: opts.product } })
   const res = await payload.find({ collection: 'offers', locale, fallbackLocale: 'ka', where: and.length ? { and } : undefined, sort: '-from', limit: 200, depth: 1 })
   return (res.docs as AnyDoc[]).map((o) => offerVM(o, locale))

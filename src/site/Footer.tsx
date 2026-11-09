@@ -96,7 +96,7 @@ export function Footer() {
           <p className="tao-caps" style={kicker}>{t('კომპანია')}</p>
           <ul style={ul}>
             <li><a href={L('/about')} className="tao-flink" style={flink}>{t('ჩვენ შესახებ')}</a></li>
-            <li><a href={L('/offers')} className="tao-flink" style={flink}>{t('შეთავაზებები')}</a></li>
+            {settings.offersOn ? <li><a href={L('/offers')} className="tao-flink" style={flink}>{t('შეთავაზებები')}</a></li> : null}
             <li><a href={L('/news')} className="tao-flink" style={flink}>{t('სიახლეები')}</a></li>
             <li><a href={L('/contact')} className="tao-flink" style={flink}>{t('კონტაქტი')}</a></li>
           </ul>

@@ -7,7 +7,7 @@ import { Breadcrumb } from './shared'
 type Line = { text: string; href: string; external?: boolean }
 
 export function Contact() {
-  const { t, L, P, settings } = useSite()
+  const { t, P, settings } = useSite()
 
   const serviceMap = settings.service.mapUrl
   const legalMap = settings.mapUrl || 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(settings.address)
@@ -31,14 +31,10 @@ export function Contact() {
     { icon: 'location', label: 'სერვის ცენტრი (ჯანმრთელობის დაზღვევა)', lines: [{ text: t(settings.service.addressShort), href: serviceMap, external: true }] },
     { icon: 'global', label: 'ტაო დაზღვევის პორტალი', lines: [{ text: t('პოლისი და ანაზღაურება'), href: P('') }] },
   ]
+  // one card per hotline: health on black, corporate motor on TAO blue (design v6)
   const hotlines = [
-    { label: 'ჯანმრთელობის დაზღვევა', phone: settings.phone, href: 'tel:' + settings.phoneHref },
-    { label: 'ავტომობილის კორპორატიული დაზღვევა', phone: settings.car.phone, href: 'tel:' + settings.car.phoneHref },
-  ]
-  const claimLinks = [
-    { icon: 'global', title: 'მოთხოვნა პორტალზე', text: 'ატვირთე დოკუმენტები და ადევნე თვალი სტატუსს', href: P('claim') },
-    { icon: 'document-text', title: 'პრეტენზიის წარდგენა', text: 'გაეცანი პრეტენზიების განხილვის წესს', href: L('/other#complaints') },
-    { icon: 'messages-2', title: 'ხშირად დასმული კითხვები', text: 'პასუხები პროდუქტის გვერდებზე', href: L('/health#faq') },
+    { label: 'ჯანმრთელობის დაზღვევა', text: 'ცხელ ხაზზე გეტყვიან, რა უნდა გააკეთო და რა დოკუმენტები დაგჭირდება. ჯანმრთელობის და სამოგზაურო პოლისზე ასისტანსის ნომერი პოლისშია მითითებული.', phone: settings.phone, href: 'tel:' + settings.phoneHref, email: settings.email, bg: 'var(--brand-black)', line: 'var(--grey-700)', muted: '#A8ADB3' },
+    { label: 'ავტომობილის კორპორატიული დაზღვევა', text: 'ცხელ ხაზზე გეტყვიან, რა უნდა გააკეთო და რა დოკუმენტები დაგჭირდება', phone: settings.car.phone, href: 'tel:' + settings.car.phoneHref, email: settings.car.email, bg: 'var(--primary)', line: 'var(--on-blue-line)', muted: 'var(--on-blue-muted)' },
   ]
 
   const card: React.CSSProperties = { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 5, padding: 28, display: 'flex', flexDirection: 'column', gap: 18 }
@@ -137,38 +133,21 @@ export function Contact() {
           <div data-reveal="up">
             <SectionMarker number={2} title={t('სადაზღვევო შემთხვევის დროს')} />
           </div>
-          <div data-reveal="stagger" className="tao-cclaim" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.2fr) minmax(0, 1fr)', gap: 4 }}>
-            <div style={{ background: 'var(--brand-black)', color: 'var(--on-primary)', borderRadius: 5, padding: 40, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 18 }}>
-              <span style={{ width: 52, height: 52, boxSizing: 'border-box', border: '1px solid var(--grey-700)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Icon name="24-support" size={22} />
-              </span>
-              <h3 className="tao-h tao-h--h3" style={{ margin: 0, color: 'var(--on-primary)' }}>{t('პირველ რიგში, დაგვირეკე')}</h3>
-              <p style={{ margin: 0, maxWidth: 460, color: '#A8ADB3' }}>{t('ცხელ ხაზზე გეტყვიან, რა უნდა გააკეთო და რა დოკუმენტები დაგჭირდება. ჯანმრთელობის და სამოგზაურო პოლისზე ასისტანსის ნომერი პოლისშია მითითებული.')}</p>
-              <div style={{ marginTop: 8, display: 'flex', flexWrap: 'wrap', gap: '24px 48px' }}>
-                {hotlines.map((h) => (
-                  <div key={h.label} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                    <span className="tao-caps" style={{ fontSize: 12, fontWeight: 500, letterSpacing: '0.08em', color: '#A8ADB3' }}>{t(h.label)}</span>
-                    <a href={h.href} className="tao-flink" style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 34, lineHeight: 1, color: 'var(--on-primary)', textDecoration: 'none', whiteSpace: 'nowrap' }}>{h.phone}</a>
-                  </div>
-                ))}
+          <div data-reveal="stagger" className="tao-cclaim" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 4 }}>
+            {hotlines.map((h) => (
+              <div key={h.label} style={{ background: h.bg, color: 'var(--on-primary)', borderRadius: 5, padding: 40, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 18, minWidth: 0 }}>
+                <span style={{ width: 52, height: 52, boxSizing: 'border-box', border: '1px solid ' + h.line, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Icon name="24-support" size={22} />
+                </span>
+                <span className="tao-caps" style={{ fontSize: 12, fontWeight: 500, letterSpacing: '0.08em', color: h.muted }}>{t(h.label)}</span>
+                <h3 className="tao-h tao-h--h3" style={{ margin: 0, color: 'var(--on-primary)' }}>{t('პირველ რიგში, დაგვირეკე')}</h3>
+                <p style={{ margin: 0, maxWidth: 460, color: h.muted }}>{t(h.text)}</p>
+                <div style={{ marginTop: 'auto', paddingTop: 8, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  <a href={h.href} className="tao-flink tao-cphone" style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 40, lineHeight: 1, color: 'var(--on-primary)', textDecoration: 'none', whiteSpace: 'nowrap' }}>{h.phone}</a>
+                  <a href={'mailto:' + h.email} className="tao-flink" style={{ fontSize: 17, fontWeight: 500, color: 'var(--on-primary)', textDecoration: 'none' }}>{h.email}</a>
+                </div>
               </div>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-              {claimLinks.map((l) => (
-                <a key={l.title} href={l.href} className="tao-docrow" style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 20, padding: '24px 28px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 5, color: 'var(--text)', textDecoration: 'none' }}>
-                  <span style={{ flex: 'none', width: 48, height: 48, boxSizing: 'border-box', border: '1px solid var(--link)', color: 'var(--link)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Icon name={l.icon} size={22} />
-                  </span>
-                  <span style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 4 }}>
-                    <span style={{ fontSize: 18, fontWeight: 500, lineHeight: 1.35 }}>{t(l.title)}</span>
-                    <span style={{ fontSize: 14, color: 'var(--text-secondary)' }}>{t(l.text)}</span>
-                  </span>
-                  <span className="tao-docrow__dl" style={{ flex: 'none', width: 40, height: 40, boxSizing: 'border-box', border: '1px solid var(--link)', color: 'var(--link)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Icon name="arrow-right" size={18} />
-                  </span>
-                </a>
-              ))}
-            </div>
+            ))}
           </div>
         </div>
       </section>

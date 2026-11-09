@@ -1,5 +1,5 @@
 'use client'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BenefitItem, Button, Icon, NewsCard, SectionMarker } from '@/ds'
 import { css } from '@/site/css'
 import { useSite } from '@/site/SiteProvider'
@@ -58,8 +58,13 @@ const COVER = {
   travel: ['სამედიცინო ხარჯები', 'გადაუდებელი ჰოსპიტალიზაცია', 'გადაუდებელი ამბულატორია', 'სამედიცინო ტრანსპორტირება', 'ბარგის დაგვიანება / დაკარგვა', 'რეისის გადადება'],
 }
 
-export function Home({ slides, banners, offers, news }: Props) {
-  const { t, L, P } = useSite()
+export function Home({ slides: allSlides, banners: allBanners, offers: allOffers, news }: Props) {
+  const { t, L, P, settings } = useSite()
+  // offers switched off in the admin: no offers section, and no banner that leads to them
+  const toOffers = (b: BannerVM) => !settings.offersOn && b.href.startsWith('/offers')
+  const offers = settings.offersOn ? allOffers : []
+  const slides = useMemo(() => { const s = allSlides.filter((b) => !toOffers(b)); return s.length ? s : allSlides }, [allSlides, settings.offersOn]) // eslint-disable-line react-hooks/exhaustive-deps
+  const banners = useMemo(() => allBanners.filter((b) => !toOffers(b)), [allBanners, settings.offersOn]) // eslint-disable-line react-hooks/exhaustive-deps
   const reduce = useRef(false)
   const n = Math.max(1, slides.length)
 
@@ -372,12 +377,12 @@ export function Home({ slides, banners, offers, news }: Props) {
         </section>
       ) : null}
 
-      {/* 04 News */}
+      {/* 04 News (03 when offers are hidden) */}
       {news.length ? (
         <section style={{ background: 'var(--bg)', padding: '80px 0' }}>
           <div style={wrap}>
             <div data-reveal="up" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 24, flexWrap: 'wrap' }}>
-              <SectionMarker number={4} title={t('სიახლეები')} />
+              <SectionMarker number={offers.length ? 4 : 3} title={t('სიახლეები')} />
               <Button variant="secondary" iconRight="arrow-right" href={L('/news')}>
                 {t('ყველა სიახლე')}
               </Button>

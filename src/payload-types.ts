@@ -1129,6 +1129,10 @@ export interface Setting {
    * თუ ცარიელია, პორტალის მთავარი გვერდი გაიხსნება.
    */
   portalClaimUrl?: string | null;
+  /**
+   * როცა გამორთულია, საიტზე შეთავაზებები არსად ჩანს: მენიუში, ფუტერში, მთავარ გვერდზე, პროდუქტის გვერდებზე. /offers გვერდი არ იხსნება. ჩართვის შემდეგაც შეთავაზებები მხოლოდ მაშინ ჩანს, თუ ერთი მაინც მოქმედია.
+   */
+  offersOn?: boolean | null;
   facebook?: string | null;
   foundedYear?: string | null;
   clients?: string | null;
@@ -1172,6 +1176,7 @@ export interface SettingsSelect<T extends boolean = true> {
   serviceMapUrl?: T;
   portalUrl?: T;
   portalClaimUrl?: T;
+  offersOn?: T;
   facebook?: T;
   foundedYear?: T;
   clients?: T;

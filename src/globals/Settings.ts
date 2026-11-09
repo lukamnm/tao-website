@@ -95,6 +95,12 @@ export const Settings: GlobalConfig = {
           ],
         },
         {
+          label: 'შეთავაზებები',
+          fields: [
+            { name: 'offersOn', type: 'checkbox', label: 'შეთავაზებები საიტზე ჩანს', defaultValue: false, admin: { description: 'როცა გამორთულია, საიტზე შეთავაზებები არსად ჩანს: მენიუში, ფუტერში, მთავარ გვერდზე, პროდუქტის გვერდებზე. /offers გვერდი არ იხსნება. ჩართვის შემდეგაც შეთავაზებები მხოლოდ მაშინ ჩანს, თუ ერთი მაინც მოქმედია.' } },
+          ],
+        },
+        {
           label: 'Facebook',
           fields: [{ name: 'facebook', type: 'text', label: 'Facebook-ის გვერდი', admin: { placeholder: 'https://facebook.com/...' } }],
         },

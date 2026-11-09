@@ -5,11 +5,10 @@ import { useSite } from '@/site/SiteProvider'
 import { Breadcrumb, InfoHero } from './shared'
 
 const VALUES = [
-  { title: 'გასაგები პირობები', text: 'პოლისში ყველაფერი მარტივად წერია, ზედმეტი წვრილი შრიფტის გარეშე' },
-  { title: 'სწრაფი ანაზღაურება', text: 'მოქნილი სისტემა და მინიმუმ ბიუროკრატია' },
-  { title: 'შენზე მორგებული', text: 'პოლისს შენს საჭიროებებს ვუსადაგებთ, არც მეტს, არც ნაკლებს' },
-  { title: 'სანდოობა', text: 'სიტყვას ვასრულებთ: საჭირო დროს შენს გვერდით ვართ.' },
-  { title: 'მუდმივი განვითარება', text: 'ვუსმენთ მომხმარებელს და სერვისს ყოველდღე ვხვეწავთ' },
+  { title: 'ხელმისაწვდომობა', text: 'მრავალფეროვანი პროვაიდერების ფართო ქსელი და მომსახურების მიღების მოსახერხებელი შესაძლებლობები.' },
+  { title: 'სამართლიანობა', text: 'გამჭვირვალე პირობები, ობიექტური გადაწყვეტილებები და თითოეული მომხმარებლის უფლებების პატივისცემა.' },
+  { title: 'ციფრული განვითარება', text: 'ონლაინ სერვისების მუდმივი გაუმჯობესება, ნაკლები პროცედურა და დაზღვევით სარგებლობის უფრო მარტივი გამოცდილება.' },
+  { title: 'ზრუნვა', text: 'მომხმარებლის საჭიროებების კვლევა, ინდივიდუალური მიდგომა და მხარდაჭერა ყველა მნიშვნელოვან ეტაპზე.' },
 ]
 const PRODUCTS = [
   { title: 'ჯანმრთელობის დაზღვევა', text: 'ექიმი, კვლევები, სტაციონარი', href: '/health', image: '/img/hero-health-clinic.jpg', alt: 'ექიმი პაციენტს ესაუბრება კლინიკაში', pos: '78% 50%' },
@@ -23,6 +22,7 @@ const LINKS = [
 
 export function About() {
   const { t, L, settings } = useSite()
+  const links = settings.offersOn ? LINKS : LINKS.filter((l) => l.href !== '/offers')
   const stats = [
     { label: 'ბაზარზე', value: settings.stats.foundedYear, style: { background: 'var(--brand-black)', color: 'var(--on-primary)' } },
     { label: 'დაზღვეული მომხმარებელი', value: settings.stats.clients, style: { background: 'var(--surface)', color: 'var(--text)', border: '1px solid var(--border)' } },
@@ -122,7 +122,7 @@ export function About() {
             <SectionMarker number={3} title={t('გაიგე მეტი')} />
           </div>
           <div data-reveal="stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', borderTop: '1px solid var(--border)', borderLeft: '1px solid var(--border)' }}>
-            {LINKS.map((l) => (
+            {links.map((l) => (
               <a key={l.href} href={L(l.href)} className="tao-coveritem" style={{ boxSizing: 'border-box', padding: '32px 28px 36px', borderRight: '1px solid var(--border)', borderBottom: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: 16, minHeight: 240, color: 'var(--text)', textDecoration: 'none' }}>
                 <span className="tao-coveritem__icon" style={{ width: 52, height: 52, boxSizing: 'border-box', border: '1px solid var(--link)', color: 'var(--link)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Icon name={l.icon} size={22} />

@@ -36,6 +36,7 @@ const FLOATING = {
 
 export function Header() {
   const { t, L, P, locale, settings } = useSite()
+  const nav = settings.offersOn ? NAV : NAV.filter((n) => n.href !== '/offers')
   const pathname = usePathname()
   const router = useRouter()
   const [docked, setDocked] = useState(false)
@@ -149,7 +150,7 @@ export function Header() {
               </div>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid var(--text)' }}>
-              {NAV.map((n) => (
+              {nav.map((n) => (
                 <a key={n.href} href={L(n.href)} className="tao-mrow" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '18px 4px', borderBottom: '1px solid var(--border)', color: 'var(--text)', textDecoration: 'none' }}>
                   <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                     <span className="tao-caps" style={{ fontSize: 17, fontWeight: 500, letterSpacing: '0.04em' }}>{t(n.label)}</span>
@@ -211,7 +212,7 @@ export function Header() {
                     </div>
                   </div>
                 </li>
-                {NAV.map((n) => (
+                {nav.map((n) => (
                   <li key={n.href}>
                     <a href={L(n.href)} aria-current={isActive(n.href) ? 'page' : undefined} className="tao-caps tao-fl-link" style={linkStyle(isActive(n.href))}>
                       {t(n.label)}

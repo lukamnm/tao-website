@@ -2,7 +2,7 @@ import React from 'react'
 import type { Metadata } from 'next'
 import { isLocale, makeT, type Locale } from '@/i18n'
 import { notFound } from 'next/navigation'
-import { getOffer, getOffers } from '@/lib/content'
+import { getOffer, getOffers, getSettings } from '@/lib/content'
 import { OfferDetail } from '@/views/OfferDetail'
 
 export const revalidate = 60
@@ -10,9 +10,9 @@ export const revalidate = 60
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }): Promise<Metadata> {
   const { locale: l, slug } = await params
   const locale = (isLocale(l) ? l : 'ka') as Locale
-  const o = await getOffer(locale, slug)
+  const [o, { offersOn }] = await Promise.all([getOffer(locale, slug), getSettings(locale)])
   if (!o) return {}
-  return { title: o.title, description: o.text, openGraph: { images: o.image ? [o.image] : undefined }, alternates: { languages: { ka: o.href, en: '/en' + o.href } } }
+  return { title: o.title, description: o.text, openGraph: { images: o.image ? [o.image] : undefined }, alternates: { languages: { ka: o.href, en: '/en' + o.href } }, ...(offersOn ? {} : { robots: { index: false } }) }
 }
 
 export default async function Page({ params }: { params: Promise<{ locale: string; slug: string }> }) {

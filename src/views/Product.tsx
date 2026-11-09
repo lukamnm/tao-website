@@ -210,12 +210,14 @@ export const PROPERTY: ProductConfig = {
 const WRAP: React.CSSProperties = { boxSizing: 'border-box', maxWidth: 1280, margin: '0 auto', padding: '0 24px', display: 'flex', flexDirection: 'column', gap: 48 }
 const NUM: React.CSSProperties = { flex: 'none', width: 32, height: 32, boxSizing: 'border-box', border: '1px solid var(--link)', color: 'var(--link)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 500, fontSize: 14 }
 
-export function Product({ cfg, offers = [] }: { cfg: ProductConfig; offers?: OfferVM[] }) {
-  const { t, L } = useSite()
+export function Product({ cfg, offers: allOffers = [] }: { cfg: ProductConfig; offers?: OfferVM[] }) {
+  const { t, L, settings } = useSite()
+  const offers = settings.offersOn ? allOffers : []
   const [faqOpen, setFaqOpen] = useState(0)
   let n = 0
   const next = () => ++n
-  // a white section 02 (schemes, area, types) puts the FAQ on white too; otherwise the FAQ takes the grey ground
+  // a white section 02 (schemes, area, types) puts the FAQ on white too; so does a hidden offers section
+  // (the grey "covered" section is then right above it); otherwise the FAQ takes the grey ground
   const plainFaq = !!(cfg.schemes || cfg.area || cfg.types)
 
   return (
@@ -398,7 +400,7 @@ export function Product({ cfg, offers = [] }: { cfg: ProductConfig; offers?: Off
       ) : null}
 
       {/* FAQ: question list only, full width (no number) */}
-      <section id="faq" style={{ background: plainFaq ? undefined : 'var(--bg)', padding: '96px 0' }}>
+      <section id="faq" style={{ background: plainFaq || !offers.length ? undefined : 'var(--bg)', padding: '96px 0' }}>
         <div style={{ boxSizing: 'border-box', maxWidth: 1280, margin: '0 auto', padding: '0 24px', display: 'flex', flexWrap: 'wrap', gap: 48 }}>
           <div data-reveal="up" style={{ flex: '1 1 100%', minWidth: 0 }}>
             <div className="tao-faq" style={{ borderTop: '1px solid var(--text)' }}>

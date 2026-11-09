@@ -11,7 +11,8 @@ const LINKS = [
 ]
 
 export function NotFound() {
-  const { t, L } = useSite()
+  const { t, L, settings } = useSite()
+  const links = settings.offersOn ? LINKS : LINKS.filter((l) => l.href !== '/offers')
   return (
     <>
       <section data-hero="" className="tao-canvas" style={{ margin: 4, borderRadius: 5, overflow: 'hidden', color: 'var(--on-primary)' }}>
@@ -32,8 +33,8 @@ export function NotFound() {
           <div data-reveal="up">
             <SectionMarker number={1} title={t('შეიძლება ეძებდი')} />
           </div>
-          <div data-reveal="stagger" className="tao-nfgrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 8 }}>
-            {LINKS.map((l) => (
+          <div data-reveal="stagger" className="tao-nfgrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 8 }}>
+            {links.map((l) => (
               <a key={l.href} href={L(l.href)} className="tao-nflink" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: 20, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 5, color: 'var(--text)', textDecoration: 'none' }}>
                 <span className="tao-nflink__ic" style={{ flex: 'none', width: 44, height: 44, boxSizing: 'border-box', border: '1px solid var(--link)', color: 'var(--link)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Icon name={l.icon} size={22} />
