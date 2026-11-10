@@ -2,7 +2,7 @@
 import React, { useMemo, useState } from 'react'
 import { Icon } from '@/ds'
 import { useSite } from '@/site/SiteProvider'
-import { InfoPage, InfoSection, KeyValue, Notice, DocList } from './info'
+import { InfoPage, InfoSection, Notice } from './info'
 import type { DocumentVM } from '@/lib/content'
 
 const TYPES = [
@@ -15,7 +15,8 @@ const PER = 8
 
 export function Legal({ docs, updated }: { docs: DocumentVM[]; updated: string }) {
   const { t, settings, locale } = useSite()
-  const corporate = docs.filter((d) => d.type === 'other')
+  // design v7: the legal page is the policy-wordings library only; corporate documents (type "other") are
+  // listed on "Other information" > სხვა დოკუმენტები
   const library = docs.filter((d) => d.type !== 'other')
   const [q, setQ] = useState('')
   const [prod, setProd] = useState('all')
@@ -42,23 +43,7 @@ export function Legal({ docs, updated }: { docs: DocumentVM[]; updated: string }
 
   return (
     <InfoPage current="/legal" title="იურიდიული ინფორმაცია" lead="კომპანიის რეკვიზიტები, ლიცენზია, დაზღვევის პირობები და კორპორატიული დოკუმენტები" updated={updated}>
-      <InfoSection id="company" number={1} title="კომპანიის რეკვიზიტები">
-        <KeyValue
-          rows={[
-            { k: 'დასახელება', v: t('სს „სადაზღვევო კომპანია ტაო“') },
-            { k: 'საიდენტიფიკაციო კოდი', v: t('[საიდენტიფიკაციო კოდი]') },
-            { k: 'იურიდიული მისამართი', v: t('საქართველო, თბილისი, ვაკის რაიონი, ანა პოლიტკოვსკაიას ქ. 16') },
-            { k: 'სადაზღვევო ლიცენზია', v: t('[ლიცენზიის ნომერი], გაცემული [თარიღი]') },
-            { k: 'ზედამხედველი ორგანო', v: t('საქართველოს სადაზღვევო სახელმწიფო ზედამხედველობის სამსახური') },
-            { k: 'საქმიანობის სფერო', v: t('ჯანმრთელობის და სამოგზაურო დაზღვევა') },
-            { k: 'ელფოსტა', v: <a href={'mailto:' + settings.email} style={{ color: 'var(--link)' }}>{settings.email}</a> },
-          ]}
-        />
-      </InfoSection>
-      <InfoSection id="corporate" number={2} title="კორპორატიული დოკუმენტები">
-        <DocList docs={corporate} emptyText="დოკუმენტები მალე დაემატება." />
-      </InfoSection>
-      <InfoSection id="wordings" number={3} title="დაზღვევის პირობები" text="ყველა პროდუქტის დაზღვევის პირობები და დოკუმენტები - ახალიც და წინა ვერსიებიც">
+      <InfoSection id="wordings" number={1} title="დაზღვევის პირობები" text="ყველა პროდუქტის დაზღვევის პირობები და დოკუმენტები - ახალიც და წინა ვერსიებიც">
         <Notice>{t('პოლისზე ვრცელდება ის პირობები, რომლებიც მოქმედებდა პოლისის შეძენის ან ბოლო განახლების დღეს. ამიტომ აქ ინახება ყველა ვერსია. მოძებნე დოკუმენტი პოლისის თარიღის მიხედვით.')}</Notice>
         <div className="tao-dtools" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div className="tao-dtools__row" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 180px 180px', gap: 12 }}>

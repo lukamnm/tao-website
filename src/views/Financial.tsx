@@ -20,7 +20,7 @@ export function Financial({ docs, updated }: { docs: DocumentVM[]; updated: stri
 
   return (
     <InfoPage current="/financial" title="ფინანსური ინფორმაცია" lead="აუდიტირებული წლიური და კვარტალური ფინანსური ანგარიშგება" updated={updated}>
-      <InfoSection id="annual" number={1} title="წლიური ანგარიშგება" text="2009 წლიდან, დამოუკიდებელი აუდიტორის დასკვნით">
+      <InfoSection id="annual" number={1} title="წლიური ფინანსური მონაცემები" text="2009 წლიდან, დამოუკიდებელი აუდიტორის დასკვნით">
         {annual.length ? (
           <div style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid var(--border)' }}>
             {shown.map((d) => (
@@ -38,7 +38,7 @@ export function Financial({ docs, updated }: { docs: DocumentVM[]; updated: stri
           </div>
         ) : null}
       </InfoSection>
-      <InfoSection id="quarterly" number={2} title="კვარტალური ანგარიშგება">
+      <InfoSection id="quarterly" number={2} title="კვარტალური მონაცემები">
         {qYears.length ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
             {qYears.map((y) => (

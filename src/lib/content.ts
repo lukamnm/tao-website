@@ -361,7 +361,7 @@ export type DocumentVM = {
 
 const fmtSize = (bytes: number) => (bytes >= 1024 * 1024 ? (bytes / 1024 / 1024).toFixed(1) + ' MB' : Math.max(1, Math.round(bytes / 1024)) + ' KB')
 
-export async function getDocuments(locale: Locale, section: 'legal' | 'financial' | 'complaints'): Promise<DocumentVM[]> {
+export async function getDocuments(locale: Locale, section: 'legal' | 'financial' | 'complaints' | 'privacy' | 'other'): Promise<DocumentVM[]> {
   const payload = await getPayload()
   const res = await payload.find({ collection: 'documents', locale, fallbackLocale: 'ka', where: { section: { equals: section } }, sort: '-date', limit: 500, depth: 1 })
   return (res.docs as AnyDoc[]).map((d) => {

@@ -31,10 +31,10 @@ export function Contact() {
     { icon: 'location', label: 'სერვის ცენტრი (ჯანმრთელობის დაზღვევა)', lines: [{ text: t(settings.service.addressShort), href: serviceMap, external: true }] },
     { icon: 'global', label: 'ტაო დაზღვევის პორტალი', lines: [{ text: t('პოლისი და ანაზღაურება'), href: P('') }] },
   ]
-  // one card per hotline: health on black, corporate motor on TAO blue (design v6)
+  // one card per hotline: health on light blue, corporate motor on TAO blue (design v7)
   const hotlines = [
-    { label: 'ჯანმრთელობის დაზღვევა', text: 'ცხელ ხაზზე გეტყვიან, რა უნდა გააკეთო და რა დოკუმენტები დაგჭირდება. ჯანმრთელობის და სამოგზაურო პოლისზე ასისტანსის ნომერი პოლისშია მითითებული.', phone: settings.phone, href: 'tel:' + settings.phoneHref, email: settings.email, bg: 'var(--brand-black)', line: 'var(--grey-700)', muted: '#A8ADB3' },
-    { label: 'ავტომობილის კორპორატიული დაზღვევა', text: 'ცხელ ხაზზე გეტყვიან, რა უნდა გააკეთო და რა დოკუმენტები დაგჭირდება', phone: settings.car.phone, href: 'tel:' + settings.car.phoneHref, email: settings.car.email, bg: 'var(--primary)', line: 'var(--on-blue-line)', muted: 'var(--on-blue-muted)' },
+    { label: 'ჯანმრთელობის დაზღვევა', text: 'ცხელ ხაზზე გეტყვიან, რა უნდა გააკეთო და რა დოკუმენტები დაგჭირდება. ჯანმრთელობის და სამოგზაურო პოლისზე ასისტანსის ნომერი პოლისშია მითითებული.', phone: settings.phone, href: 'tel:' + settings.phoneHref, email: settings.email, card: { background: 'var(--primary-subtle)', border: '1px solid var(--primary-subtle-border)', color: 'var(--text)' }, icon: { border: '1px solid var(--link)', color: 'var(--link)' }, muted: 'var(--text-secondary)', strong: 'var(--link)', mail: 'var(--text)' },
+    { label: 'ავტომობილის კორპორატიული დაზღვევა', text: 'ცხელ ხაზზე გეტყვიან, რა უნდა გააკეთო და რა დოკუმენტები დაგჭირდება', phone: settings.car.phone, href: 'tel:' + settings.car.phoneHref, email: settings.car.email, card: { background: 'var(--primary)', color: 'var(--on-primary)' }, icon: { border: '1px solid var(--on-blue-line)' }, muted: 'var(--on-blue-muted)', strong: 'var(--on-primary)', mail: 'var(--on-primary)' },
   ]
 
   const card: React.CSSProperties = { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 5, padding: 28, display: 'flex', flexDirection: 'column', gap: 18 }
@@ -135,16 +135,16 @@ export function Contact() {
           </div>
           <div data-reveal="stagger" className="tao-cclaim" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 4 }}>
             {hotlines.map((h) => (
-              <div key={h.label} style={{ background: h.bg, color: 'var(--on-primary)', borderRadius: 5, padding: 40, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 18, minWidth: 0 }}>
-                <span style={{ width: 52, height: 52, boxSizing: 'border-box', border: '1px solid ' + h.line, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div key={h.label} style={{ ...h.card, borderRadius: 5, padding: 40, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 18, minWidth: 0 }}>
+                <span style={{ width: 52, height: 52, boxSizing: 'border-box', ...h.icon, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Icon name="24-support" size={22} />
                 </span>
                 <span className="tao-caps" style={{ fontSize: 12, fontWeight: 500, letterSpacing: '0.08em', color: h.muted }}>{t(h.label)}</span>
-                <h3 className="tao-h tao-h--h3" style={{ margin: 0, color: 'var(--on-primary)' }}>{t('პირველ რიგში, დაგვირეკე')}</h3>
+                <h3 className="tao-h tao-h--h3" style={{ margin: 0, color: h.strong }}>{t('პირველ რიგში, დაგვირეკე')}</h3>
                 <p style={{ margin: 0, maxWidth: 460, color: h.muted }}>{t(h.text)}</p>
                 <div style={{ marginTop: 'auto', paddingTop: 8, display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  <a href={h.href} className="tao-flink tao-cphone" style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 40, lineHeight: 1, color: 'var(--on-primary)', textDecoration: 'none', whiteSpace: 'nowrap' }}>{h.phone}</a>
-                  <a href={'mailto:' + h.email} className="tao-flink" style={{ fontSize: 17, fontWeight: 500, color: 'var(--on-primary)', textDecoration: 'none' }}>{h.email}</a>
+                  <a href={h.href} className="tao-flink tao-cphone" style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 40, lineHeight: 1, color: h.strong, textDecoration: 'none', whiteSpace: 'nowrap' }}>{h.phone}</a>
+                  <a href={'mailto:' + h.email} className="tao-flink" style={{ fontSize: 17, fontWeight: 500, color: h.mail, textDecoration: 'none' }}>{h.email}</a>
                 </div>
               </div>
             ))}

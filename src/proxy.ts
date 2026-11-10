@@ -4,8 +4,8 @@ import { NextResponse, type NextRequest } from 'next/server'
    1. URL scheme: Georgian at "/", English at "/en/...". Internally every public page lives under
       /[locale]/..., so "/health" is rewritten to "/ka/health" and "/en/health" stays as is.
    2. /account/* is guarded by the Neon Auth session (visitor accounts, set up by the Neon session).
-   3. Retired pages: /privacy, /terms and /complaints (and /en/...) were merged into /other, one tab each;
-      they get a permanent redirect to the matching tab hash (the fragment is kept in the Location header). */
+   3. Retired pages: /privacy, /terms and /complaints (and /en/...) were merged into /other; they get a
+      permanent redirect to the matching list there (the fragment is kept in the Location header). */
 const PUBLIC_FILE = /\.[a-zA-Z0-9]+$/
 const MOVED = /^(\/en)?\/(privacy|terms|complaints)\/?$/
 

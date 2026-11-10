@@ -523,7 +523,7 @@ export interface Banner {
   createdAt: string;
 }
 /**
- * PDF ფაილები: დაზღვევის პირობები, ფორმები და ფინანსური ანგარიშგება. ჩანს იურიდიული და ფინანსური ინფორმაციის გვერდებზე.
+ * PDF ფაილები: დაზღვევის პირობები, ფორმები, ფინანსური მონაცემები, კონფიდენციალურობის პოლიტიკა და სხვა. ჩანს იურიდიული, ფინანსური და სხვა ინფორმაციის გვერდებზე.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "documents".
@@ -531,7 +531,7 @@ export interface Banner {
 export interface Document {
   id: number;
   title: string;
-  section: 'legal' | 'financial' | 'complaints';
+  section: 'legal' | 'financial' | 'privacy' | 'complaints' | 'other';
   docType: 'terms' | 'sheet' | 'sample' | 'other' | 'annual' | 'quarterly';
   /**
    * ცარიელი = ზოგადი დოკუმენტი

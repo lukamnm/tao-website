@@ -57,7 +57,8 @@ export function About() {
           </div>
         </div>
       </section>
-      {/* Numbers */}
+      {/* Numbers: hidden while any figure is still a placeholder like "[N]+" (admin: საიტის პარამეტრები > ციფრები) */}
+      {stats.every((s) => s.value && !s.value.includes('[')) ? (
       <section style={{ padding: '0 0 4px' }}>
         <div data-reveal="stagger" className="tao-abstats" style={{ margin: '0 4px', display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 4 }}>
           {stats.map((s) => (
@@ -68,6 +69,7 @@ export function About() {
           ))}
         </div>
       </section>
+      ) : null}
       {/* Values */}
       <section style={{ padding: '96px 0' }}>
         <div className="tao-abwho" style={{ boxSizing: 'border-box', maxWidth: 1280, margin: '0 auto', padding: '0 24px', display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 2fr)', gap: 96, alignItems: 'start' }}>
