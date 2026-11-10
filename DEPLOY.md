@@ -88,7 +88,9 @@ Pushing to GitHub still deploys the Vercel copy (on Neon) as before; the two dat
 ### Maintenance page (until launch)
 
 taoinsurance.ge points to the server since 2026-11-10, but the site is not launched yet. Caddy shows visitors
-`scripts/maintenance/index.html` (copied to `/srv/maintenance/index.html`, HTTP 503 so search engines wait).
+`scripts/maintenance/index.html`: the first-view loader (white ტ on TAO blue) on a loop. On the server it is
+`/srv/maintenance/index.html` (HTTP 503 so search engines wait), next to `lottie_svg.min.js` (from
+node_modules/lottie-web) and `tao-loader-symbol.json` (from public/lottie), served at `/maintenance/...`.
 The team opens the private preview link once (`/preview-<token>`, the token is in `/etc/caddy/Caddyfile`); a cookie
 then shows that browser the real site for 30 days. `/admin`, `/api`, `/_next`, `/fonts` and `/logo` always pass.
 
