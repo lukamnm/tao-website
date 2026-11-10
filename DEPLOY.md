@@ -85,6 +85,16 @@ Pushing to GitHub still deploys the Vercel copy (on Neon) as before; the two dat
 3. In `app.env` set `NEXT_PUBLIC_SITE_URL=https://taoinsurance.ge` and `NEXT_PUBLIC_INDEXABLE=1`, then deploy
    again (NEXT_PUBLIC values are fixed at build time).
 
+### Maintenance page (until launch)
+
+taoinsurance.ge points to the server since 2026-11-10, but the site is not launched yet. Caddy shows visitors
+`scripts/maintenance/index.html` (copied to `/srv/maintenance/index.html`, HTTP 503 so search engines wait).
+The team opens the private preview link once (`/preview-<token>`, the token is in `/etc/caddy/Caddyfile`); a cookie
+then shows that browser the real site for 30 days. `/admin`, `/api`, `/_next`, `/fonts` and `/logo` always pass.
+
+To launch: delete the block between `# MAINTENANCE` and `# END MAINTENANCE` in `/etc/caddy/Caddyfile`, then
+`sudo systemctl reload caddy`. To change the page: edit `scripts/maintenance/index.html` and copy it to the server again.
+
 ### Neon-only extras
 
 Visitor accounts (`/auth`, `/account`), Neon Realtime and the AI gateway (`/neon-status`, `/api/neon/*`) need
