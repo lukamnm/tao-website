@@ -14,7 +14,8 @@ export const Documents: CollectionConfig = {
   },
   access: { read: () => true },
   hooks: contentHooks,
-  upload: { mimeTypes: ['application/pdf', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'] },
+  // old .xls files are detected as application/x-cfb (the OLE container format), so that type is allowed too
+  upload: { mimeTypes: ['application/pdf', 'application/vnd.ms-excel', 'application/x-cfb', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'] },
   defaultSort: '-date',
   fields: [
     { name: 'title', type: 'text', label: 'დოკუმენტის სახელი', required: true, localized: true, admin: { placeholder: 'მაგ: სამოგზაურო დაზღვევის პირობები' } },
