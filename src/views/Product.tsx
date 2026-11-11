@@ -153,15 +153,15 @@ export const CAR: ProductConfig = {
   faq: BUSINESS_FAQ,
 }
 
-/* The design's hero photo is a blob ("თანამედროვე ოფისი თბილისში"); the closest existing image is the About office photo. */
+/* Hero photo generated with Nano Banana 2 (a shop owner by her blue storefront in Old Tbilisi). */
 export const PROPERTY: ProductConfig = {
   product: 'property',
   title: ['ქონების', 'კორპორატიული', 'დაზღვევა'],
   titleSize: 'min(64px, 4.4vw)',
   lead: 'ქონების დაზღვევა დაგეხმარებათ დაიცვათ თქვენი ბიზნესის კუთვნილი ქონება და უზრუნველყოფს თქვენს ფინანსურ სტაბილურობას',
-  image: '/img/about-team-office.jpg',
-  imageAlt: 'თანამედროვე ოფისი თბილისში',
-  imagePos: '70% 50%',
+  image: '/img/hero-property-shop.jpg',
+  imageAlt: 'მაღაზიის მფლობელი თავისი მაღაზიის შესასვლელთან ძველ თბილისში',
+  imagePos: '74% 50%',
   coversTitle: 'ბიზნეს ქონება ფარავს:',
   coversCols: 5,
   coverMinHeight: 200,
