@@ -25,6 +25,8 @@ export function Legal({ docs, updated }: { docs: DocumentVM[]; updated: string }
   const [sort, setSort] = useState('new')
   const [page, setPage] = useState(1)
 
+  // type pills with no documents at all are hidden ("ყველა ტიპი" always stays)
+  const types = TYPES.filter((c) => c.id === 'all' || library.some((d) => d.type === c.id))
   const prods = useMemo(() => [{ id: 'all', label: 'ყველა' }].concat(settings.products.filter((p) => library.some((d) => d.product === p.key)).map((p) => ({ id: p.key, label: p.short }))), [settings.products, library])
   const years = useMemo(() => ['all'].concat(Array.from(new Set(library.map((d) => d.year))).sort().reverse()), [library])
   const query = q.trim().toLowerCase()
@@ -79,7 +81,7 @@ export function Legal({ docs, updated }: { docs: DocumentVM[]; updated: string }
               ))}
             </div>
             <div role="radiogroup" aria-label={t('დოკუმენტის ტიპი')} style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-              {TYPES.map((c) => (
+              {types.map((c) => (
                 <button key={c.id} type="button" role="radio" aria-checked={type === c.id} onClick={() => set(() => setType(c.id))} className={'tao-dchip' + (type === c.id ? ' is-on' : '')} style={chip(type === c.id)}>
                   {t(c.label)}
                   <span className="tao-dchip__n" style={{ fontSize: 12, color: 'var(--text-muted)' }}>{library.filter((d) => match(d, 'type') && (c.id === 'all' || d.type === c.id)).length}</span>
