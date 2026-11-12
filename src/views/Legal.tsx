@@ -6,7 +6,7 @@ import { InfoPage, InfoSection, Notice } from './info'
 import type { DocumentVM } from '@/lib/content'
 
 const TYPES = [
-  { id: 'all', label: 'ყველა ტიპი' },
+  { id: 'all', label: 'ყველა დოკუმენტი' },
   { id: 'terms', label: 'დაზღვევის პირობები' },
   { id: 'sheet', label: 'საინფორმაციო ფურცელი' },
   { id: 'sample', label: 'ნიმუშები და ფორმები' },
@@ -25,9 +25,9 @@ export function Legal({ docs, updated }: { docs: DocumentVM[]; updated: string }
   const [sort, setSort] = useState('new')
   const [page, setPage] = useState(1)
 
-  // type pills with no documents at all are hidden ("ყველა ტიპი" always stays)
+  // type pills with no documents at all are hidden ("ყველა დოკუმენტი" always stays)
   const types = TYPES.filter((c) => c.id === 'all' || library.some((d) => d.type === c.id))
-  const prods = useMemo(() => [{ id: 'all', label: 'ყველა' }].concat(settings.products.filter((p) => library.some((d) => d.product === p.key)).map((p) => ({ id: p.key, label: p.short }))), [settings.products, library])
+  const prods = useMemo(() => [{ id: 'all', label: 'ყველა პროდუქტი' }].concat(settings.products.filter((p) => library.some((d) => d.product === p.key)).map((p) => ({ id: p.key, label: p.short }))), [settings.products, library])
   const years = useMemo(() => ['all'].concat(Array.from(new Set(library.map((d) => d.year))).sort().reverse()), [library])
   const query = q.trim().toLowerCase()
   const match = (d: DocumentVM, skip?: string) =>
