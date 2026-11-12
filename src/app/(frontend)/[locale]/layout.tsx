@@ -21,7 +21,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     metadataBase: new URL(base),
     title: { default: s.siteName, template: `%s · ${s.siteName}` },
     description: s.siteDescription,
-    openGraph: { siteName: s.siteName, locale: locale === 'en' ? 'en_GB' : 'ka_GE', type: 'website', images: s.ogImage ? [s.ogImage] : undefined },
+    // share image: Settings > გაზიარების ფოტო, else the default logo card (public/og-image.png, 1200x630)
+    openGraph: { siteName: s.siteName, locale: locale === 'en' ? 'en_GB' : 'ka_GE', type: 'website', images: [s.ogImage || { url: '/og-image.png', width: 1200, height: 630, alt: s.siteName }] },
+    twitter: { card: 'summary_large_image' },
     icons: { icon: [{ url: '/favicon.ico' }, { url: '/icon-512.png', sizes: '512x512', type: 'image/png' }], apple: '/apple-touch-icon.png' },
   }
 }

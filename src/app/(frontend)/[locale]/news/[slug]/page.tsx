@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const locale = (isLocale(l) ? l : 'ka') as Locale
   const n = await getNewsItem(locale, slug)
   if (!n) return {}
-  return { title: n.title, description: n.excerpt, openGraph: { type: 'article', publishedTime: n.dateISO, images: n.image ? [n.image] : undefined }, alternates: { languages: { ka: n.href, en: '/en' + n.href } } }
+  return { title: n.title, description: n.excerpt, openGraph: { type: 'article', publishedTime: n.dateISO, images: [n.image || '/og-image.png'] }, alternates: { languages: { ka: n.href, en: '/en' + n.href } } }
 }
 
 export default async function Page({ params }: { params: Promise<{ locale: string; slug: string }> }) {

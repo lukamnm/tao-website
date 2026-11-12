@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const locale = (isLocale(l) ? l : 'ka') as Locale
   const [o, { offersOn }] = await Promise.all([getOffer(locale, slug), getSettings(locale)])
   if (!o) return {}
-  return { title: o.title, description: o.text, openGraph: { images: o.image ? [o.image] : undefined }, alternates: { languages: { ka: o.href, en: '/en' + o.href } }, ...(offersOn ? {} : { robots: { index: false } }) }
+  return { title: o.title, description: o.text, openGraph: { images: [o.image || '/og-image.png'] }, alternates: { languages: { ka: o.href, en: '/en' + o.href } }, ...(offersOn ? {} : { robots: { index: false } }) }
 }
 
 export default async function Page({ params }: { params: Promise<{ locale: string; slug: string }> }) {
