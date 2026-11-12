@@ -87,6 +87,11 @@ Pushing to GitHub still deploys the Vercel copy (on Neon) as before; the two dat
 
 ### Maintenance page (until launch)
 
+**Launched 2026-11-12:** the MAINTENANCE block was removed from /etc/caddy/Caddyfile (the version with it is kept as
+/etc/caddy/Caddyfile.bak-prelaunch-20261112). To close the site again, put that block back and `sudo systemctl reload caddy`.
+Old-site URLs (*_GEO.html, *_ENG.html, root-level PDFs/XLS) are redirected by src/proxy.ts and the legacy-file route.
+
+
 taoinsurance.ge points to the server since 2026-11-10, but the site is not launched yet. Caddy shows visitors
 `scripts/maintenance/index.html`: the first-view loader (white ტ on TAO blue) on a loop. On the server it is
 `/srv/maintenance/index.html` (HTTP 503 so search engines wait), next to `lottie_svg.min.js` (from
