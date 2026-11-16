@@ -209,7 +209,10 @@ export interface News {
    * 1-2 წინადადება. ჩანს სიახლეების სიაში.
    */
   excerpt: string;
-  image: number | Media;
+  /**
+   * მონახაზი (როცა "საიტზე ჩანს" მონიშნული არ არის) ფოტოს გარეშეც ინახება.
+   */
+  image?: (number | null) | Media;
   imagePosition?: string | null;
   /**
    * პირველი აბზაცი, დიდი შრიფტით.
@@ -373,7 +376,10 @@ export interface Offer {
    */
   value?: string | null;
   note?: string | null;
-  image: number | Media;
+  /**
+   * მონახაზი (როცა "საიტზე ჩანს" მონიშნული არ არის) ფოტოს გარეშეც ინახება.
+   */
+  image?: (number | null) | Media;
   imagePosition?: string | null;
   from: string;
   /**
@@ -426,6 +432,10 @@ export interface Offer {
         id?: string | null;
       }[]
     | null;
+  /**
+   * მოხსენი მონიშვნა, თუ ჯერ არ გინდა გამოქვეყნება (მონახაზი).
+   */
+  published?: boolean | null;
   /**
    * ივსება ავტომატურად სათაურიდან. მაგ: taoinsurance.ge/offers/travel-15
    */
@@ -484,7 +494,10 @@ export interface Banner {
    * 1 წინადადება
    */
   text?: string | null;
-  image: number | Media;
+  /**
+   * მონახაზი (როცა "საიტზე ჩანს" მონიშნული არ არის) ფოტოს გარეშეც ინახება.
+   */
+  image?: (number | null) | Media;
   imagePosition?: string | null;
   actionLabel?: string | null;
   link?: {
@@ -828,6 +841,7 @@ export interface OffersSelect<T extends boolean = true> {
         text?: T;
         id?: T;
       };
+  published?: T;
   slug?: T;
   featured?: T;
   pct?: T;

@@ -32,7 +32,7 @@ export const Banners: CollectionConfig = {
     },
     { name: 'title', type: 'text', label: 'სათაური', required: true, localized: true, admin: { description: 'პრომო-ბანერზე საიტზე არ ჩანს: მხოლოდ სიაში გეხმარება მის პოვნაში.' } },
     { name: 'text', type: 'textarea', label: 'ტექსტი', localized: true, admin: { description: '1 წინადადება', condition: (d) => d?.placement !== 'promo' } },
-    ...imageFields({ label: 'ფოტო' }),
+    ...imageFields({ label: 'ფოტო', requiredWhen: 'active' }),
     { name: 'actionLabel', type: 'text', label: 'ღილაკის ტექსტი', localized: true, defaultValue: 'გაიგე მეტი', admin: { condition: (d) => d?.placement !== 'promo' } },
     linkField(),
     { name: 'active', type: 'checkbox', label: 'საიტზე ჩანს', defaultValue: true, admin: { components: { Cell: '/components/admin/YesNoCell#YesNoCell' }, position: 'sidebar' } },

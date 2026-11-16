@@ -1,8 +1,20 @@
 import type { Field } from 'payload'
 
-/** Photo + the point that must always stay visible when the photo is cropped (picked by clicking the photo). */
-export const imageFields = (opts: { required?: boolean; label?: string } = {}): Field[] => [
-  { name: 'image', type: 'upload', relationTo: 'media', label: opts.label || 'ფოტო', required: opts.required ?? true },
+/** Photo + the point that must always stay visible when the photo is cropped (picked by clicking the photo).
+    requiredWhen = the name of the "visible on the site" checkbox: the photo is needed only once that box is ticked,
+    so a hidden draft can be saved with text only. */
+export const imageFields = (opts: { required?: boolean; label?: string; requiredWhen?: string } = {}): Field[] => [
+  opts.requiredWhen
+    ? {
+        name: 'image',
+        type: 'upload',
+        relationTo: 'media',
+        label: opts.label || 'ფოტო',
+        validate: (value: unknown, { data }: { data: Record<string, unknown> }) =>
+          value || !data?.[opts.requiredWhen!] ? true : 'ფოტო სავალდებულოა, როცა "საიტზე ჩანს" მონიშნულია. ატვირთე ფოტო ან შეინახე მონახაზად (მოხსენი "საიტზე ჩანს").',
+        admin: { description: 'მონახაზი (როცა "საიტზე ჩანს" მონიშნული არ არის) ფოტოს გარეშეც ინახება.' },
+      }
+    : { name: 'image', type: 'upload', relationTo: 'media', label: opts.label || 'ფოტო', required: opts.required ?? true },
   {
     name: 'imagePosition',
     type: 'text',

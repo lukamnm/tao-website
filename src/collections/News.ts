@@ -35,7 +35,7 @@ export const News: CollectionConfig = {
               ],
             },
             { name: 'excerpt', type: 'textarea', label: 'მოკლე აღწერა', required: true, localized: true, admin: { description: '1-2 წინადადება. ჩანს სიახლეების სიაში.' } },
-            ...imageFields(),
+            ...imageFields({ requiredWhen: 'published' }),
           ],
         },
         {

@@ -126,10 +126,10 @@ export const getSettings = cache(async (locale: Locale): Promise<SiteSettings> =
   }
 })
 
-/** Offers still running today (or with no end date). */
+/** Published offers still running today (or with no end date). */
 function activeOffer(): AnyDoc {
   const today = new Date().toISOString().slice(0, 10)
-  return { or: [{ unlimited: { equals: true } }, { until: { greater_than_equal: today } }] }
+  return { and: [{ published: { not_equals: false } }, { or: [{ unlimited: { equals: true } }, { until: { greater_than_equal: today } }] }] }
 }
 
 /* ---------- Banners ---------- */

@@ -11,7 +11,7 @@ export const Offers: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     group: 'კონტენტი',
-    defaultColumns: ['title', 'product', 'until', 'unlimited', 'featured'],
+    defaultColumns: ['title', 'product', 'until', 'unlimited', 'featured', 'published'],
     listSearchableFields: ['title'],
     description: 'აქციები, ფასდაკლებები და პარტნიორების შეთავაზებები. ვადაგასული შეთავაზება საიტზე ავტომატურად ქრება.',
     preview: (doc, { locale }) => previewUrl(`/offers/${doc.slug}`, locale),
@@ -61,7 +61,7 @@ export const Offers: CollectionConfig = {
                 { name: 'note', type: 'text', label: 'ფასდაკლების ახსნა', localized: true, admin: { width: '65%', placeholder: 'მაგ: ოჯახის ყველა წევრი ერთ პოლისში' } },
               ],
             },
-            ...imageFields(),
+            ...imageFields({ requiredWhen: 'published' }),
             {
               type: 'row',
               fields: [
@@ -112,6 +112,7 @@ export const Offers: CollectionConfig = {
         },
       ],
     },
+    { name: 'published', type: 'checkbox', label: 'საიტზე ჩანს', defaultValue: true, admin: { components: { Cell: '/components/admin/YesNoCell#YesNoCell' }, position: 'sidebar', description: 'მოხსენი მონიშვნა, თუ ჯერ არ გინდა გამოქვეყნება (მონახაზი).' } },
     slugField(),
     { name: 'featured', type: 'checkbox', label: 'მთავარ გვერდზე ჩვენება', defaultValue: false, admin: { components: { Cell: '/components/admin/YesNoCell#YesNoCell' }, position: 'sidebar', description: 'მთავარ გვერდზე ჩანს 3 მონიშნული შეთავაზება.' } },
     { name: 'pct', type: 'number', defaultValue: 0, admin: { hidden: true } },
