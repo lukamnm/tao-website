@@ -130,7 +130,7 @@ export function Header() {
       {menuOpen ? (
         <div className="tao-mmenu" role="dialog" aria-modal="true" aria-label={t('მენიუ')} style={{ position: 'fixed', inset: 0, zIndex: 3000, background: 'var(--surface)', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
           <div style={{ flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '16px 24px', borderBottom: '1px solid var(--border)' }}>
-            <Logo variant="primary" height={32} href={L('/')} />
+            <Logo variant="primary" height={32} href={L('/')} lang={locale} />
             <button type="button" onClick={() => setMenuOpen(false)} aria-label={t('მენიუს დახურვა')} className="tao-mclose" style={{ width: 40, height: 40, border: '1px solid var(--primary-subtle-border)', borderRadius: 12, background: 'var(--surface)', color: 'var(--link)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
               <Icon name="close" size={22} />
             </button>
@@ -187,8 +187,8 @@ export function Header() {
             <a href={L('/')} className="tao-hlogo" aria-label={t('ტაო დაზღვევა - მთავარი გვერდი')} onMouseEnter={playLogo}>
               <span className={cx('tao-hlogo__sym tao-hlogo__sym--dark tao-hlogo--dark', ready.dark && 'is-ready')} aria-hidden="true" />
               <span className={cx('tao-hlogo__sym tao-hlogo__sym--light tao-hlogo--light', ready.light && 'is-ready')} aria-hidden="true" />
-              <img className="tao-hlogo__word tao-hlogo--dark" src="/logo/wordmark-dark.svg" alt="" />
-              <img className="tao-hlogo__word tao-hlogo--light" src="/logo/wordmark-light.svg" alt="" />
+              <img className="tao-hlogo__word tao-hlogo--dark" src={locale === 'en' ? '/logo/wordmark-dark-en.svg' : '/logo/wordmark-dark.svg'} alt="" />
+              <img className="tao-hlogo__word tao-hlogo--light" src={locale === 'en' ? '/logo/wordmark-light-en.svg' : '/logo/wordmark-light.svg'} alt="" />
             </a>
             <nav className="tao-segnav" aria-label={t('მთავარი მენიუ')} style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
               <ul style={{ display: 'flex', gap: 4, listStyle: 'none', margin: 0, padding: 0 }}>

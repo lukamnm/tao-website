@@ -41,7 +41,7 @@ export function Footer() {
   return (
     <footer className="tao-bento" data-reveal="up" style={{ margin: '4px 4px 0', display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 3fr)', gap: 4 }}>
       <div className="tao-bento__brand" style={{ borderRadius: 5, boxSizing: 'border-box', minWidth: 0, gridRow: 'span 2', background: 'var(--brand-black)', color: 'var(--on-primary)', padding: '48px 40px', display: 'flex', flexDirection: 'column', gap: 24 }}>
-        <Logo variant="whitetext" height={36} href="#top" />
+        <Logo variant="whitetext" height={36} href="#top" lang={locale} />
         <p style={{ margin: 0, fontSize: 16, color: '#A8ADB3' }}>{t('დაზღვევა, რომელიც მუშაობს')}</p>
         <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
           {addr('სერვის ცენტრი (ჯანმრთელობის დაზღვევა)', settings.service.address)}
@@ -112,7 +112,7 @@ export function Footer() {
       </nav>
       <div className="tao-bento__bottom" style={{ borderRadius: 5, boxSizing: 'border-box', minWidth: 0, gridColumn: '1 / -1', background: 'var(--brand-black)', color: '#A8ADB3', padding: '18px 40px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
         <p className="tao-caps" style={{ margin: 0, fontSize: 12, fontWeight: 500, letterSpacing: '0.08em' }}>
-          {locale === 'en' ? `© ${year} TAO Insurance Company. All rights reserved.` : `© ${year} სადაზღვევო კომპანია ტაო. ყველა უფლება დაცულია.`}
+          {locale === 'en' ? `© ${year} Insurance Company TAO JSC. All rights reserved.` : `© ${year} სადაზღვევო კომპანია ტაო. ყველა უფლება დაცულია.`}
         </p>
         <LanguageSwitch tone="onBlue" value={locale} onChange={onLang} />
         <a href="#top" className="tao-caps tao-flink" style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--on-primary)', textDecoration: 'none', fontSize: 12, fontWeight: 500, letterSpacing: '0.08em' }}>
