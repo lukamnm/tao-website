@@ -5,6 +5,13 @@ import { Icon } from './Icon'
 import { cx, pad } from '@/site/css'
 
 export { Icon } from './Icon'
+
+/** Link attributes for a document file: a PDF opens in a new tab (the browser's viewer has its own download button),
+    other files (.xls, .doc ...) can't be shown in the browser, so they download. */
+export function fileLinkProps(href?: string | null): React.AnchorHTMLAttributes<HTMLAnchorElement> {
+  if (!href || href === '#') return {}
+  return /\.pdf($|[?#])/i.test(href) ? { target: '_blank', rel: 'noopener' } : { download: '' }
+}
 export { Logo } from './Logo'
 
 type Any = Record<string, unknown>
@@ -163,7 +170,7 @@ export function DocumentRow({ title, fileType = 'PDF', size, date, href = '#', d
         <p className="tao-doc__title">{title}</p>
         <p className="tao-meta">{meta}</p>
       </div>
-      <a className="tao-btn tao-btn--secondary tao-btn--sm tao-doc__dl" href={href} download="" aria-label={downloadLabel + ': ' + title}>
+      <a className="tao-btn tao-btn--secondary tao-btn--sm tao-doc__dl" href={href} {...fileLinkProps(href)} aria-label={downloadLabel + ': ' + title}>
         <Icon name="document-download" size={20} />
         <span className="tao-btn__label">{downloadLabel}</span>
       </a>

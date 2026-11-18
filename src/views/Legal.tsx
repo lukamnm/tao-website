@@ -1,6 +1,6 @@
 'use client'
 import React, { useMemo, useState } from 'react'
-import { Icon } from '@/ds'
+import { Icon, fileLinkProps } from '@/ds'
 import { useSite } from '@/site/SiteProvider'
 import { InfoPage, InfoSection, Notice } from './info'
 import type { DocumentVM } from '@/lib/content'
@@ -106,7 +106,7 @@ export function Legal({ docs, updated }: { docs: DocumentVM[]; updated: string }
             <ul style={{ listStyle: 'none', margin: '-28px 0 0', padding: 0, display: 'flex', flexDirection: 'column' }}>
               {items.map((d) => (
                 <li key={d.id}>
-                  <a href={d.url || '#'} download="" className="tao-drow" style={{ display: 'grid', gridTemplateColumns: '132px minmax(0, 1fr) auto', alignItems: 'center', gap: 20, padding: '20px 8px', borderBottom: '1px solid var(--border)', color: 'var(--text)', textDecoration: 'none' }}>
+                  <a href={d.url || '#'} {...fileLinkProps(d.url)} className="tao-drow" style={{ display: 'grid', gridTemplateColumns: '132px minmax(0, 1fr) auto', alignItems: 'center', gap: 20, padding: '20px 8px', borderBottom: '1px solid var(--border)', color: 'var(--text)', textDecoration: 'none' }}>
                     <span className="tao-drow__date" style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                       <span style={{ fontSize: 15, fontWeight: 500 }}>{d.month}</span>
                       <span className="tao-caps" style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.08em', color: 'var(--text-muted)' }}>{t('გამოქვეყნდა')}</span>

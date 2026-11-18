@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import { Button, Icon } from '@/ds'
+import { Button, Icon, fileLinkProps } from '@/ds'
 import { useSite } from '@/site/SiteProvider'
 import { InfoPage, InfoSection, Notice, DocRow } from './info'
 import type { DocumentVM } from '@/lib/content'
@@ -47,7 +47,7 @@ export function Financial({ docs, updated }: { docs: DocumentVM[]; updated: stri
                 {['Q1', 'Q2', 'Q3', 'Q4'].map((q) => {
                   const d = quarterly.find((x) => x.year === y && x.quarter === q)
                   return d ? (
-                    <a key={q} href={d.url || '#'} download="" className="tao-iq" aria-label={qTitle(d)} style={{ height: 56, boxSizing: 'border-box', border: '1px solid var(--link)', color: 'var(--link)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: '0 14px', textDecoration: 'none', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18 }}>
+                    <a key={q} href={d.url || '#'} {...fileLinkProps(d.url)} className="tao-iq" aria-label={qTitle(d)} style={{ height: 56, boxSizing: 'border-box', border: '1px solid var(--link)', color: 'var(--link)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: '0 14px', textDecoration: 'none', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18 }}>
                       {q}
                       <Icon name="document-download" size={18} />
                     </a>

@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { Icon, SectionMarker } from '@/ds'
+import { Icon, SectionMarker, fileLinkProps } from '@/ds'
 import { useSite } from '@/site/SiteProvider'
 import { Breadcrumb } from './shared'
 import type { DocumentVM } from '@/lib/content'
@@ -119,11 +119,11 @@ export function KeyValue({ rows }: { rows: { k: string; v: React.ReactNode }[] }
   )
 }
 
-/** Document row with a download button (PDF). */
+/** Document row with a download button (a PDF opens in a new tab). */
 export function DocRow({ title, meta, href }: { title: string; meta: string; href: string }) {
   const { t } = useSite()
   return (
-    <a href={href || '#'} className="tao-docrow" download={href ? '' : undefined} style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '20px 8px', borderBottom: '1px solid var(--border)', color: 'var(--text)', textDecoration: 'none' }}>
+    <a href={href || '#'} className="tao-docrow" {...fileLinkProps(href)} style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '20px 8px', borderBottom: '1px solid var(--border)', color: 'var(--text)', textDecoration: 'none' }}>
       <span style={{ flex: 'none', width: 44, height: 44, boxSizing: 'border-box', border: '1px solid var(--link)', color: 'var(--link)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Icon name="document-text" size={22} />
       </span>
