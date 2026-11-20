@@ -8,6 +8,8 @@ import { NextResponse, type NextRequest } from 'next/server'
       permanent redirect to the matching list there (the fragment is kept in the Location header).
    4. Old-site URLs (before 2026-11): its .html pages redirect to the new pages; its root-level files
       (/<name>.pdf, .xls...) go to the legacy-file handler, which finds the imported copy in Documents.
+   4b. /legal-info/<document code>[/ge|/en] (the address printed on policies, e.g. /legal-info/TAO-R-TR-001-2026/ge)
+      goes to the legal-doc handler, which opens the document with that code.
    5. /neon-status (Neon test page) is closed in production unless ENABLE_NEON_STATUS=1. */
 const PUBLIC_FILE = /\.[a-zA-Z0-9]+$/
 const MOVED = /^(\/en)?\/(privacy|terms|complaints)\/?$/
@@ -20,6 +22,7 @@ const OLD_PAGES: Record<string, string> = {
   'property_geo.html': '/property', 'property_eng.html': '/en/property',
 }
 const OLD_FILE = /^\/([^/]+\.(pdf|xls|xlsx|doc|docx|rar|zip))$/i
+const LEGAL_INFO = /^\/legal-info\/([^/]+)(?:\/(ge|ka|en))?\/?$/i
 
 export default async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl
@@ -43,6 +46,13 @@ export default async function proxy(req: NextRequest) {
   if (oldFile) {
     const url = req.nextUrl.clone()
     url.pathname = '/legacy-file/' + oldFile[1]
+    return NextResponse.rewrite(url)
+  }
+  const legalInfo = LEGAL_INFO.exec(pathname)
+  if (legalInfo) {
+    const url = req.nextUrl.clone()
+    url.pathname = '/legal-doc/' + legalInfo[1]
+    url.search = legalInfo[2]?.toLowerCase() === 'en' ? '?lang=en' : ''
     return NextResponse.rewrite(url)
   }
   if (pathname.startsWith('/neon-status') && process.env.NODE_ENV === 'production' && process.env.ENABLE_NEON_STATUS !== '1') {
