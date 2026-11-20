@@ -14,7 +14,7 @@ type Entry = { file: string; ka: string; en: string; section: string; docType: s
 const manifest = process.env.MANIFEST
 if (!manifest || !fs.existsSync(manifest)) throw new Error('MANIFEST must point to a JSON manifest')
 const entries = JSON.parse(fs.readFileSync(manifest, 'utf8')) as Entry[]
-const MIME: Record<string, string> = { '.pdf': 'application/pdf', '.xls': 'application/vnd.ms-excel', '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }
+const MIME: Record<string, string> = { '.pdf': 'application/pdf', '.xls': 'application/vnd.ms-excel', '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', '.doc': 'application/msword' }
 
 const payload = await getPayload({ config })
 const products = new Map((await payload.find({ collection: 'products', limit: 100, depth: 0 })).docs.map((p) => [(p as { key?: string }).key, p.id]))

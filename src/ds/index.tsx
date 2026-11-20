@@ -8,6 +8,12 @@ export { Icon } from './Icon'
 
 /** Link attributes for a document file: a PDF opens in a new tab (the browser's viewer has its own download button),
     other files (.xls, .doc ...) can't be shown in the browser, so they download. */
+/** File type label shown next to a document ("PDF", "DOCX", "XLS"), taken from the file name. */
+export function fileTypeLabel(href?: string | null): string {
+  const m = /\.([a-z0-9]+)($|[?#])/i.exec(href || '')
+  return m ? m[1].toUpperCase() : 'PDF'
+}
+
 export function fileLinkProps(href?: string | null): React.AnchorHTMLAttributes<HTMLAnchorElement> {
   if (!href || href === '#') return {}
   return /\.pdf($|[?#])/i.test(href) ? { target: '_blank', rel: 'noopener' } : { download: '' }

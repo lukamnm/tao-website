@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import { Button, Icon, fileLinkProps } from '@/ds'
+import { Button, Icon, fileLinkProps, fileTypeLabel } from '@/ds'
 import { useSite } from '@/site/SiteProvider'
 import { InfoPage, InfoSection, Notice, DocRow } from './info'
 import type { DocumentVM } from '@/lib/content'
@@ -24,7 +24,7 @@ export function Financial({ docs, updated }: { docs: DocumentVM[]; updated: stri
         {annual.length ? (
           <div style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid var(--border)' }}>
             {shown.map((d) => (
-              <DocRow key={d.id} title={d.title || (locale === 'en' ? `${d.year} audited financial statements` : `${d.year} წლის აუდიტირებული ფინანსური ანგარიშგება`)} meta={['PDF', t('აუდიტირებული'), d.size].filter(Boolean).join(' · ')} href={d.url} />
+              <DocRow key={d.id} title={d.title || (locale === 'en' ? `${d.year} audited financial statements` : `${d.year} წლის აუდიტირებული ფინანსური ანგარიშგება`)} meta={[fileTypeLabel(d.url), t('აუდიტირებული'), d.size].filter(Boolean).join(' · ')} href={d.url} />
             ))}
           </div>
         ) : (

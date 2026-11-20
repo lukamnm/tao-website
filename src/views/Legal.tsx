@@ -1,6 +1,6 @@
 'use client'
 import React, { useMemo, useState } from 'react'
-import { Icon, fileLinkProps } from '@/ds'
+import { Icon, fileLinkProps, fileTypeLabel } from '@/ds'
 import { useSite } from '@/site/SiteProvider'
 import { InfoPage, InfoSection, Notice } from './info'
 import type { DocumentVM } from '@/lib/content'
@@ -119,7 +119,7 @@ export function Legal({ docs, updated }: { docs: DocumentVM[]; updated: string }
                         <span>{t(TYPES.find((x) => x.id === d.type)?.label || '')}</span>
                       </span>
                       <span className="tao-drow__title" style={{ fontSize: 17, fontWeight: 500, lineHeight: 1.4 }}>{d.title}</span>
-                      <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{[d.code, 'PDF', d.size].filter(Boolean).join(' · ')}</span>
+                      <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{[d.code, fileTypeLabel(d.url), d.size].filter(Boolean).join(' · ')}</span>
                     </span>
                     <span className="tao-caps tao-drow__dl" style={{ flex: 'none', display: 'flex', alignItems: 'center', gap: 8, height: 40, padding: '0 14px', border: '1px solid var(--link)', borderRadius: 5, color: 'var(--link)', fontSize: 13, fontWeight: 500, letterSpacing: '0.04em' }}>
                       <Icon name="document-download" size={18} />

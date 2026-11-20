@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { Icon, SectionMarker, fileLinkProps } from '@/ds'
+import { Icon, SectionMarker, fileLinkProps, fileTypeLabel } from '@/ds'
 import { useSite } from '@/site/SiteProvider'
 import { Breadcrumb } from './shared'
 import type { DocumentVM } from '@/lib/content'
@@ -145,7 +145,7 @@ export function DocList({ docs, emptyText }: { docs: DocumentVM[]; emptyText: st
   return (
     <div style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid var(--border)' }}>
       {docs.map((d) => (
-        <DocRow key={d.id} title={d.title} meta={['PDF', d.size, d.year].filter(Boolean).join(' · ')} href={d.url} />
+        <DocRow key={d.id} title={d.title} meta={[fileTypeLabel(d.url), d.size, d.year].filter(Boolean).join(' · ')} href={d.url} />
       ))}
     </div>
   )
